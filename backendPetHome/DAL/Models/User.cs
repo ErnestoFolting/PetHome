@@ -1,5 +1,8 @@
-﻿namespace backendPetHome.Controllers.Models
+﻿using System.Text.Json.Serialization;
+
+namespace DAL.Models
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum sexEnum
     {
         male = 0,

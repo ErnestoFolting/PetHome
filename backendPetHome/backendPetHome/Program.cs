@@ -1,5 +1,8 @@
-global using backendPetHome.Data;
 global using Microsoft.EntityFrameworkCore;
+using BAL.Services;
+using DAL.Data;
+using DAL.Models;
+using DAL.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +20,8 @@ builder.Services.AddCors(options =>
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddTransient<IRepository<User>,userRepository>();
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));

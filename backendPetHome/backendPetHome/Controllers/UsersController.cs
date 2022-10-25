@@ -1,4 +1,5 @@
-﻿using backendPetHome.Controllers.Models;
+﻿using DAL.Models;
+using BAL.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backendPetHome.Controllers
@@ -7,55 +8,55 @@ namespace backendPetHome.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly DataContext _dataContext;
+        private readonly UserService _userService;
 
-        public UsersController(DataContext dataContext)
+        public UsersController(UserService userService)
         {
-            _dataContext = dataContext;
+            _userService = userService;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<User>>> Get()
         {
-            return Ok(await _dataContext.users.ToListAsync()); 
-        } 
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<User>> Get(int id)
-        {
-            var user = _dataContext.users.FindAsync(id).Result;
-            if (user == null) return BadRequest("User not found");
-            return Ok(user);
+            return Ok(await _userService.getAllUsers());
         }
 
-        [HttpPost]
-        public async Task<ActionResult<List<User>>> Post([FromBody] User dto)
-        {
-            _dataContext.users.Add(dto);
-            await _dataContext.SaveChangesAsync();
-            return Ok(await _dataContext.users.ToListAsync());
-        }
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<User>> Get(int id)
+        //{
+        //    var user = _dataContext.users.FindAsync(id).Result;
+        //    if (user == null) return BadRequest("User not found");
+        //    return Ok(user);
+        //}
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<List<User>>> Put(int id, [FromBody] User dto)
-        {
-            var user = await _dataContext.users.FindAsync(id);
-            if (user == null) return BadRequest("User not found");
-            user.Surname = dto.Surname;
-            user.age = dto.age;
-            user.sex = dto.sex;
-            await _dataContext.SaveChangesAsync();
-            return Ok(await _dataContext.users.ToListAsync());
-        }
+        //[HttpPost]
+        //public async Task<ActionResult<List<User>>> Post([FromBody] User dto)
+        //{
+        //    _dataContext.users.Add(dto);
+        //    await _dataContext.SaveChangesAsync();
+        //    return Ok(await _dataContext.users.ToListAsync());
+        //}
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<List<User>>> Delete(int id)
-        {
-            var user = _dataContext.users.FindAsync(id).Result;
-            if (user == null) return BadRequest("User not found");
-            _dataContext.users.Remove(user);
-            await _dataContext.SaveChangesAsync();
-            return Ok(await _dataContext.users.ToListAsync());
-        }
+        //[HttpPut("{id}")]
+        //public async Task<ActionResult<List<User>>> Put(int id, [FromBody] User dto)
+        //{
+        //    var user = await _dataContext.users.FindAsync(id);
+        //    if (user == null) return BadRequest("User not found");
+        //    user.Surname = dto.Surname;
+        //    user.age = dto.age;
+        //    user.sex = dto.sex;
+        //    await _dataContext.SaveChangesAsync();
+        //    return Ok(await _dataContext.users.ToListAsync());
+        //}
+
+        //[HttpDelete("{id}")]
+        //public async Task<ActionResult<List<User>>> Delete(int id)
+        //{
+        //    var user = _dataContext.users.FindAsync(id).Result;
+        //    if (user == null) return BadRequest("User not found");
+        //    _dataContext.users.Remove(user);
+        //    await _dataContext.SaveChangesAsync();
+        //    return Ok(await _dataContext.users.ToListAsync());
+        //}
     }
 }
