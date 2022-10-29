@@ -1,6 +1,7 @@
 ﻿using DAL.Models;
 using BAL.Services;
 using Microsoft.AspNetCore.Mvc;
+using BAL.DTOs;
 
 namespace backendPetHome.Controllers
 {
@@ -29,13 +30,12 @@ namespace backendPetHome.Controllers
         //    return Ok(user);
         //}
 
-        //[HttpPost]
-        //public async Task<ActionResult<List<User>>> Post([FromBody] User dto)
-        //{
-        //    _dataContext.users.Add(dto);
-        //    await _dataContext.SaveChangesAsync();
-        //    return Ok(await _dataContext.users.ToListAsync());
-        //}
+        [HttpPost]
+        public async Task<OkResult> Post([FromBody] UserDTO dto)
+        {
+            await _userService.addUser(dto);
+            return Ok();
+        }
 
         //[HttpPut("{id}")]
         //public async Task<ActionResult<List<User>>> Put(int id, [FromBody] User dto)
@@ -49,14 +49,11 @@ namespace backendPetHome.Controllers
         //    return Ok(await _dataContext.users.ToListAsync());
         //}
 
-        //[HttpDelete("{id}")]
-        //public async Task<ActionResult<List<User>>> Delete(int id)
-        //{
-        //    var user = _dataContext.users.FindAsync(id).Result;
-        //    if (user == null) return BadRequest("User not found");
-        //    _dataContext.users.Remove(user);
-        //    await _dataContext.SaveChangesAsync();
-        //    return Ok(await _dataContext.users.ToListAsync());
-        //}
+        [HttpDelete("{id}")]
+        public async Task<OkResult> Delete(int id)
+        {
+            await _userService.deleteUser(id);
+            return Ok();
+        }
     }
 }

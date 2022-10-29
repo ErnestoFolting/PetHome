@@ -4,6 +4,7 @@ using DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221026143631_addSomeRelationships")]
+    partial class addSomeRelationships
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,53 +71,6 @@ namespace DAL.Migrations
                     b.ToTable("adverts");
                 });
 
-            modelBuilder.Entity("DAL.Models.Interval", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
-
-                    b.Property<DateTime>("endTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("startTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("userId")
-                        .HasColumnType("int");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("userId");
-
-                    b.ToTable("Interval");
-                });
-
-            modelBuilder.Entity("DAL.Models.Request", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
-
-                    b.Property<int>("advertId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("userId")
-                        .HasColumnType("int");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("advertId");
-
-                    b.HasIndex("userId");
-
-                    b.ToTable("Request");
-                });
-
             modelBuilder.Entity("DAL.Models.User", b =>
                 {
                     b.Property<int>("id")
@@ -165,50 +120,11 @@ namespace DAL.Migrations
                     b.Navigation("performer");
                 });
 
-            modelBuilder.Entity("DAL.Models.Interval", b =>
-                {
-                    b.HasOne("DAL.Models.User", "user")
-                        .WithMany("timeIntervals")
-                        .HasForeignKey("userId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("user");
-                });
-
-            modelBuilder.Entity("DAL.Models.Request", b =>
-                {
-                    b.HasOne("DAL.Models.Advert", "advert")
-                        .WithMany("requests")
-                        .HasForeignKey("advertId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DAL.Models.User", "user")
-                        .WithMany("requests")
-                        .HasForeignKey("userId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("advert");
-
-                    b.Navigation("user");
-                });
-
-            modelBuilder.Entity("DAL.Models.Advert", b =>
-                {
-                    b.Navigation("requests");
-                });
-
             modelBuilder.Entity("DAL.Models.User", b =>
                 {
                     b.Navigation("performAtAdverts");
 
                     b.Navigation("postedAdverts");
-
-                    b.Navigation("requests");
-
-                    b.Navigation("timeIntervals");
                 });
 #pragma warning restore 612, 618
         }

@@ -2,7 +2,6 @@ global using Microsoft.EntityFrameworkCore;
 using BAL.Services;
 using DAL.Data;
 using DAL.Models;
-using DAL.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +20,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<UserService>();
-builder.Services.AddTransient<IRepository<User>,userRepository>();
+builder.Services.AddScoped<AdvertService>();
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));

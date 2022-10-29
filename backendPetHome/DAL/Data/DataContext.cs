@@ -17,6 +17,38 @@ namespace DAL.Data
                 optionsBuilder.UseSqlServer("Data Source=localhost\\sqlexpress;database=testdb;trusted_connection=true");
             }
         }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder
+                .Entity<Advert>()
+                .HasOne(a => a.owner)
+                .WithMany(u => u.postedAdverts)
+                .HasForeignKey(a => a.ownerId);
+
+            builder
+                .Entity<Advert>()
+                .HasOne(a => a.performer)
+                .WithMany(u => u.performAtAdverts)
+                .HasForeignKey(a => a.performerId);
+            builder
+                .Entity<Interval>()
+                .HasOne(i => i.user)
+                .WithMany(u => u.timeIntervals)
+                .HasForeignKey(i=>i.userId);
+            builder
+                .Entity<Request>()
+                .HasOne(r => r.user)
+                .WithMany(u => u.requests)
+                .HasForeignKey(r => r.userId)
+                .OnDelete(DeleteBehavior.NoAction);
+            builder
+                .Entity<Request>()
+                .HasOne(r => r.advert)
+                .WithMany(a => a.requests)
+                .HasForeignKey(r => r.advertId);
+
+            base.OnModelCreating(builder);
+        }
     }
     public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<DataContext>
     {
