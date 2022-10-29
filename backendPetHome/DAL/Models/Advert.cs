@@ -27,9 +27,9 @@ namespace DAL.Models
         public advertStatusEnum status { get; set; }
         public DateTime startTime{ get; set; }
         public DateTime endTime{ get; set; }
-        public int ownerId { get; set; }
+        public string ownerId { get; set; }
         public User owner { get; set; }
-        public int? performerId { get; set; }
+        public string? performerId { get; set; }
         public User? performer { get; set; }
         public IEnumerable<Request>? requests { get; set; }
     }

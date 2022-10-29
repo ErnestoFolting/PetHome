@@ -2,6 +2,7 @@ global using Microsoft.EntityFrameworkCore;
 using BAL.Services;
 using DAL.Data;
 using DAL.Models;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,9 @@ builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddAuthentication();
+builder.Services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<DataContext>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

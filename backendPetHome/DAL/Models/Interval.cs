@@ -10,7 +10,7 @@ namespace DAL.Models
     public class Interval
     {
         public int id { get; set; }
-        public int userId { get; set; }
+        public string userId { get; set; }
         public User user { get; set; }
         [Required]
         public DateTime startTime { get; set; }
