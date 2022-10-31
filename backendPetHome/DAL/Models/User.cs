@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace DAL.Models
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))]
+
     
     public class User:IdentityUser
     {
@@ -14,6 +14,7 @@ namespace DAL.Models
         }
         public string surname { get; set; } = string.Empty;
         public string name { get; set; } = string.Empty;
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public sexEnum sex { get; set; } = sexEnum.male;
         public IEnumerable<Advert>? postedAdverts;
         public IEnumerable<Advert>? performAtAdverts;

@@ -1,8 +1,10 @@
 ﻿using BAL.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backendPetHome.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class AdvertsController : ControllerBase
@@ -12,7 +14,7 @@ namespace backendPetHome.Controllers
         {
             _advertService = advertService;
         }
-
+        [Authorize]
         [HttpGet]
         public IEnumerable<string> Get()
         {

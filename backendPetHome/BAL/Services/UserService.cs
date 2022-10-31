@@ -25,27 +25,26 @@ namespace BAL.Services
             //List<UserDTO> lstDTO = new();
             //foreach (var user in lst)
             //{
-            //    UserDTO dto = new ();
-            //    dto.id = user.id;
-            //    dto.name = user.name;  
-            //    dto.email = user.email;
+            //    UserDTO dto = new();
+
+            //    dto.name = user.name;
+
             //    dto.surname = user.surname;
             //    dto.sex = user.sex;
-            //    dto.phone = user.phoneNumber;
             //    lstDTO.Add(dto);
             //}
             return lst;
         }
         public Task addUser(UserDTO dto)
         {
-            User userToAdd = new();
-            userToAdd.id = dto.id;
-            userToAdd.name = dto.name;
-            userToAdd.email = dto.email;
-            userToAdd.surname= dto.surname;
-            userToAdd.sex= dto.sex;
-            userToAdd.phoneNumber = dto.phone;
-            _context.users.Add(userToAdd);
+            //User userToAdd = new();
+            ////userToAdd.id = dto.id;
+            //userToAdd.name = dto.name;
+            ////userToAdd.email = dto.email;
+            //userToAdd.surname= dto.surname;
+            //userToAdd.sex= dto.sex;
+            ////userToAdd.phoneNumber = dto.phone;
+            //_context.users.Add(userToAdd);
             return _context.SaveChangesAsync();
         }
         public Task deleteUser(int id)
