@@ -20,5 +20,6 @@ namespace DAL.Models
         public IEnumerable<Advert>? performAtAdverts;
         public IEnumerable<Request>? requests;
         public IEnumerable<Interval>? timeIntervals;
+        public IEnumerable<RefreshToken>? refreshTokens;
     }
 }

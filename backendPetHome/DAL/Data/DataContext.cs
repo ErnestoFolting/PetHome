@@ -12,6 +12,7 @@ namespace DAL.Data
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
         public DbSet<User> users { get; set; }
         public DbSet<Advert> adverts { get; set; }
+        public DbSet<RefreshToken> refreshTokens{ get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -49,6 +50,11 @@ namespace DAL.Data
                 .HasOne(r => r.advert)
                 .WithMany(a => a.requests)
                 .HasForeignKey(r => r.advertId);
+            builder
+                .Entity<RefreshToken>()
+                .HasOne(r => r.owner)
+                .WithMany(u => u.refreshTokens)
+                .HasForeignKey(r => r.ownerId);
 
             base.OnModelCreating(builder);
         }

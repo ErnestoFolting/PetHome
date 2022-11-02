@@ -1,10 +1,12 @@
-﻿using DAL.Models;
+﻿using DAL.Data;
+using DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace backendPetHome.Controllers
@@ -15,11 +17,13 @@ namespace backendPetHome.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly DataContext _dbContext;
 
-        public AuthController(UserManager<User> userManager, IConfiguration configuration)
+        public AuthController(UserManager<User> userManager, IConfiguration configuration,DataContext dbContext)
         {
              _userManager = userManager;
             _configuration = configuration;
+            _dbContext = dbContext;
         }
         [HttpPost]
         [Route("register")]
@@ -51,22 +55,84 @@ namespace backendPetHome.Controllers
             var user = await _userManager.FindByNameAsync(creds.username);
             if(user != null && await _userManager.CheckPasswordAsync(user,creds.password))
             {
-                var authClaims = new List<Claim>
+                var token = GetSecurityToken(user);
+                var resfreshToken = GetRefreshToken(user);
+                _dbContext.refreshTokens.Add(resfreshToken);
+                await _dbContext.SaveChangesAsync();
+                SetRefreshToken(resfreshToken);
+                return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token), expiration = token.ValidTo });
+            }
+            return Unauthorized();
+        }
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<string>> Refresh()
+        {
+            var refreshToken = Request.Cookies["refreshToken"];
+            RefreshToken? refreshTokenInDb = _dbContext.refreshTokens.FirstOrDefault(t => t.token == refreshToken);
+            if(refreshTokenInDb == null)
+            {
+                return Unauthorized("Invalid token.");
+            }
+            else
+            {
+                if(refreshTokenInDb.isNotActual == true)
+                {
+                    return Unauthorized("Token is not actual.");
+                }
+                else
+                {
+                    if(refreshTokenInDb.expires < DateTime.Now)
+                    {
+                        return Unauthorized("Token is expired.");
+                    }       
+                    refreshTokenInDb.isNotActual = true;
+                    _dbContext.Update(refreshTokenInDb);
+                    var user = await _userManager.FindByIdAsync(refreshTokenInDb.ownerId);
+                    var token = GetSecurityToken(user);
+                    var newRefreshToken = GetRefreshToken(user);
+                    _dbContext.refreshTokens.Add(newRefreshToken);
+                    await _dbContext.SaveChangesAsync();
+                    SetRefreshToken(newRefreshToken);
+                    return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token), expiration = token.ValidTo });
+                }
+            }
+        }
+        private SecurityToken GetSecurityToken(User user)
+        {
+            var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name,user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
                 };
-                var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"]));
-                var token = new JwtSecurityToken(
-                    issuer: _configuration["JWT:ValidIssuer"],
-                    audience: _configuration["JWT:ValidAudience"],
-                    expires: DateTime.Now.AddMinutes(15),
-                    claims: authClaims,
-                    signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                    );
-                return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token), expration = token.ValidTo });
-            }
-            return Unauthorized();
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"]));
+            var token = new JwtSecurityToken(
+                issuer: _configuration["JWT:ValidIssuer"],
+                audience: _configuration["JWT:ValidAudience"],
+                expires: DateTime.Now.AddMinutes(1),
+                claims: authClaims,
+                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+                );
+            return token;
+        }
+        private RefreshToken GetRefreshToken(User user)
+        {
+            RefreshToken refreshToken = new()
+            {
+                token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                expires = DateTime.Now.AddDays(7),
+                created = DateTime.Now,
+                ownerId = user.Id
+            };
+            return refreshToken;
+        }
+        private void SetRefreshToken(RefreshToken newRefreshToken)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = newRefreshToken.expires
+            };
+            Response.Cookies.Append("refreshToken", newRefreshToken.token, cookieOptions);
         }
     }
 }
