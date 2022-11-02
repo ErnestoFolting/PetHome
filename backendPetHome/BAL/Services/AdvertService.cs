@@ -1,4 +1,6 @@
-﻿using DAL.Data;
+﻿using BAL.DTOs;
+using DAL.Data;
+using DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +16,26 @@ namespace BAL.Services
         {
             _context = context;
         }
+        public IEnumerable<Advert> getAdverts(string userId)
+        {
+            throw new ArgumentNullException("Check");
+        }
 
+        public async Task addAdvert(AdvertDTO advertToAdd, string userId)
+        {
+            Advert newAdvert = new()
+            {
+                name = advertToAdd.name,
+                cost = advertToAdd.cost,
+                location = advertToAdd.location,
+                description = advertToAdd.description,
+                startTime = advertToAdd.startTime,
+                endTime = advertToAdd.endTime,
+                status = Advert.advertStatusEnum.search,
+                ownerId = userId
+            };
+            _context.adverts.Add(newAdvert);
+            await _context.SaveChangesAsync();
+        }
     }
 }

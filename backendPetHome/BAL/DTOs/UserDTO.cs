@@ -1,11 +1,12 @@
-﻿using System;
+﻿using backendPetHome.DAL.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static DAL.Models.User;
+using static backendPetHome.DAL.Models.User;
 
-namespace BAL.DTOs
+namespace backendPetHome.BLL.DTOs
 {
     public class UserDTO
     {
@@ -14,7 +15,7 @@ namespace BAL.DTOs
         public string name { get; set; }
         public string email { get; set; }
         public string phone { get; set; }
-        public sexEnum sex { get; set; }
+        public SexEnum sex { get; set; }
 
     }
 }

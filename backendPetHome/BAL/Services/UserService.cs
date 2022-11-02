@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BAL.DTOs;
+using backendPetHome.BLL.DTOs;
+using backendPetHome.DAL.Data;
+using backendPetHome.DAL.Models;
 using DAL;
-using DAL.Data;
-using DAL.Models;
 using Microsoft.EntityFrameworkCore;
-using static DAL.Models.User;
+using static backendPetHome.DAL.Models.User;
 
-namespace BAL.Services
+namespace backendPetHome.BLL.Services
 {
     public class UserService
     {

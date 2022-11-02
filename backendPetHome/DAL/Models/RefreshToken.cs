@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL.Models
+namespace backendPetHome.DAL.Models
 {
     public class RefreshToken
     {
@@ -14,6 +14,6 @@ namespace DAL.Models
         public DateTime expires { get; set; } = DateTime.Now.AddDays(7);
         public string ownerId { get; set; }
         public User owner { get; set; }
-        public bool isNotActual { get; set; } = false; 
+        public bool isNotActual { get; set; } = false;
     }
 }

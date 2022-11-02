@@ -1,7 +1,7 @@
-﻿using DAL.Models;
-using BAL.Services;
-using Microsoft.AspNetCore.Mvc;
-using BAL.DTOs;
+﻿using Microsoft.AspNetCore.Mvc;
+using backendPetHome.BLL.DTOs;
+using backendPetHome.BLL.Services;
+using backendPetHome.DAL.Models;
 
 namespace backendPetHome.Controllers
 {

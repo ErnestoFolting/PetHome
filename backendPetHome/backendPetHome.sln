@@ -5,9 +5,9 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "backendPetHome", "backendPetHome\backendPetHome.csproj", "{8FC8726E-E3A0-4FF6-A7EF-FA16F336BFF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{D10B0563-1C23-4AFF-A91F-7699140F0BF1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "backendPetHome.DAL", "DAL\backendPetHome.DAL.csproj", "{D10B0563-1C23-4AFF-A91F-7699140F0BF1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BAL", "BAL\BAL.csproj", "{D21214B6-7811-43C0-ACAE-F1142BEBD985}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "backendPetHome.BLL", "BAL\backendPetHome.BLL.csproj", "{D21214B6-7811-43C0-ACAE-F1142BEBD985}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

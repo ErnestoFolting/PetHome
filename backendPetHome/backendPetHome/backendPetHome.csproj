@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BAL\BAL.csproj" />
+    <ProjectReference Include="..\BAL\backendPetHome.BLL.csproj" />
   </ItemGroup>
 
 </Project>

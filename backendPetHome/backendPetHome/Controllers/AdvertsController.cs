@@ -1,6 +1,11 @@
-﻿using BAL.Services;
+﻿using BAL.DTOs;
+using BAL.Services;
+using DAL.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace backendPetHome.Controllers
 {
@@ -16,9 +21,10 @@ namespace backendPetHome.Controllers
         }
         [Authorize]
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<Advert>>> Get()
         {
-            return new string[] { "value1", "value2" };
+            string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            return Ok(_advertService.getAdverts(userId));
         }
 
         [HttpGet("{id}")]
@@ -28,8 +34,11 @@ namespace backendPetHome.Controllers
         }
 
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> Post([FromBody] AdvertDTO advertToAdd)
         {
+            var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            await _advertService.addAdvert(advertToAdd,userId);
+            return Ok();
         }
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)

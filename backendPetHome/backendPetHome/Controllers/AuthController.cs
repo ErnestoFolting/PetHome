@@ -1,4 +1,7 @@
-﻿using DAL.Data;
+﻿using backendPetHome.BLL.Models;
+using backendPetHome.BLL.Services;
+using backendPetHome.DAL.Data;
+using backendPetHome.DAL.Models;
 using DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -15,15 +18,11 @@ namespace backendPetHome.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly UserManager<User> _userManager;
-        private readonly IConfiguration _configuration;
-        private readonly DataContext _dbContext;
+        private readonly AuthService _authService;
 
-        public AuthController(UserManager<User> userManager, IConfiguration configuration,DataContext dbContext)
+        public AuthController(AuthService authService)
         {
-             _userManager = userManager;
-            _configuration = configuration;
-            _dbContext = dbContext;
+             _authService = authService;
         }
         [HttpPost]
         [Route("register")]
@@ -101,14 +100,14 @@ namespace backendPetHome.Controllers
         {
             var authClaims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name,user.UserName),
+                    new Claim(ClaimTypes.NameIdentifier,user.Id),
                     new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
                 };
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"]));
             var token = new JwtSecurityToken(
                 issuer: _configuration["JWT:ValidIssuer"],
                 audience: _configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddMinutes(1),
+                expires: DateTime.Now.AddMinutes(60),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );

@@ -1,7 +1,7 @@
 global using Microsoft.EntityFrameworkCore;
-using BAL.Services;
-using DAL.Data;
-using DAL.Models;
+using backendPetHome.BLL.Services;
+using backendPetHome.DAL.Data;
+using backendPetHome.DAL.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -26,6 +26,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AdvertService>();
+builder.Services.AddScoped<AuthService>();
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));

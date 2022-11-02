@@ -1,18 +1,18 @@
-﻿using DAL.Models;
+﻿using backendPetHome.DAL.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace DAL.Data
+namespace backendPetHome.DAL.Data
 {
     public class DataContext : IdentityDbContext<User>
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
         public DbSet<User> users { get; set; }
         public DbSet<Advert> adverts { get; set; }
-        public DbSet<RefreshToken> refreshTokens{ get; set; }
+        public DbSet<RefreshToken> refreshTokens { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -38,7 +38,7 @@ namespace DAL.Data
                 .Entity<Interval>()
                 .HasOne(i => i.user)
                 .WithMany(u => u.timeIntervals)
-                .HasForeignKey(i=>i.userId);
+                .HasForeignKey(i => i.userId);
             builder
                 .Entity<Request>()
                 .HasOne(r => r.user)
@@ -70,6 +70,6 @@ namespace DAL.Data
             var connectionString = configuration.GetConnectionString("DefaultConnection");
             builder.UseSqlServer(connectionString);
             return new DataContext(builder.Options);
-        } 
+        }
     }
 }
