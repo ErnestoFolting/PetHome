@@ -1,12 +1,10 @@
-﻿using DAL.Enums;
+﻿using backendPetHome.DAL.Enums;
 using Microsoft.AspNetCore.Identity;
 using System.Text.Json.Serialization;
 
-namespace DAL.Models
+namespace backendPetHome.DAL.Models
 {
-
-    
-    public class User:IdentityUser
+    public class User : IdentityUser
     {
         public string surname { get; set; } = string.Empty;
         public string name { get; set; } = string.Empty;

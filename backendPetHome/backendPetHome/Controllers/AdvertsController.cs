@@ -1,15 +1,13 @@
-﻿using BAL.DTOs;
-using BAL.Services;
-using DAL.Models;
+﻿using backendPetHome.BLL.DTOs;
+using backendPetHome.BLL.Services;
+using backendPetHome.DAL.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace backendPetHome.Controllers
 {
-    
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AdvertsController : ControllerBase
@@ -19,7 +17,6 @@ namespace backendPetHome.Controllers
         {
             _advertService = advertService;
         }
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Advert>>> Get()
         {

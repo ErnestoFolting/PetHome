@@ -2,6 +2,7 @@ global using Microsoft.EntityFrameworkCore;
 using backendPetHome.BLL.Services;
 using backendPetHome.DAL.Data;
 using backendPetHome.DAL.Models;
+using backendPetHome.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -101,6 +102,8 @@ app.UseAuthentication();
 app.UseCors("CORSPolicy");
 
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.MapControllers();
 

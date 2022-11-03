@@ -1,13 +1,9 @@
-﻿using BAL.DTOs;
-using DAL.Data;
-using DAL.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using backendPetHome.BLL.DTOs;
+using backendPetHome.DAL.Data;
+using backendPetHome.DAL.Enums;
+using backendPetHome.DAL.Models;
 
-namespace BAL.Services
+namespace backendPetHome.BLL.Services
 {
     public class AdvertService
     {
@@ -18,7 +14,7 @@ namespace BAL.Services
         }
         public IEnumerable<Advert> getAdverts(string userId)
         {
-            throw new ArgumentNullException("Check");
+            return _context.adverts.Where(a => a.ownerId == userId);
         }
 
         public async Task addAdvert(AdvertDTO advertToAdd, string userId)
@@ -31,7 +27,7 @@ namespace BAL.Services
                 description = advertToAdd.description,
                 startTime = advertToAdd.startTime,
                 endTime = advertToAdd.endTime,
-                status = Advert.advertStatusEnum.search,
+                status = AdvertStatusEnum.search,
                 ownerId = userId
             };
             _context.adverts.Add(newAdvert);
