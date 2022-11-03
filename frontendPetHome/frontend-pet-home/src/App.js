@@ -1,51 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import * as signalR from '@microsoft/signalr';
 
 export default function App() {
-  const [weather, setWeather] = useState([])
+  const [message, setMessage] = useState(null);
+  const [connection, setConnection] = useState(null);
+  useEffect(() => {
+    var newConnection = new signalR.HubConnectionBuilder().withUrl("https://localhost:7124/performerSelectionHub", {
+    skipNegotiation: true,
+    transport: signalR.HttpTransportType.WebSockets
+  }).build();
+
+    setConnection(newConnection);
+  }, []);
+
+  useEffect(() => {
+    if (connection) {
+      connection.start()
+        .then(result => {
+          console.log('Connected!');
+
+          connection.on('Send', messageFromHub => {
+            setMessage(messageFromHub)
+
+          });
+        })
+        .catch(e => console.log('Connection failed: ', e));
+    }
+  }, [connection]);
   return (
     <div>
-      <button onClick={getWeather}>
-        GetForecast
-      </button>
-      <></>
-        <div>
-        <MapElements/>
-      </div>
+      Check {message}
     </div>
   );
-  function getWeather() {
-    const url = "https://localhost:7124/api/WeatherForecast"
-    fetch(url, {
-      method: 'GET'
-    })
-      .then(response => response.json())
-      .then(weather => setWeather(weather))
-      .catch(er => alert(er))
-  }
-  function MapElements(){
-    const listItems = weather.map(
-      (element) => {
-          return (
-              <ul type="disc">
-                  <li style={{ 
-                      fontWeight: 'bold', 
-                      color: 'red' }}
-                  >
-                      {element.date}
-                  </li>
-                  <li>{element.temperatureC}</li>
-                  <li>{element.temperatureF}</li>
-                  <li>{element.summary}</li>
-              </ul>
-          )
-      }
-  )
-
-    return (
-      <div>
-          {listItems}
-      </div>
-    )
-  }
 }
-

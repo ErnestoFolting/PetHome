@@ -3,6 +3,7 @@ using backendPetHome.BLL.Services;
 using backendPetHome.DAL.Data;
 using backendPetHome.DAL.Models;
 using backendPetHome.Middlewares;
+using backendPetHome.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -25,6 +26,7 @@ builder.Services.AddCors(options =>
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddSignalR();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AdvertService>();
 builder.Services.AddScoped<AuthService>();
@@ -102,6 +104,8 @@ app.UseAuthentication();
 app.UseCors("CORSPolicy");
 
 app.UseAuthorization();
+
+app.MapHub<PerformerSelectionHub>("/performerSelectionHub");
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 
