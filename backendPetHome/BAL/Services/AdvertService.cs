@@ -2,6 +2,7 @@
 using backendPetHome.DAL.Data;
 using backendPetHome.DAL.Enums;
 using backendPetHome.DAL.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace backendPetHome.BLL.Services
 {
@@ -15,6 +16,11 @@ namespace backendPetHome.BLL.Services
         public IEnumerable<Advert> getAdverts(string userId)
         {
             return _context.adverts.Where(a => a.ownerId == userId);
+        }
+        public Advert getAdvertById(int advertId)
+        {
+            var advert = _context.adverts.Include(el => el.owner).FirstOrDefault(a => a.Id == advertId);
+            return advert;
         }
 
         public async Task addAdvert(AdvertDTO advertToAdd, string userId)

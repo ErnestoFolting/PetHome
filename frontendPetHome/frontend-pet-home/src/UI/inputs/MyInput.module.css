@@ -1,0 +1,9 @@
+.MyInput{
+    width: 100%;
+    padding: 5px 15px;
+    border: 2px  solid lightsalmon;
+    border-radius: 5px;
+}
+.MyInput:focus{
+    outline: none;
+}

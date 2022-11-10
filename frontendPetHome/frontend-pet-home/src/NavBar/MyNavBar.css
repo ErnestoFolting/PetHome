@@ -1,0 +1,21 @@
+.navBar {
+    min-height: 50px;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    background-color: lightsalmon;
+    padding: 0 15px;
+}
+
+.navBar__links a {
+    margin-right: 0;
+    color: white;
+    margin: 40px;
+    text-decoration: none;
+}
+
+.navBar__links a:hover {
+    color: black;
+    transition: 0.5s;
+}

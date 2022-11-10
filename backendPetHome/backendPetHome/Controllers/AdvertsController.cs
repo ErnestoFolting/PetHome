@@ -9,7 +9,6 @@ using System.Security.Claims;
 
 namespace backendPetHome.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AdvertsController : ControllerBase
@@ -24,15 +23,16 @@ namespace backendPetHome.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Advert>>> Get()
         {
-            string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            
+            //string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            string userId = "2165b137-1f4f-42fe-9650-178455d7df41";
+
             return Ok(_advertService.getAdverts(userId));
         }
 
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<Advert>> Get(int id)
         {
-            return "value";
+            return Ok(_advertService.getAdvertById(id));
         }
 
         [HttpPost]
