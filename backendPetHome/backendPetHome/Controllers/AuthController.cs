@@ -31,7 +31,7 @@ namespace backendPetHome.Controllers
         public async Task<IActionResult> Login([FromBody]LoginCreds creds)
         {
             Tuple<SecurityToken, RefreshToken> tokens = await _authService.Login(creds);
-            SetRefreshToken(tokens.Item2);
+            SetTokens(tokens);
             return Ok(new { accessToken = new JwtSecurityTokenHandler().WriteToken(tokens.Item1), expirationDate = tokens.Item1.ValidTo });
         }
         [HttpPost("refresh-token")]
@@ -39,17 +39,25 @@ namespace backendPetHome.Controllers
         {
             var refreshToken = Request.Cookies["refreshToken"];
             Tuple<SecurityToken, RefreshToken> tokens = await _authService.Refresh(refreshToken);
-            SetRefreshToken(tokens.Item2);
+            SetTokens(tokens);
             return Ok(new { accessToken = new JwtSecurityTokenHandler().WriteToken(tokens.Item1), expirationDate = tokens.Item1.ValidTo });
         }
-        private void SetRefreshToken(RefreshToken newRefreshToken)
+        private void SetTokens(Tuple<SecurityToken, RefreshToken> tokens)
         {
-            var cookieOptions = new CookieOptions
+            var accessOption = new CookieOptions
             {
                 HttpOnly = true,
-                Expires = newRefreshToken.expires
+                Expires = tokens.Item1.ValidTo
             };
-            Response.Cookies.Append("refreshToken", newRefreshToken.token, cookieOptions);
+            var refreshOption = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = tokens.Item2.expires
+            };
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var encrypterAccessToken = tokenHandler.WriteToken(tokens.Item1);
+            Response.Cookies.Append("accessToken", encrypterAccessToken, accessOption);
+            Response.Cookies.Append("refreshToken", tokens.Item2.token , refreshOption);
         }
     }
 }

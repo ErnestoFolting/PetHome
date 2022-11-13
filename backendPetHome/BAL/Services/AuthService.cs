@@ -46,26 +46,7 @@ namespace backendPetHome.BLL.Services
                 throw new InvalidOperationException("Can not add a new user.");
             }
         }
-        public async Task<Tuple<SecurityToken, RefreshToken>> Refresh(string? refreshToken)
-        {
-            RefreshToken? refreshTokenInDb = _dataContext.refreshTokens.FirstOrDefault(t => t.token == refreshToken);
-            if (refreshTokenInDb == null)
-            {
-                throw new KeyNotFoundException("The refresh token does not exist.");
-            }
-            else if(refreshTokenInDb?.isNotActual == true || refreshTokenInDb?.expires < DateTime.Now)
-            {
-                throw new ArgumentException("The refresh token is not actual.");
-            }
-            else
-            {
-                refreshTokenInDb.isNotActual = true;
-                _dataContext.Update(refreshTokenInDb);
-                var user = await _userManager.FindByIdAsync(refreshTokenInDb.ownerId);
-                var newTokens = await getTokens(user);
-                return newTokens;
-            }
-        }
+
         public async Task<Tuple<SecurityToken, RefreshToken>> Login(LoginCreds creds)
         {
             var user = await _userManager.FindByNameAsync(creds.username);
@@ -76,42 +57,94 @@ namespace backendPetHome.BLL.Services
             }
             throw new ArgumentException("Invalid credentials.");
         }
+
+        public async Task<Tuple<SecurityToken, RefreshToken>> Refresh(string? refreshToken)
+        {
+            RefreshToken? refreshTokenInDb = _dataContext.refreshTokens.FirstOrDefault(t => t.token == refreshToken);
+            if (refreshTokenInDb == null)
+            {
+                throw new KeyNotFoundException("The refresh token does not exist.");
+            }
+            else if (refreshTokenInDb?.isNotActual == true || refreshTokenInDb?.expires < DateTime.Now)
+            {
+                throw new ArgumentException("The refresh token is not actual.");
+            }
+            else if (validateToken(refreshToken))
+            {
+                refreshTokenInDb.isNotActual = true;
+                _dataContext.Update(refreshTokenInDb);
+                var user = await _userManager.FindByIdAsync(refreshTokenInDb.ownerId);
+                var newTokens = await getTokens(user);
+                return newTokens;
+            }
+            else
+            {
+                throw new ArgumentException("The refresh token is not valid.");
+            }
+        }
+        private bool validateToken(string? token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            try
+            {
+                var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidIssuer = _configuration["JWT:ValidIssuer"],
+                    ValidAudience = _configuration["JWT:ValidAudience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"])),
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
+                }, out SecurityToken validatedToken);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         private async Task<Tuple<SecurityToken, RefreshToken>> getTokens(User user)
         {
-            var securityToken = GetSecurityToken(user);
+            var securityToken = GetSecurityToken(user, DateTime.Now.AddMinutes(30));
             var newRefreshToken = GetRefreshToken(user);
             _dataContext.refreshTokens.Add(newRefreshToken);
             await _dataContext.SaveChangesAsync();
             Tuple<SecurityToken, RefreshToken> tokens = new(securityToken, newRefreshToken);
             return tokens;
         }
-        private SecurityToken GetSecurityToken(User user)
+        private RefreshToken GetRefreshToken(User user)
+        {
+            var expireTime = DateTime.Now.AddDays(7);
+            var refreshJWT = GetSecurityToken(user, expireTime);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var encryptedRefreshToken = tokenHandler.WriteToken(refreshJWT);
+            RefreshToken refreshToken = new()
+            {
+                token = encryptedRefreshToken,
+                expires = expireTime,
+                created = DateTime.Now,
+                ownerId = user.Id
+            };
+            return refreshToken;
+        }
+        private SecurityToken GetSecurityToken(User user, DateTime expireTime)
         {
             var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier,user.Id),
-                    new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
                 };
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"]));
             var token = new JwtSecurityToken(
                 issuer: _configuration["JWT:ValidIssuer"],
                 audience: _configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddMinutes(60),
+                expires: expireTime,
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );
             return token;
-        }
-        private RefreshToken GetRefreshToken(User user)
-        {
-            RefreshToken refreshToken = new()
-            {
-                token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
-                expires = DateTime.Now.AddDays(7),
-                created = DateTime.Now,
-                ownerId = user.Id
-            };
-            return refreshToken;
         }
     }
 }
