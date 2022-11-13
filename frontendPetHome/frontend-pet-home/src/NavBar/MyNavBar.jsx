@@ -5,9 +5,11 @@ export const MyNavBar = () => {
   return (
     <div className='navBar'>
           <div className = 'navBar__links'>
-              <Link to="/">Home</Link>
-              <Link to="/adverts">Adverts</Link>
-              <Link to="/about">About</Link>
+              <Link to="/adverts">Оголошення</Link>
+              <Link to="/create">Створити оголошення</Link>
+              <Link to="/myadverts">Мої оголошення</Link>
+              <Link to="/myrequests">Мої заявки</Link>
+              <Link to="/myprofile">Профіль</Link>
           </div>
       </div>
   )

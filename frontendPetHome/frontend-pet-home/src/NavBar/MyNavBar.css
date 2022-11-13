@@ -10,12 +10,12 @@
 
 .navBar__links a {
     margin-right: 0;
-    color: white;
+    color: black;
     margin: 40px;
     text-decoration: none;
 }
 
 .navBar__links a:hover {
-    color: black;
+    color: white;
     transition: 0.5s;
 }

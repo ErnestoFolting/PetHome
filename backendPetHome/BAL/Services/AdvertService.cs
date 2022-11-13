@@ -20,6 +20,7 @@ namespace backendPetHome.BLL.Services
         public Advert getAdvertById(int advertId)
         {
             var advert = _context.adverts.Include(el => el.owner).FirstOrDefault(a => a.Id == advertId);
+            Console.WriteLine(advert.owner.name);
             return advert;
         }
 

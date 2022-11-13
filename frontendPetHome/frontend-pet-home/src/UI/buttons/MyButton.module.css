@@ -4,5 +4,9 @@
     color: white;
     cursor: pointer;
     border-radius: 5px;
-    background-color: lightsalmon;
+    background-color: #ffa07a;
+}
+.myBtn:hover{
+    opacity: 0.8;
+    transition: 0.5s;
 }

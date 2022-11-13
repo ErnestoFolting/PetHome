@@ -15,7 +15,7 @@ export const AdvertForm = ({create}) => {
         setAdvert({ name: '', description: '' })
     }
     return (
-        <div>
+        <div style={{height:'100vh' ,display:'flex',flexDirection:'column',justifyContent:'center',width:'50%',alignItems:'center'} }>
             <MyInput
                 value={advert.name}
                 onChange={e => setAdvert({ ...advert, name: e.target.value })}
@@ -26,6 +26,13 @@ export const AdvertForm = ({create}) => {
                 value={advert.description}
                 onChange={e => setAdvert({ ...advert, description: e.target.value })}
                 type="text"
+                placeholder="Текст оголошення"
+                style ={{width:'30%'}}
+            />
+            <MyInput
+                value={advert.description}
+                onChange={e => setAdvert({ ...advert, description: e.target.value })}
+                type="file"
                 placeholder="Текст оголошення"
             />
             <MyButton onClick={addNewAdvert}>Створити оголошення</MyButton>

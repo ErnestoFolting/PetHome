@@ -5,14 +5,13 @@
     height: 100%;
     margin: 0;
     padding: 0;
-    width: 80%;
+    width: 60%;
     font-size: 2.5vh;
 }
 
 .imgBlock {
     display: flex;
     flex: 1.5;
-    /* background-color: rgb(248, 213, 167); */
     align-items: center;
     justify-content: space-around;
 }
@@ -32,7 +31,7 @@
 }
 
 .imgBlock img {
-    width: 50%;
+    width: 60%;
     min-width: 150px;
     border-radius: 10px;
     padding: 3px;
@@ -40,7 +39,6 @@
 
 .advertInfoBlock {
     width: 100%;
-    /* background-color: rgb(228, 157, 157); */
     flex: 1;
     display: flex;
     align-items: center;
@@ -49,9 +47,31 @@
 
 .ownerInfoBlock {
     width: 100%;
-    /* background-color: rgb(202, 140, 202); */
     flex: 1;
-    padding: 0 20px;
+    display: flex;
+}
+.ownerPhoto{
+    flex:1;
     display: flex;
     align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding:10px 0;
+}
+.ownerPhoto img{
+    width:25%;
+    min-width: 100px;
+    height:auto;
+}
+.ownerInfo{
+    flex:1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.advertInfoBlock{
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
 }
