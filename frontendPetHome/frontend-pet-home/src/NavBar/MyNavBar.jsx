@@ -10,7 +10,7 @@ const MyNavBar = () => {
   if (!store.isAuth) {
     return (
       <div className='navBar'>
-        <h2 style={{color:'black'}}>Буль ласка, для початку авторизуйтесь.</h2>
+        <h2 style={{color:'rgb(109, 106, 105)'}}>Буль ласка, для початку авторизуйтесь.</h2>
       </div>
     )
   }

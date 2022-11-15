@@ -7,6 +7,7 @@ import Adverts from "../pages/Adverts/Adverts"
 import { CertainAdvert } from "../pages/CertainAdvert/CertainAdvert"
 import { CreateAdvert } from "../pages/CreateAdvert/CreateAdvert"
 import { MyLoader } from '../UI/Loader/MyLoader';
+import { Registration } from '../pages/Registration/Registration';
 
 function AppRouter() {
   const { store } = useContext(Context);
@@ -25,7 +26,7 @@ function AppRouter() {
       :
       <Routes>
         <Route path="/login" element=<Login /> />
-        <Route path="/check" element=<h1>check</h1> />
+        <Route path="/registration" element=<Registration/> />
         <Route path="*" element= <Navigate replace to ='/login'/> />
       </Routes>
   );

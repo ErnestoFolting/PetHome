@@ -7,6 +7,7 @@ import { observer } from 'mobx-react-lite'
 import { useFetching } from '../../Hooks/useFetching'
 import { MyLoader } from '../../UI/Loader/MyLoader'
 import { MyModal } from '../../UI/MyModal/MyModal'
+import { Link } from 'react-router-dom'
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -25,7 +26,8 @@ const Login = () => {
     }
     return (
         <div className='loginPage'>
-            <MyModal visible={modalVisible} setVisible={setModalVisible} style={{backgroundColor:'black',color:'lightsalmon'}}>{error}</MyModal>
+
+            <MyModal visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{error}</MyModal>
             <div className='loginContent'>
                 <div className='inputsPart'>
                     <form className='form'>
@@ -53,6 +55,9 @@ const Login = () => {
                 <div className='loginImages'>
                     <img src={require('../../Images/goldenRetriever.png')} alt='photo' />
                 </div>
+            </div>
+            <div className='registrationRedirect'>
+                <h3>Ще не маєте акаунту?<Link to="/registration"> Зареєструйтесь</Link></h3>
             </div>
         </div>
     )
