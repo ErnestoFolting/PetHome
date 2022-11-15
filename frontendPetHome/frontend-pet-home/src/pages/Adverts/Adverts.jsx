@@ -12,7 +12,6 @@ export default function Adverts() {
     setAdverts(adverts)
   })
   useEffect(() => {
-    console.log("check")
     fetchAdverts()
   }, [])
 

@@ -20,7 +20,8 @@ builder.Services.AddCors(options =>
             builder
             .AllowAnyMethod()
             .AllowAnyHeader()
-            .WithOrigins("http://localhost:3000");
+            .AllowCredentials()
+            .SetIsOriginAllowed(origin => true);
         });
 });
 // Add services to the container.
@@ -42,7 +43,10 @@ builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+
+}).AddCookie(option =>
+{
+    option.Cookie.Name = "accessToken";
 }).AddJwtBearer(options =>
 {
     options.SaveToken = true;
@@ -56,6 +60,14 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SecretKey"])),
         ValidateLifetime = true,
         ClockSkew = TimeSpan.Zero
+    };
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            context.Token = context.Request.Cookies["accessToken"];
+            return Task.CompletedTask;
+        }
     };
 });
 

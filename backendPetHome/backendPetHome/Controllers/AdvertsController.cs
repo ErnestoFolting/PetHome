@@ -9,6 +9,7 @@ using System.Security.Claims;
 
 namespace backendPetHome.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AdvertsController : ControllerBase
@@ -25,7 +26,6 @@ namespace backendPetHome.Controllers
         {
             //string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
             string userId = "2165b137-1f4f-42fe-9650-178455d7df41";
-
             return Ok(_advertService.getAdverts(userId));
         }
 

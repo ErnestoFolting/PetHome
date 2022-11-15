@@ -107,7 +107,7 @@ namespace backendPetHome.BLL.Services
 
         private async Task<Tuple<SecurityToken, RefreshToken>> getTokens(User user)
         {
-            var securityToken = GetSecurityToken(user, DateTime.Now.AddMinutes(30));
+            var securityToken = GetSecurityToken(user, DateTime.Now.AddSeconds(5));
             var newRefreshToken = GetRefreshToken(user);
             _dataContext.refreshTokens.Add(newRefreshToken);
             await _dataContext.SaveChangesAsync();
@@ -116,7 +116,7 @@ namespace backendPetHome.BLL.Services
         }
         private RefreshToken GetRefreshToken(User user)
         {
-            var expireTime = DateTime.Now.AddDays(7);
+            var expireTime = DateTime.Now.AddDays(7); /////////
             var refreshJWT = GetSecurityToken(user, expireTime);
             var tokenHandler = new JwtSecurityTokenHandler();
             var encryptedRefreshToken = tokenHandler.WriteToken(refreshJWT);
