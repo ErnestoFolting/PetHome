@@ -1,10 +1,8 @@
 import { React, useContext } from 'react'
 import { Route, Routes, Navigate } from "react-router-dom";
-// import { publicRoutes, privateRoutes } from '../Router/router';
 import { Context } from '../index'
 import { observer } from 'mobx-react-lite';
 import Login from '../pages/Login/Login';
-import { NotFound } from '../pages/NotFound/NotFound'
 import Adverts from "../pages/Adverts/Adverts"
 import { CertainAdvert } from "../pages/CertainAdvert/CertainAdvert"
 import { CreateAdvert } from "../pages/CreateAdvert/CreateAdvert"
@@ -22,7 +20,7 @@ function AppRouter() {
         <Route path="/adverts" element=<Adverts /> exact />
         <Route path="/adverts/:id" element=<CertainAdvert /> exact />
         <Route path="create" element=<CreateAdvert /> />
-        <Route path="*" element=<NotFound /> />
+        <Route path="*" element= <Navigate replace to ='/adverts'/> />
       </Routes>
       :
       <Routes>

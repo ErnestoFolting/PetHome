@@ -26,7 +26,7 @@ export default class Store{
             await AuthService.login(username,password)
             this.setAuth(true);
         }catch(e){
-            console.log(e.response?.data)
+            throw e
         }
     }
     async registration(username,password){
