@@ -26,7 +26,7 @@ export const CertainAdvert = () => {
                 : <div className='certainAdvertContent'>
                     <div className='imgBlock'>
                         <div className='imageInfo'>
-                            <img src={require('../../Images/hairy.jpeg')} alt='photo' />
+                            <img src={require('../../Assets/hairy.jpeg')} alt='photo' />
                             📍{advert.location}
                         </div>
                         <div className='headerInfo'>
@@ -44,8 +44,8 @@ export const CertainAdvert = () => {
                     <hr size="2" width="100%" color="lightsalmon" />
                     <div className='ownerInfoBlock' style={{ fontSize: '2vh' }}>
                         <div className='ownerPhoto'>
-                            <img src={require('../../Images/man.png')} alt='ownerPhoto' />
-                            {advert.owner.surname}{advert.owner.name}
+                            <img src={require('../../Assets/man.png')} alt='ownerPhoto' />
+                            {advert.owner.surname} {advert.owner.name}
                         </div>
                         <div className='ownerInfo'>
                             <MyButton style={{ marginTop: '15px', width: '40%', height:'25%' }} onClick={() => console.log('redirect')}>Переглянути профіль</MyButton>

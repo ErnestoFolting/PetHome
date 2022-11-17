@@ -1,0 +1,34 @@
+.createAdvertPage{
+    width:30%;
+    margin-top: 50px;
+    min-width: 400px;
+}
+
+textarea{
+  width: 100%;
+  height: 150px;
+  padding: 5px 15px;
+  box-sizing: border-box;
+  border: 2px solid lightsalmon;
+  border-radius: 5px;
+  font-size: 16px;
+  resize: none;
+  background: transparent;
+}
+textarea:focus{
+  background-color:  rgb(241, 236, 234);
+    transition: 0.3s ease;
+    outline: none;
+}
+
+.dates{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

@@ -36,15 +36,11 @@ export const Registration = () => {
   }
   return (
     <div className='registrationPage'>
-      <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{error}</MyModal>
-      <div className='formName'>
-        Реєстрація
-      </div>
-
+      <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{error}</MyModal> 
       {isLoading
         ? <MyLoader />
         :
-        <MyForm>
+        <MyForm title = 'Реєстрація'>
           <div className='names'>
             <InputWithLabel
               type='text'

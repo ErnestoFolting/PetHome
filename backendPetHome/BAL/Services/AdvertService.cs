@@ -15,7 +15,7 @@ namespace backendPetHome.BLL.Services
         }
         public IEnumerable<Advert> getAdverts(string userId)
         {
-            return _context.adverts.Where(a => a.ownerId == userId);
+            return _context.adverts; //.Where(a => a.ownerId == userId);
         }
         public Advert getAdvertById(int advertId)
         {

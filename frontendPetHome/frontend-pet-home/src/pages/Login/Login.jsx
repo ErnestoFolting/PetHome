@@ -56,7 +56,7 @@ const Login = () => {
                     </form>}
                 </div>
                 <div className='loginImages'>
-                    <img src={require('../../Images/goldenRetriever.png')} alt='photo' />
+                    <img src={require('../../Assets/goldenRetriever.png')} alt='photo' />
                 </div>
             </div>
             <div className='registrationRedirect'>

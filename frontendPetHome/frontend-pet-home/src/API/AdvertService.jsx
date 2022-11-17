@@ -9,4 +9,8 @@ export default class AdvertService {
         const response = await $api.get('/api/adverts/' + id)
         return response.data
     }
+    static async createAdvert(advertData) {
+        const response = await $api.post('/api/adverts/', advertData)
+        return response.data
+    }
 }
