@@ -4,8 +4,8 @@ export default class AdvertService {
         const response = await $api.post('/api/auth/login', { username,password})
         return response.errors
     }
-    static async registration(username,password) {
-        const response = await $api.post('api/auth/registration', { username,password})
+    static async registration(registrationData) {
+        const response = await $api.post('api/auth/register', registrationData)
         return response.data
     }
     static async logout() {

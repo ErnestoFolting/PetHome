@@ -29,12 +29,11 @@ export default class Store{
             throw e
         }
     }
-    async registration(username,password){
+    async registration(registrationData){
         try{
-            await AuthService.registration(username,password)
-            this.setAuth(true);
+            await AuthService.registration(registrationData)
         }catch(e){
-            console.log(e.response?.data)
+            throw e
         }
     }
     async logout(){

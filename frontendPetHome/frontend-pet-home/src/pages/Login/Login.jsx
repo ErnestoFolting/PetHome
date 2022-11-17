@@ -1,6 +1,5 @@
 import { React, useState, useContext } from 'react'
 import { MyButton } from '../../UI/buttons/MyButton'
-import { MyInput } from '../../UI/inputs/MyInput'
 import './Login.css'
 import { Context } from '../../index'
 import { observer } from 'mobx-react-lite'
@@ -8,6 +7,7 @@ import { useFetching } from '../../Hooks/useFetching'
 import { MyLoader } from '../../UI/Loader/MyLoader'
 import { MyModal } from '../../UI/MyModal/MyModal'
 import { Link } from 'react-router-dom'
+import { InputWithLabel } from '../../UI/inputs/InputWithLabel'
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -19,38 +19,41 @@ const Login = () => {
     })
     const login = async (e) => {
         e.preventDefault()
-        await fetching()
-        setModalVisible(true)
-        setPassword('')
-        setUsername('')
+        try{
+            await fetching()
+        }catch(e){
+            setModalVisible(true)
+        }finally{
+            setPassword('')
+            setUsername('')
+        }        
     }
     return (
         <div className='loginPage'>
-
             <MyModal visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{error}</MyModal>
             <div className='loginContent'>
                 <div className='inputsPart'>
+               { isLoading
+                ? <MyLoader/>
+                :
                     <form className='form'>
-                        <MyInput
+                        <InputWithLabel
                             onChange={e => setUsername(e.target.value)}
                             value={username}
-                            placeholder='Введіть логін'
                             type='email'
-                            required
+                            label='Логін'
                         >
-                        </MyInput>
-                        <MyInput
+                        </InputWithLabel>
+                        <InputWithLabel
                             onChange={e => setPassword(e.target.value)}
                             value={password}
-                            placeholder='Введіть пароль'
-                            type='password'>
-                        </MyInput>
-                        {
-                            isLoading
-                                ? <MyLoader />
-                                : <MyButton onClick={login}>Увійти</MyButton>
-                        }
-                    </form>
+                            type='password'
+                            label='Пароль'
+                        >
+
+                        </InputWithLabel>
+                        <MyButton onClick={login}>Увійти</MyButton>
+                    </form>}
                 </div>
                 <div className='loginImages'>
                     <img src={require('../../Images/goldenRetriever.png')} alt='photo' />

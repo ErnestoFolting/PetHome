@@ -1,96 +1,121 @@
-import { React, useState } from 'react'
-import { MyInput } from '../../UI/inputs/MyInput'
+import { React, useState, useContext } from 'react'
 import '../Registration/Registration.css'
 import { RadioButton } from '../../UI/RadioButton/RadioButton'
 import { MyButton } from '../../UI/buttons/MyButton'
 import { useNavigate } from 'react-router-dom'
+import { InputWithLabel } from '../../UI/inputs/InputWithLabel'
+import { Link } from 'react-router-dom'
+import { MyForm } from '../../UI/Form/MyForm'
+import { Context } from '../../index'
+import { useFetching } from '../../Hooks/useFetching'
+import { MyLoader } from '../../UI/Loader/MyLoader'
+import { MyModal } from '../../UI/MyModal/MyModal'
+
 export const Registration = () => {
 
-  const [gender, setGender] = useState('male');
-  const setMale = () => {
-    setGender('male')
-  }
-  const setFemale = () => {
-    setGender('female')
-  }
+  const [registrationData, setRegistrationData] = useState({ surname: '', name: '', sex: 0, file: '', email: '', phone: '', username: '', password: '', confirmPassword: '' });
+  const { store } = useContext(Context);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [fetching, isLoading, error] = useFetching(async () => {
+    await store.registration(registrationData)
+  })
+
+
   const navigate = useNavigate()
-  
-  const register = (e) => {
+
+  const register = async (e) => {
     e.preventDefault()
-    
+    try{
+      await fetching()
+      navigate('/login')
+    }catch (e){
+      setModalVisible(true)
+    }finally{
+      setRegistrationData({ surname: '', name: '', sex: 0, file: '', email: '', phone: '', username: '', password: '', confirmPassword: '' })
+    }  
   }
   return (
     <div className='registrationPage'>
+      <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{error}</MyModal>
       <div className='formName'>
         Реєстрація
       </div>
-      <form className='registrationForm'>
-        <div className='names'>
-          <div className='surname'>
-            <label>Прізвище</label>
-            <MyInput
-              type='text'
-              placeholder='Введіть прізвище'
-            />
-          </div>
-          <div className='name'>
-            <label>Ім'я</label>
-            <MyInput
-              type='text'
-              placeholder="Введіть ім'я"
-            />
-          </div>
-        </div>
 
-        <div className='sex'>
-          <RadioButton
-            label='Чоловік'
-            value={gender === 'male'}
-            onChange={setMale}
+      {isLoading
+        ? <MyLoader />
+        :
+        <MyForm>
+          <div className='names'>
+            <InputWithLabel
+              type='text'
+              label='Прізвище'
+              value={registrationData.surname}
+              onChange={e => setRegistrationData({ ...registrationData, surname: e.target.value })}
+            />
+            <InputWithLabel
+              type='text'
+              label="Ім'я"
+              value={registrationData.name}
+              onChange={e => setRegistrationData({ ...registrationData, name: e.target.value })}
+            />
+
+          </div>
+          <div className='sex'>
+            <RadioButton
+              label='Чоловік'
+              value={registrationData.sex === 0}
+              onChange={e => setRegistrationData({ ...registrationData, sex: 0 })}
+            />
+            <RadioButton
+              label='Жінка'
+              value={registrationData.sex === 1}
+              onChange={e => setRegistrationData({ ...registrationData, sex: 1 })}
+            />
+          </div>
+          <InputWithLabel
+            type='file'
+            label="Фото"
+            value={registrationData.file}
+            onChange={e => setRegistrationData({ ...registrationData, file: e.target.value })}
           />
-          <RadioButton
-            label='Жінка'
-            value={gender === 'female'}
-            onChange={setFemale}
-          />
-        </div>
-        <div className='email'>
-          <label>Поштова скринька</label>
-          <MyInput
+          <InputWithLabel
             type='email'
-            placeholder="Введіть email"
+            label="Email"
+            value={registrationData.email}
+            onChange={e => setRegistrationData({ ...registrationData, email: e.target.value })}
           />
-        </div>
-        <div className='phoneNumber'>
-          <label>Номер телефону</label>
-          <MyInput
+          <InputWithLabel
             type='tel'
-            placeholder="Введіть телефон"
+            label="Номер телефону"
+            value={registrationData.phone}
+            onChange={e => setRegistrationData({ ...registrationData, phone: e.target.value })}
           />
-        </div>
-        <div className='username'>
-          <label>Нікнейм</label>
-          <MyInput
+          <InputWithLabel
             type='text'
-            placeholder="Введіть нікнейм"
+            label="Логін"
+            value={registrationData.username}
+            onChange={e => setRegistrationData({ ...registrationData, username: e.target.value })}
           />
-        </div>
-        <div className='password'>
-          <label>Пароль</label>
-          <MyInput
+          <InputWithLabel
             type='password'
-            placeholder="Введіть Пароль"
+            label="Пароль"
+            value={registrationData.password}
+            onChange={e => setRegistrationData({ ...registrationData, password: e.target.value })}
           />
-        </div>
-        <div className='confirmPassword'>
-          <label>Підтвердіть пароль</label>
-          <MyInput
+          <InputWithLabel
             type='password'
-            placeholder="Введіть пароль"
+            label="Підтвердження"
+            placeholder='Введіть пароль'
+            value={registrationData.confirmPassword}
+            onChange={e => setRegistrationData({ ...registrationData, confirmPassword: e.target.value })}
           />
-        </div>
-        <MyButton onClick={register} style={{ height: '35px', marginTop: '20px' }}>Зареєструватись</MyButton>
-      </form>
+
+          <MyButton onClick={register} style={{ height: '35px', marginTop: '20px' }}>Зареєструватись</MyButton>
+        </MyForm>}
+
+      <div className='loginRedirect'>
+        <h3>Вже маєте акаунт?<Link to="/login"> Авторизуйтесь</Link></h3>
+      </div>
     </div>
   )
 }
