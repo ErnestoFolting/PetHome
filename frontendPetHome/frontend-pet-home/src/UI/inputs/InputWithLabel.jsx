@@ -8,7 +8,7 @@ export const InputWithLabel = ({ label, type, ...props }) => {
             <label>{label}</label>
             <MyInput 
                 type={type}
-                placeholder = {`Введіть ${label.toLowerCase()}`}
+                placeholder = {`Введіть ${label?.toLowerCase()}`}
                 {...props}
             />
         </div>

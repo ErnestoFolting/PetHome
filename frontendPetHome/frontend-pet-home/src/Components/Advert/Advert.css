@@ -1,0 +1,107 @@
+.certainAdvertContent {
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    width: 60%;
+    font-size: 2.5vh;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.imgBlock {
+    margin-top: 50px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex: 1.5;
+    align-items: center;
+    justify-content: space-around;
+    padding: 10px;
+}
+
+.imageInfo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: grey;
+}
+
+.headerInfo {
+    flex: 1;
+    flex-direction: column;
+    display: flex;
+}
+
+.imgBlock img {
+    width: 80%;
+    min-width: 150px;
+    border-radius: 10px;
+    padding: 3px;
+}
+
+.advertInfoBlock {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+
+}
+
+.ownerInfoBlock {
+
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.ownerInfoBlock h3{
+    align-self: center;
+    margin-top: 20px;
+}
+
+.ownerInfoContent{
+    display: flex;
+    flex-direction: row;
+}
+
+.ownerPhoto{
+    flex:1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding:10px 0;
+}
+.ownerPhoto img{
+    width:25%;
+    min-width: 100px;
+    height:auto;
+}
+.ownerInfo{
+    flex:1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.ownerInfo button{
+    margin-top: 15px;
+    width:40%;
+    height:25%;
+}
+
+.advertInfoBlock{
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+}
+
+.advertPrice{
+    font-weight: 600;
+    color: rgb(52, 131, 52);
+}

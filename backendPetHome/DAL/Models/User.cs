@@ -10,10 +10,10 @@ namespace backendPetHome.DAL.Models
         public string name { get; set; } = string.Empty;
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public SexEnum sex { get; set; } = SexEnum.male;
-        public IEnumerable<Advert>? postedAdverts;
-        public IEnumerable<Advert>? performAtAdverts;
-        public IEnumerable<Request>? requests;
-        public IEnumerable<Interval>? timeIntervals;
-        public IEnumerable<RefreshToken>? refreshTokens;
+        public List<Advert> postedAdverts { get; set; } = new List<Advert>() ;
+        public List<Advert> performAtAdverts { get; set; } = new List<Advert> () ;
+        public List<Request> requests { get; set; } = new List<Request> () ;
+        public List<TimeException> timeExceptions{ get; set; } = new List<TimeException> () ;
+        public List<RefreshToken> refreshTokens { get; set; } = new List<RefreshToken>();
     }
 }

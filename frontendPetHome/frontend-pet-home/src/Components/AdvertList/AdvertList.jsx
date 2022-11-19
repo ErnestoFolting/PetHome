@@ -1,5 +1,6 @@
 import React from 'react'
-import AdvertItem from './AdvertItem'
+import AdvertItem from '../AdvertItem/AdvertItem'
+import './AdvertList.css'
 
 export const AdvertList = ({ adverts }) => {
     if (!adverts.length) {
@@ -10,11 +11,10 @@ export const AdvertList = ({ adverts }) => {
         </div>
     }
     return (
-        <div>
-            <h1 style={{ textAlign: 'center' }}>Adverts</h1>
+        <ul>
             {adverts.map((advert) =>
                 <AdvertItem advert={advert} key={advert.id} />
             )}
-        </div>
+        </ul>
     )
 }

@@ -21,7 +21,7 @@ namespace backendPetHome.BLL.Services
         }
         public async Task<List<User>> getAllUsers()
         {
-            var lst = await _context.users.ToListAsync();
+            var lst = await _context.users.Include(u => u.postedAdverts).ToListAsync();
             //List<UserDTO> lstDTO = new();
             //foreach (var user in lst)
             //{
@@ -34,6 +34,11 @@ namespace backendPetHome.BLL.Services
             //    lstDTO.Add(dto);
             //}
             return lst;
+        }
+        public async Task<User> getCertainUser(string id)
+        {
+            var user = await _context.users.Include(u => u.timeExceptions).FirstOrDefaultAsync(u=>u.Id==id);
+            return user;
         }
         public Task addUser(UserDTO dto)
         {

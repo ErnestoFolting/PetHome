@@ -13,6 +13,8 @@ namespace backendPetHome.DAL.Data
         public DbSet<User> users { get; set; }
         public DbSet<Advert> adverts { get; set; }
         public DbSet<RefreshToken> refreshTokens { get; set; }
+        public DbSet<TimeException> timeExceptions{ get; set; }
+        public DbSet<Request> requests{ get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -35,9 +37,9 @@ namespace backendPetHome.DAL.Data
                 .WithMany(u => u.performAtAdverts)
                 .HasForeignKey(a => a.performerId);
             builder
-                .Entity<Interval>()
+                .Entity<TimeException>()
                 .HasOne(i => i.user)
-                .WithMany(u => u.timeIntervals)
+                .WithMany(u => u.timeExceptions)
                 .HasForeignKey(i => i.userId);
             builder
                 .Entity<Request>()

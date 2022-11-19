@@ -10,14 +10,14 @@ const MyNavBar = () => {
   if (!store.isAuth) {
     return (
       <div className='navBar'>
-        <h2 style={{color:'rgb(109, 106, 105)'}}>Буль ласка, для початку авторизуйтесь.</h2>
+        <h2 style={{color:'rgb(109, 106, 105)'}}>Будь ласка, для початку авторизуйтесь.</h2>
       </div>
     )
   }
   return (
     <div className='navBar'>
       <div className='exitButton'>
-        {store.isAuth && <MyButton onClick={store.logout}>Вийти</MyButton>}
+        {store.isAuth && <MyButton onClick={store.logout} style={{boxShadow:'none'}}>Вийти</MyButton>}
       </div>
       <div className='navBar__links'>
         <Link to="/adverts">Оголошення</Link>

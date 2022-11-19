@@ -22,13 +22,13 @@ namespace backendPetHome.Controllers
             return Ok(await _userService.getAllUsers());
         }
 
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<User>> Get(int id)
-        //{
-        //    var user = _dataContext.users.FindAsync(id).Result;
-        //    if (user == null) return BadRequest("User not found");
-        //    return Ok(user);
-        //}
+        [HttpGet("{id}")]
+        public async Task<ActionResult<User>> Get(string id)
+        {
+            var user = await _userService.getCertainUser(id);
+            if (user == null) return BadRequest("User not found");
+            return Ok(user);
+        }
 
         [HttpPost]
         public async Task<OkResult> Post([FromBody] UserDTO dto)

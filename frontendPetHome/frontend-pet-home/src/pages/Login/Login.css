@@ -11,10 +11,9 @@
     flex:1.5;
 }
 .loginContent {
-    border: lightsalmon 3px solid;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 20px;
     display: flex;
-    background-color: rgba(253, 246, 235, 0.5)
 }
 .form > *{
     margin-top:20px;
@@ -67,4 +66,14 @@
 
 .form div{
     width:100%;
+}
+
+.formName {
+    width: 100%;
+    text-align: center;
+    margin-top: 30px;
+    font-size: 30px;
+    font-weight: 600;
+    color: gray;
+    margin-bottom: 10px;
 }

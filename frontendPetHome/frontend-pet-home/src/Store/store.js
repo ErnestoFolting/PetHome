@@ -4,7 +4,7 @@ import axios from 'axios';
 
 export default class Store{
     isAuth = false;
-    isLoading = true;
+    isLoading = false;
     constructor(){
         makeAutoObservable(this)
         this.login = this.login.bind(this)

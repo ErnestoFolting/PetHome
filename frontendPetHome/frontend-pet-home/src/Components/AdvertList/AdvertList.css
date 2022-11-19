@@ -1,0 +1,13 @@
+ul{
+    list-style: none;
+    padding:0;
+    margin:0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
+    grid-gap:3em;
+    padding: 50px;
+    border-left: 1px solid lightsalmon;
+}
+img{
+    max-width: 100%;
+}

@@ -1,0 +1,83 @@
+.profileContent {
+    margin-top: 25px;
+}
+
+.headerBlock {
+    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+    display: flex;
+}
+
+.userImgBlock {
+
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.userImgBlock img {
+    width: 40%;
+    margin: 20px;
+}
+
+.userNameBlock {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: left;
+    flex-direction: column;
+}
+
+.userName {
+    font-size: 35px;
+    font-weight: 600;
+}
+
+.contactsBlock {
+    display: flex;
+    justify-content: center;
+}
+
+h3 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.contactsBlock {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    height: 150px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+}
+
+
+.userEmail {
+    background-color: rgb(255, 219, 205);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 2px 5px 0 rgba(0, 0, 0, 0.19);
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 30px;
+    border-radius: 15px;
+}
+
+.userPhone {
+    background-color: cornsilk;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 2px 5px 0 rgba(0, 0, 0, 0.19);
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 30px;
+    border-radius: 15px;
+}
+
+.calendarBlock {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

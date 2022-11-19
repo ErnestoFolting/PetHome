@@ -1,10 +1,11 @@
-.footer{
-    margin-top: 1rem;
-    padding: 1rem;
-    background-color: lightsalmon;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    min-height: 50px;
-  }
+.footer {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: rgb(241, 199, 182);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  min-height: 50px;
+}

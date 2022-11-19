@@ -7,14 +7,12 @@ using System.Threading.Tasks;
 
 namespace backendPetHome.DAL.Models
 {
-    public class Interval
+    public class TimeException
     {
         public int id { get; set; }
         public string userId { get; set; }
         public User user { get; set; }
         [Required]
-        public DateTime startTime { get; set; }
-        [Required]
-        public DateTime endTime { get; set; }
+        public DateTime date { get; set; }
     }
 }

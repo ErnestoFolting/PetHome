@@ -25,6 +25,6 @@ namespace backendPetHome.DAL.Models
         public User owner { get; set; }
         public string? performerId { get; set; }
         public User? performer { get; set; }
-        public IEnumerable<Request>? requests { get; set; }
+        public List<Request>? requests { get; set; }
     }
 }

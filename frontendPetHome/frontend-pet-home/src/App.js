@@ -23,9 +23,8 @@ function App() {
 
   return (
     <BrowserRouter>
-      <MyNavBar />
-      <AppRouter />
-
+        <MyNavBar />
+        <AppRouter />
     </BrowserRouter>
   );
 }
