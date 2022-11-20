@@ -6,8 +6,8 @@ import { MyLoader } from '../../UI/Loader/MyLoader';
 import { useFetching } from '../../Hooks/useFetching';
 import { MyModal } from '../../UI/MyModal/MyModal';
 import { MyButton } from '../../UI/buttons/MyButton';
-import { InputWithLabel, MyInput } from '../../UI/inputs/InputWithLabel'
-import AdvertItem from '../../Components/AdvertItem/AdvertItem';
+import { InputWithLabel} from '../../UI/inputs/InputWithLabel'
+
 
 export default function Adverts() {
   const [adverts, setAdverts] = useState([]);

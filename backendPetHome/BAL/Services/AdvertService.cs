@@ -13,9 +13,13 @@ namespace backendPetHome.BLL.Services
         {
             _context = context;
         }
-        public IEnumerable<Advert> getAdverts(string userId)
+        public IEnumerable<Advert> getAllAdverts()
         {
-            return _context.adverts; //.Where(a => a.ownerId == userId);
+            return _context.adverts;
+        }
+        public IEnumerable<Advert> getCurrentUserAdverts(string userId)
+        {
+            return _context.adverts.Where(a => a.ownerId == userId);
         }
         public Advert getAdvertById(int advertId)
         {

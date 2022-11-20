@@ -24,9 +24,13 @@ namespace backendPetHome.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Advert>>> Get()
         {
-            //string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            string userId = "2165b137-1f4f-42fe-9650-178455d7df41";
-            return Ok(_advertService.getAdverts(userId));
+            return Ok(_advertService.getAllAdverts());
+        }
+        [HttpGet("myadverts")]
+        public async Task<ActionResult<IEnumerable<Advert>>> GetUserAdverts()
+        {
+            string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            return Ok(_advertService.getCurrentUserAdverts(userId));
         }
 
         [HttpGet("{id}")]

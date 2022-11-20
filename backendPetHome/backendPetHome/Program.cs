@@ -33,6 +33,7 @@ builder.Services.AddSignalR();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AdvertService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<TimeExceptionService>();
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));

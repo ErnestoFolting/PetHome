@@ -1,0 +1,12 @@
+.addDatesButton{
+    display: flex;
+    margin-top: 20px;
+    justify-content: center;
+    width: 100%;
+    height:40px;
+    
+}
+.addDatesButton button{
+    background-color: rgb(197, 49, 49);
+}
+

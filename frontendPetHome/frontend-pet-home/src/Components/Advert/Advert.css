@@ -3,15 +3,22 @@
     display: flex;
     align-items: center;
     height: 100%;
-    margin: 0;
+    margin-bottom: 0;
     padding: 0;
     width: 60%;
     font-size: 2.5vh;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
+.certainAdvertContent>h3 {
+    padding: 15px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 2px 5px 0 rgba(0, 0, 0, 0.19);
+    width: 100%;
+    text-align: center;
+}
+
 .imgBlock {
-    margin-top: 50px;
+    margin-top: 25px;
     border-bottom: 2px solid rgba(0, 0, 0, 0.2);
     display: flex;
     flex: 1.5;
@@ -34,6 +41,23 @@
     display: flex;
 }
 
+.headerInfoContent {
+    display: flex;
+}
+
+.advertDates {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 40px;
+    margin-bottom: 10px;
+}
+
+.advertDates p {
+    margin-bottom: 10px;
+}
+
 .imgBlock img {
     width: 80%;
     min-width: 150px;
@@ -47,61 +71,78 @@
     display: flex;
     align-items: center;
     padding: 0 20px;
-
+    font-size: 20px;
 }
 
 .ownerInfoBlock {
-
     width: 100%;
     flex: 1;
     display: flex;
     flex-direction: column;
+    padding-bottom: 20px;
 }
-.ownerInfoBlock h3{
+
+.ownerInfoBlock h3 {
     align-self: center;
     margin-top: 20px;
 }
 
-.ownerInfoContent{
+.ownerInfoContent {
     display: flex;
     flex-direction: row;
 }
 
-.ownerPhoto{
-    flex:1;
+.ownerPhoto {
+    flex: 1;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
     flex-direction: column;
-    padding:10px 0;
+    padding: 10px 0;
+    padding-right: 60px;
 }
-.ownerPhoto img{
-    width:25%;
+
+.ownerPhoto img {
+    width: 25%;
     min-width: 100px;
-    height:auto;
+    height: auto;
+
 }
-.ownerInfo{
-    flex:1;
+
+.ownerInfo {
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    padding-left: 30px;
 }
 
-.ownerInfo button{
+.ownerInfo button {
     margin-top: 15px;
-    width:40%;
-    height:25%;
+    width: 40%;
+    height: 25%;
 }
 
-.advertInfoBlock{
+.advertInfoBlock {
     display: flex;
     flex-direction: column;
     padding: 20px;
     border-bottom: 2px solid rgba(0, 0, 0, 0.2);
 }
 
-.advertPrice{
-    font-weight: 600;
-    color: rgb(52, 131, 52);
+.advertPrice {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center
+}
+
+.advertPrice p {
+    background-color: rgb(85, 161, 85);
+    color: white;
+    padding: 3px;
+    border-radius: 5px;
+    font-weight: 700;
 }

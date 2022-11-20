@@ -19,13 +19,12 @@ export const UserProfile = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        fetchCertainUser()
+        await fetchCertainUser()
       } catch (e) {
         setModalVisible(true)
       }
     }
     fetchData();
-    console.log(profile)
   }, []);
   return (
     <div className='userProfilePage'>
@@ -34,6 +33,7 @@ export const UserProfile = () => {
         ? <MyLoader />
         : <User
           profile={profile}
+          calendarVisible={true}
         />
       }
     </div>

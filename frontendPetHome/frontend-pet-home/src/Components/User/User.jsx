@@ -1,16 +1,14 @@
 import { React, useState, useEffect } from 'react'
 import { MyCalendar } from '../MyCalendar/MyCalendar'
 import './User.css'
-import { MyButton } from '../../UI/buttons/MyButton'
 
-export const User = ({ profile }) => {
+export const User = ({ profile, calendarVisible }) => {
     const [timeExceptions, setTimeExceptions] = useState([]);
     function getSex(sex) {
         if (sex === 'male') return 'чоловіча'
         else return 'жіноча'
     }
     useEffect(() => {
-
         const times = profile?.timeExceptions?.map(el => new Date(el.date))
         setTimeExceptions(times)
     }, []);
@@ -40,11 +38,14 @@ export const User = ({ profile }) => {
                 </div>
             </div>
             <h3>Недоступні дати</h3>
-            <div className='calendarBlock'>
-                <MyCalendar
-                    dates={timeExceptions}
-                />
-            </div>
+            {calendarVisible
+                ? <div className='calendarBlock'>
+                    <MyCalendar
+                        monthsShown={3}
+                        dates={timeExceptions}
+                    />
+                </div>
+                : <p>Ви обираєте дати.</p>}
         </div>
     )
 }

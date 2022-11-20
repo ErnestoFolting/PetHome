@@ -1,20 +1,23 @@
 import React, { useState } from "react";
 import { Calendar } from "react-multi-date-picker";
 import "react-multi-date-picker/styles/colors/red.css"
+import "react-multi-date-picker/styles/backgrounds/bg-dark.css"
 import './MyCalendar.css'
 
-export function MyCalendar({dates,props}) {
+export function MyCalendar({ dates, isMultiple, className, monthsShown, props }) {
     return (
         <div className="myCalendar">
             <Calendar
-            {...props} 
-            numberOfMonths={3}
-            readOnly 
-            className="red" 
-            multiple 
-            value = {dates}
-            minDate ={new Date()}
-            maxDate ={new Date().setMonth(new Date().getMonth()+2)}
+                {...props}
+                disableMonthPicker
+                disableYearPicker
+                numberOfMonths={monthsShown}
+                readOnly
+                className="red"
+                multiple={isMultiple}
+                value={dates}
+                minDate={new Date()}
+                maxDate={new Date().setMonth(new Date().getMonth() + 2)}
             />
         </div>
     )

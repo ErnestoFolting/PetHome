@@ -105,7 +105,7 @@ export const Registration = () => {
             value={registrationData.confirmPassword}
             onChange={e => setRegistrationData({ ...registrationData, confirmPassword: e.target.value })}
           />
-
+          <p style={{textAlign:'center', color:'lightsalmon', width:'75%'}}>*В профілі користувача Ви зможете налаштувати дати коли Вам зручно сидіти з тваринами.</p>
           <MyButton onClick={register} style={{ height: '35px', marginTop: '20px' }}>Зареєструватись</MyButton>
         </MyForm>}
 

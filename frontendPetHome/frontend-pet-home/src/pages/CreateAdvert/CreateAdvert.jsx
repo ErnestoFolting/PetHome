@@ -8,17 +8,32 @@ import AdvertService from '../../API/AdvertService'
 import { useNavigate } from 'react-router-dom'
 import { MyModal } from '../../UI/MyModal/MyModal'
 import { MyLoader } from '../../UI/Loader/MyLoader'
-import { MyCalendar } from '../../Components/MyCalendar/MyCalendar'
+import { Calendar } from "react-multi-date-picker";
+import "react-multi-date-picker/styles/colors/red.css"
+import "react-multi-date-picker/styles/backgrounds/bg-dark.css"
 
 export const CreateAdvert = () => {
 
-  const [advertData, setAdvertData] = useState({});
+  const [advertData, setAdvertData] = useState({ name: '', description: '', cost: '', location: '', startTime: '', endTime: '' });
   const [modalVisible, setModalVisible] = useState(false);
+  const [calendarVisible, setCalendarVisible] = useState(false);
+  const [calendar, setCalendar] = useState([Date.now()]);
   const [fetching, isLoading, error] = useFetching(async () => {
     await AdvertService.createAdvert(advertData)
   })
 
   const navigate = useNavigate()
+
+  function setCalendarData(values) {
+    setCalendar(values)
+    console.log()
+    if (values.length === 1) {
+      setAdvertData({ ...advertData, startTime: values[0]?.format().split('/').join('-'), endTime: values[0]?.format().split('/').join('-') })
+
+    } else {
+      setAdvertData({ ...advertData, startTime: values[0]?.format().split('/').join('-'), endTime: values[1]?.format().split('/').join('-') })
+    }
+  }
 
   const addNewAdvert = async (e) => {
     e.preventDefault()
@@ -34,6 +49,18 @@ export const CreateAdvert = () => {
   return (
     <div className='createAdvertPage'>
       <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{error}</MyModal>
+      <MyModal title='Оберіть дати' visible={calendarVisible} setVisible={setCalendarVisible} style={{ backgroundColor: 'rgba(49,47,47,255)' }}>
+        <Calendar
+          rangeHover
+          value={calendar}
+          onChange={setCalendarData}
+          range
+          minDate={new Date()}
+          maxDate={new Date().setMonth(new Date().getMonth() + 2)}
+          monthsShown={1}
+          className="bg-dark"
+        />
+      </MyModal>
       {isLoading
         ? <MyLoader />
         : <MyForm title='Створення оголошення'>
@@ -72,21 +99,12 @@ export const CreateAdvert = () => {
             label='Локація'
             placeholder='Введіть локацію'
           />
-          <div className='dates'>
-            <InputWithLabel
-              value={advertData.startTime}
-              onChange={e => setAdvertData({ ...advertData, startTime: e.target.value })}
-              type="date"
-              label='Дата початку'
-            />
-            <InputWithLabel
-              value={advertData.endTime}
-              onChange={e => setAdvertData({ ...advertData, endTime: e.target.value })}
-              type="date"
-              label='Дата закінчення'
-            />
+          <div className='createAdvertButtons'>
+            <p>Дати</p>
+            <MyButton style={{ marginBottom: '10px', backgroundColor: 'rgba(35, 145, 241, 1)' }} onClick={(e) => { e.preventDefault(); setCalendarVisible(true) }}>Обрати дати</MyButton>
+            <MyButton style={{ marginTop: '20px' }} onClick={addNewAdvert}>Створити оголошення</MyButton>
           </div>
-          <MyButton style={{ height: '35px' }} onClick={addNewAdvert}>Створити оголошення</MyButton>
+
         </MyForm>
       }
     </div>

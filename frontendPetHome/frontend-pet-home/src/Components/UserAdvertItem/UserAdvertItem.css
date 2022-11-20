@@ -1,0 +1,14 @@
+.userAdvertButtons{
+    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    align-items: center;
+}
+.userAdvertButtons button{
+    width:50%;
+    margin: 5px;
+    height: 40px;
+}
+

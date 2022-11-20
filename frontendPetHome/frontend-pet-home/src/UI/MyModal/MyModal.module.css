@@ -5,7 +5,7 @@
     right: 0;
     left: 0;
     display: none;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
 }
 
 .myModalContent {
@@ -19,4 +19,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.myModalContent>h3 {
+    margin-bottom: 20px;
 }

@@ -2,6 +2,7 @@
 using backendPetHome.BLL.DTOs;
 using backendPetHome.BLL.Services;
 using backendPetHome.DAL.Models;
+using System.Security.Claims;
 
 namespace backendPetHome.Controllers
 {
@@ -21,6 +22,15 @@ namespace backendPetHome.Controllers
         {
             return Ok(await _userService.getAllUsers());
         }
+        [HttpGet("myprofile")]
+        public async Task<ActionResult<User>> GetUserProfile()
+        {
+            string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            var user = await _userService.getCertainUser(userId);
+            if (user == null) return BadRequest("User not found");
+            return Ok(user);
+        }
+        //await _userService.getCertainUser(userId)
 
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> Get(string id)

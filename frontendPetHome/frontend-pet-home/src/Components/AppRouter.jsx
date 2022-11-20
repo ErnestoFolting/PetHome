@@ -10,6 +10,7 @@ import { MyLoader } from '../UI/Loader/MyLoader';
 import { Registration } from '../pages/Registration/Registration';
 import { UserProfile } from '../pages/UserProfile/UserProfile'
 import { MyProfile } from '../pages/MyProfile/MyProfile';
+import { MyAdverts } from '../pages/MyAdverts/MyAdverts';
 
 function AppRouter() {
   const { store } = useContext(Context);
@@ -24,8 +25,9 @@ function AppRouter() {
         <Route path="/adverts/:id" element=<CertainAdvert /> exact />
         <Route path="/users/:id" element=<UserProfile /> exact />
         <Route path="/myprofile" element=<MyProfile /> exact />
+        <Route path="/myadverts" element=<MyAdverts /> exact />
         <Route path="/create" element=<CreateAdvert /> />
-        <Route path="*" element=<Navigate replace to='/myprofile' /> />
+        <Route path="*" element=<Navigate replace to='/adverts' /> />
       </Routes>
       :
       <Routes>
