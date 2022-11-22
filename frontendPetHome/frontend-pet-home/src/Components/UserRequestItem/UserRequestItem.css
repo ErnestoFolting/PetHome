@@ -1,0 +1,41 @@
+.requestStatus{
+    text-align: center;
+    background-color: darkgray;
+    width: 30%;
+    border-radius: 10px;
+}
+.requestConfirmationButtons{
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+    align-items: center;
+}
+.requestConfirmationButtons button{
+    height:35px;    
+    width:50%;
+    margin:10px;
+}
+
+.userRequestItem p{
+    text-align: center;
+    height:35px;    
+    margin:5px;
+    background-color: rgb(211, 211, 211);
+    border-radius: 5px;
+    margin-top: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.userRequestItem{   
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.userRequestItem:hover{
+    cursor: pointer;
+    transition: ease 0.3s;
+    box-shadow: none;
+}

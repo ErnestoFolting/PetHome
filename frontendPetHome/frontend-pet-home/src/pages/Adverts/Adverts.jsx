@@ -29,6 +29,7 @@ export default function Adverts() {
 
   return (
     <div className="advertsPage">
+    <h1 style={{ textAlign: 'center', marginTop: '30px' }}> Усі оголошення</h1>
       <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{error}</MyModal>
       {loader
         ? <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}><MyLoader /></div>

@@ -9,27 +9,3 @@
     transition: ease 0.3s;
     box-shadow: none;
 }
-.advertCost{
-    color:rgb(55, 139, 55);
-    font-weight: 700;
-}
-.infoSection{
-    width:100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center; 
-}
-.advertCost{
-    flex: 1;
-}
-.advertInfo{
-    flex:4;
-    padding-left: 10px;
-}
-.advertName{
-    padding-left: 10px;
-}
-
-.advertInfo > *{
-    padding-top: 5px;
-}

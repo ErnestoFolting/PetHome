@@ -5,6 +5,7 @@ import { MyLoader } from '../../UI/Loader/MyLoader'
 import './MyRequests.css'
 import UserDataService from '../../API/UserDataService'
 import AdvertItem from '../../Components/AdvertItem/AdvertItem'
+import { UserRequestItem } from '../../Components/UserRequestItem/UserRequestItem'
 
 export const MyRequests = () => {
     const [myRequests, setMyRequests] = useState([]);
@@ -31,9 +32,12 @@ export const MyRequests = () => {
                 ? <MyLoader />
                 : <div className='userAdvertsContent'>
                     <h1 style={{ textAlign: 'center', marginTop: '30px' }}> Ваші заявки</h1>
-                    {myRequests.map((el) => <AdvertItem
-                        advert={el.advert}
-                    />)}
+                    <ul>
+                        {myRequests.map((el) =>
+                            <UserRequestItem
+                                advert={el.advert} key={el.id} status = {el.status}
+                            />)}
+                    </ul>
                 </div>
             }
         </div>
