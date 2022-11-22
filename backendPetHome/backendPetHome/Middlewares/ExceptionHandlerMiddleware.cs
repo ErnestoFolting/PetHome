@@ -32,7 +32,7 @@ namespace backendPetHome.Middlewares
 
             context.Response.StatusCode = exception switch
             {
-                ArgumentNullException => 400,
+                ArgumentException => 400,
                 InvalidOperationException => 403,
                 KeyNotFoundException => 404,
                 _ => 500

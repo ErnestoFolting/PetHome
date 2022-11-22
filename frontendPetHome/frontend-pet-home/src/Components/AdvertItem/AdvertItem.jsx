@@ -10,7 +10,7 @@ const AdvertItem = (props) => {
     });
 
     return (
-        <li onClick={() => navigate(path)} key={props?.advert?.id}>
+        <li onClick={() => navigate(path)} key={props?.advert?.id} className='advertItem'>
             <div className='imgSection'>
                 <img src={require('../../Assets/hairy.jpeg')} alt='photo' />
             </div>

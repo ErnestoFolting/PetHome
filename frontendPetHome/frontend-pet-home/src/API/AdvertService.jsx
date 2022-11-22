@@ -6,7 +6,11 @@ export default class AdvertService {
         return response.data
     }
     static async getUserAdverts() {
-        const response = await $api.get('/api/adverts/myadverts')
+        const response = await $api.get('/api/userdata/myadverts')
+        return response.data
+    }
+    static async getUserCertainAdvert(id) {
+        const response = await $api.get('/api/userdata/myadverts/' + id)
         return response.data
     }
     static async getCertainAdvert(id) {

@@ -16,13 +16,6 @@ namespace backendPetHome.DAL.Data
         public DbSet<TimeException> timeExceptions{ get; set; }
         public DbSet<Request> requests{ get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("Data Source=localhost\\sqlexpress;database=testdb;trusted_connection=true");
-            }
-        }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder

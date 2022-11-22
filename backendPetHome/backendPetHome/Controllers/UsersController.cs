@@ -17,21 +17,6 @@ namespace backendPetHome.Controllers
             _userService = userService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<User>>> Get()
-        {
-            return Ok(await _userService.getAllUsers());
-        }
-        [HttpGet("myprofile")]
-        public async Task<ActionResult<User>> GetUserProfile()
-        {
-            string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            var user = await _userService.getCertainUser(userId);
-            if (user == null) return BadRequest("User not found");
-            return Ok(user);
-        }
-        //await _userService.getCertainUser(userId)
-
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> Get(string id)
         {

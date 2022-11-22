@@ -11,6 +11,8 @@ import { Registration } from '../pages/Registration/Registration';
 import { UserProfile } from '../pages/UserProfile/UserProfile'
 import { MyProfile } from '../pages/MyProfile/MyProfile';
 import { MyAdverts } from '../pages/MyAdverts/MyAdverts';
+import { MyCertainAdvert } from '../pages/MyCertainAdvert/MyCertainAdvert';
+import { MyRequests } from '../pages/MyRequests/MyRequests';
 
 function AppRouter() {
   const { store } = useContext(Context);
@@ -26,7 +28,9 @@ function AppRouter() {
         <Route path="/users/:id" element=<UserProfile /> exact />
         <Route path="/myprofile" element=<MyProfile /> exact />
         <Route path="/myadverts" element=<MyAdverts /> exact />
+        <Route path="/myadverts/:id" element=<MyCertainAdvert /> exact />
         <Route path="/create" element=<CreateAdvert /> />
+        <Route path="/myrequests" element=<MyRequests /> />
         <Route path="*" element=<Navigate replace to='/adverts' /> />
       </Routes>
       :

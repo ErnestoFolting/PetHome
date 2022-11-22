@@ -1,0 +1,29 @@
+.myAdvert{
+    display: flex;
+    flex-direction: column;
+}
+.myAdvertHeader{
+    flex:1
+}
+.myAdvertRequests{
+    flex:1;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    min-height: 350px;
+}
+.myAdvertRequests h3{
+    text-align: center;
+    margin-top: 20px;
+}
+
+.myAdvertRequests ul{
+    list-style: none;
+    padding:0;
+    margin:0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,220px);
+    grid-gap:3em;
+    padding: 50px;
+}
+.myAdvertRequests img{
+    max-width: 100%;
+}

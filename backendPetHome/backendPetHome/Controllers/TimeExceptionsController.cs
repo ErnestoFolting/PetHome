@@ -13,20 +13,6 @@ namespace backendPetHome.Controllers
         {
             _timeExceptionServise = timeExceptionService;
         }
-
-        //[HttpGet]
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
-
-
-        //[HttpGet("{id}")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
-
         [HttpPost]
         public async Task<ActionResult<IEnumerable<DateTime>>> Post([FromBody] IEnumerable<DateTime> dates)
         {
@@ -34,16 +20,5 @@ namespace backendPetHome.Controllers
             await _timeExceptionServise.addTimeExceptions(userId, dates);
             return Ok(dates);
         }
-
-
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
-
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
     }
 }

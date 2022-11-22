@@ -26,12 +26,6 @@ namespace backendPetHome.Controllers
         {
             return Ok(_advertService.getAllAdverts());
         }
-        [HttpGet("myadverts")]
-        public async Task<ActionResult<IEnumerable<Advert>>> GetUserAdverts()
-        {
-            string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            return Ok(_advertService.getCurrentUserAdverts(userId));
-        }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Advert>> Get(int id)
@@ -46,15 +40,6 @@ namespace backendPetHome.Controllers
             await _advertService.addAdvert(advertToAdd,userId);
             await _hub.Clients.All.SendAsync("Send", "check");
             return Ok();
-        }
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }

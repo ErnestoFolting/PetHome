@@ -17,10 +17,7 @@ namespace backendPetHome.BLL.Services
         {
             return _context.adverts;
         }
-        public IEnumerable<Advert> getCurrentUserAdverts(string userId)
-        {
-            return _context.adverts.Where(a => a.ownerId == userId);
-        }
+
         public Advert getAdvertById(int advertId)
         {
             var advert = _context.adverts.Include(el => el.owner).FirstOrDefault(a => a.Id == advertId);

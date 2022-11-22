@@ -1,42 +1,51 @@
-import { React, useEffect } from 'react'
+import { React, useState, useEffect } from 'react'
 import { MyButton } from '../../UI/buttons/MyButton'
 import { observer } from 'mobx-react-lite'
-import convertDate from '../../Common/DateConverter'
 import './Advert.css'
-import { MyCalendar } from '../MyCalendar/MyCalendar'
-import { DateObject, getAllDatesInRange } from "react-multi-date-picker"
+import { AdvertHeader } from '../AdvertHeader/AdvertHeader'
+import { useFetching } from '../../Hooks/useFetching'
+import RequestService from '../../API/RequestService'
+import { MyModal } from '../../UI/MyModal/MyModal'
+import { MyLoader } from '../../UI/Loader/MyLoader'
+import UserDataService from '../../API/UserDataService'
 
 const Advert = ({ advert, pathToProfile, navigate }) => {
-
+    const [modalVisible, setModalVisible] = useState(false);
+    const [userRequests, setUserRequests] = useState([]);
+    const [sendRequestOnAdvert, loading, error] = useFetching(async () => {
+        await RequestService.sendRequest(advert?.id)
+    });
+    const [checkIfRequestSent, loading2, error2] = useFetching(async () => {
+        setUserRequests(await UserDataService.getUserRequests())
+    });
+    function sendRequest() {
+        async function sendRequest() {
+            try {
+                await sendRequestOnAdvert()
+            } catch (e) {
+                setModalVisible(true)
+            }
+        }
+        sendRequest();
+    }
+    useEffect(() => {
+        async function fetchRequests() {
+            try {
+                await checkIfRequestSent()
+            } catch (e) {
+                setModalVisible(true)
+            }
+        }
+        fetchRequests();
+    }, [loading]);
+    if (loading || loading2) return <MyLoader />
     return (
         <div className='certainAdvertContent'>
-            <h3>{advert.name}</h3>
-            <div className='imgBlock'>
-                <div className='imageInfo'>
-                    <img src={require('../../Assets/hairy.jpeg')} alt='photo' />
-                    📍{advert.location}
-                </div>
-                <div className='headerInfo'>
-
-                    <div className='headerInfoContent'>
-
-                        <div className='advertDates'>
-                            <p>{convertDate(advert.startTime).split('.').join('/')} - {convertDate(advert.endTime)}</p>
-                            <MyCalendar
-                                className="bg-dark"
-                                monthsShown={1}
-                                isMultiple={true}
-                                dates={getAllDatesInRange([new DateObject(advert.startTime), new DateObject(advert.endTime)])}
-                            />
-                        </div>
-                        <div className='advertPrice'>
-
-                            <p> {advert.cost} ГРН </p>
-                        </div>
-
-                    </div>
-
-                </div>
+            <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{error} {error2}</MyModal>
+            <div className='advertImageBlock'>
+                <AdvertHeader
+                    advert={advert}
+                />
             </div>
             <div className='advertInfoBlock'>
                 <h3>Опис</h3>
@@ -50,7 +59,13 @@ const Advert = ({ advert, pathToProfile, navigate }) => {
                         {advert?.owner?.surname} {advert?.owner?.name}
                     </div>
                     <div className='ownerInfo'>
-                        <MyButton style={{ backgroundColor: 'lightgreen' }} onClick={() => console.log('request')}>Подати заявку</MyButton>
+                        {
+                            userRequests?.some((el) => el?.advertId === advert?.id)
+                                ? <p>Ви вже подали заявку</p>
+                                :
+                                <MyButton style={{ backgroundColor: 'lightgreen' }} onClick={sendRequest}>Подати заявку</MyButton>
+                        }
+
                         <MyButton onClick={() => navigate(pathToProfile)}>Переглянути профіль</MyButton>
                     </div>
                 </div>

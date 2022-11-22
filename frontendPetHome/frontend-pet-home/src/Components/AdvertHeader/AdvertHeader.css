@@ -1,0 +1,84 @@
+.advertHeaderContent {
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    margin-bottom: 0;
+    padding: 0;
+    width: 100%;
+    font-size: 2.5vh;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.advertHeaderContent>h3 {
+    padding: 15px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 2px 5px 0 rgba(0, 0, 0, 0.19);
+    width: 100%;
+    text-align: center;
+}
+
+.imgBlock {
+    margin-top: 25px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex: 1.5;
+    align-items: center;
+    justify-content: space-around;
+    padding: 10px;
+}
+
+.imgBlock img {
+    width: 80%;
+    min-width: 150px;
+    border-radius: 10px;
+    padding: 3px;
+}
+
+.imageInfo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: grey;
+}
+
+.headerInfo {
+    flex: 1;
+    flex-direction: column;
+    display: flex;
+}
+
+.headerInfoContent {
+    display: flex;
+}
+
+.advertDates {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 40px;
+    margin-bottom: 10px;
+}
+
+.advertDates p {
+    margin-bottom: 10px;
+}
+
+
+.advertPrice {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center
+}
+
+.advertPrice p {
+    background-color: rgb(85, 161, 85);
+    color: white;
+    padding: 3px;
+    border-radius: 5px;
+    font-weight: 700;
+}
+

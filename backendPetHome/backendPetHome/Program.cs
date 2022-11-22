@@ -34,6 +34,8 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AdvertService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<TimeExceptionService>();
+builder.Services.AddScoped<UserDataService>();
+builder.Services.AddScoped<RequestService>();
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));

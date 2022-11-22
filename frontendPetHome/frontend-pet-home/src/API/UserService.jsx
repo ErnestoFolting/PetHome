@@ -6,7 +6,7 @@ export default class UserService {
         return response.data
     }
     static async getUserProfile() {
-        const response = await $api.get('/api/users/myprofile' )
+        const response = await $api.get('/api/userdata/myprofile' )
         return response.data
     }
 }

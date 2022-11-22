@@ -6,12 +6,12 @@ import { MyButton } from '../../UI/buttons/MyButton'
 
 export const UserAdvertItem = (props) => {
   const navigate = useNavigate()
-  const path = generatePath("/adverts/:id", {
+  const path = generatePath("/myadverts/:id", {
     id: props?.advert?.id
   });
 
   return (
-    <li key={props?.advert?.id}>
+    <li key={props?.advert?.id} className='userAdvertItem'>
       <div className='imgSection'>
         <img src={require('../../Assets/hairy.jpeg')} alt='photo' />
       </div>
@@ -23,9 +23,9 @@ export const UserAdvertItem = (props) => {
         </div>
         <div className='advertCost'>{props?.advert?.cost} ГРН</div>
       </div>
+      <div className='requestsCount'>Відгукнулось: {props?.advert?.requests?.length}</div>
       <div className='userAdvertButtons'>
-        <MyButton onClick={() => navigate(path)} style={{backgroundColor:'rgba(0, 180, 0, 1)'}}>Деталі</MyButton>
-        <MyButton style={{backgroundColor:'rgba(35, 145, 241, 1)'}}>Відгукнулись</MyButton>
+        <MyButton onClick={() => navigate(path)} style={{ backgroundColor: 'rgba(0, 180, 0, 1)' }}>Деталі</MyButton>
       </div>
     </li>
   );

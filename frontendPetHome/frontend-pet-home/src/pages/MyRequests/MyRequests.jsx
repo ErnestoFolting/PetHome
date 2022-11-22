@@ -1,23 +1,23 @@
 import { React, useState, useEffect } from 'react'
 import { useFetching } from '../../Hooks/useFetching'
-import './MyAdverts.css'
-import AdvertService from '../../API/AdvertService'
 import { MyModal } from '../../UI/MyModal/MyModal'
 import { MyLoader } from '../../UI/Loader/MyLoader'
-import { AdvertList } from '../../Components/AdvertList/AdvertList'
+import './MyRequests.css'
+import UserDataService from '../../API/UserDataService'
+import AdvertItem from '../../Components/AdvertItem/AdvertItem'
 
-export const MyAdverts = () => {
-    const [myAdverts, setMyAdverts] = useState([]);
+export const MyRequests = () => {
+    const [myRequests, setMyRequests] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
-    const [fetchUserAdverts, loading, error] = useFetching(async () => {
-        const advertsResponse = await AdvertService.getUserAdverts()
-        setMyAdverts(advertsResponse)
+    const [fetchUserRequests, loading, error] = useFetching(async () => {
+        const requestsResponse = await UserDataService.getUserRequests()
+        setMyRequests(requestsResponse)
     });
 
     useEffect(() => {
         async function fetchData() {
             try {
-                await fetchUserAdverts()
+                await fetchUserRequests()
             } catch (e) {
                 setModalVisible(true)
             }
@@ -30,15 +30,12 @@ export const MyAdverts = () => {
             {loading
                 ? <MyLoader />
                 : <div className='userAdvertsContent'>
-                    <h1 style={{ textAlign: 'center', marginTop:'30px' }}> Ваші оголошення</h1>
-                    <AdvertList
-                        userAdverts={true}
-                        adverts={myAdverts}
-                    />
+                    <h1 style={{ textAlign: 'center', marginTop: '30px' }}> Ваші заявки</h1>
+                    {myRequests.map((el) => <AdvertItem
+                        advert={el.advert}
+                    />)}
                 </div>
-
             }
         </div>
     )
 }
-
