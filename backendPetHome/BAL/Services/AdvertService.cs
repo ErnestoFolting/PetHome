@@ -15,7 +15,7 @@ namespace backendPetHome.BLL.Services
         }
         public IEnumerable<Advert> getAllAdverts()
         {
-            return _context.adverts;
+            return _context.adverts.Where(el=>el.status == AdvertStatusEnum.search);
         }
 
         public Advert getAdvertById(int advertId)
@@ -40,6 +40,22 @@ namespace backendPetHome.BLL.Services
             };
             _context.adverts.Add(newAdvert);
             await _context.SaveChangesAsync();
+        }
+        public Task MarkAsFinished(int advertId, string userId) {
+            var advertInDb = _context.adverts.FirstOrDefault(el => el.Id == advertId);
+            if (advertInDb == null) throw new ArgumentException("That advert not exists.");
+            if (advertInDb.ownerId!= userId) throw new ArgumentException("You do not have the access.");
+            advertInDb.status = AdvertStatusEnum.finished;
+            return _context.SaveChangesAsync();
+        }
+
+        public Task deleteAdvert(int advertId, string userId)
+        {
+            var advertInDb = _context.adverts.FirstOrDefault(el => el.Id == advertId);
+            if (advertInDb == null) throw new ArgumentException("That advert not exists.");
+            if (advertInDb.ownerId != userId) throw new ArgumentException("You do not have the access.");
+            _context.adverts.Remove(advertInDb);
+            return _context.SaveChangesAsync();
         }
     }
 }

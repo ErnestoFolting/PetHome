@@ -22,5 +22,19 @@ namespace backendPetHome.Controllers
             await _requestService.addRequest(userId, advertId);
             return Ok();
         }
+        [HttpPut("confirm/{id}")]
+        public async Task<IActionResult> ConfirmRequest(int id)
+        {
+            string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            await _requestService.confirmRequest(id,userId);
+            return Ok();
+        }
+        [HttpPut("reject/{id}")]
+        public async Task<IActionResult> Reject(int id)
+        {
+            string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            await _requestService.rejectRequest(id, userId);
+            return Ok();
+        }
     }
 }

@@ -4,7 +4,6 @@ import { MyModal } from '../../UI/MyModal/MyModal'
 import { MyLoader } from '../../UI/Loader/MyLoader'
 import './MyRequests.css'
 import UserDataService from '../../API/UserDataService'
-import AdvertItem from '../../Components/AdvertItem/AdvertItem'
 import { UserRequestItem } from '../../Components/UserRequestItem/UserRequestItem'
 
 export const MyRequests = () => {

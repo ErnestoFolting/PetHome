@@ -36,7 +36,6 @@ export const MyAdverts = () => {
                         adverts={myAdverts}
                     />
                 </div>
-
             }
         </div>
     )

@@ -41,5 +41,19 @@ namespace backendPetHome.Controllers
             await _hub.Clients.All.SendAsync("Send", "check");
             return Ok();
         }
+        [HttpPut("finish/{advertId}")]
+        public async Task<ActionResult> MarkAsFinished(int advertId)
+        {
+            var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            await _advertService.MarkAsFinished(advertId, userId);
+            return Ok();
+        }
+        [HttpDelete("{advertId}")]
+        public async Task<ActionResult> deleteAdvert(int advertId)
+        {
+            var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            await _advertService.deleteAdvert(advertId, userId);
+            return Ok();
+        }
     }
 }

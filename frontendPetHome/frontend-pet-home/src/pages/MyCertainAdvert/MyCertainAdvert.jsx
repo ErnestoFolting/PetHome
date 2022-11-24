@@ -1,4 +1,4 @@
-import {React,useState,useEffect} from 'react'
+import { React, useState, useEffect } from 'react'
 import './MyCertainAdvert.css'
 import { useParams } from 'react-router-dom'
 import AdvertService from '../../API/AdvertService'
@@ -11,6 +11,7 @@ export const MyCertainAdvert = () => {
     const params = useParams()
     const [advert, setAdvert] = useState({})
     const [modalVisible, setModalVisible] = useState(false);
+    const [update, setUpdate] = useState('');
     const [fetchUserCertainAdvert, loading, error] = useFetching(async () => {
         const advertResponse = await AdvertService.getUserCertainAdvert(params.id)
         setAdvert(advertResponse)
@@ -22,19 +23,20 @@ export const MyCertainAdvert = () => {
                 fetchUserCertainAdvert()
             } catch (e) {
                 setModalVisible(true)
-            } 
+            }
         }
         fetchData();
 
-    }, []);
+    }, [update]);
 
     return (
         <div className='myCertainAdvert'>
             <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{error}</MyModal>
             {loading
-                ? <MyLoader/>
+                ? <MyLoader />
                 : <MyAdvert
                     advert={advert}
+                    update={setUpdate}
                 />
             }
         </div>

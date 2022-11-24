@@ -1,11 +1,11 @@
-.userInRequest {
+.userInRequestContent {
     display: flex;
     flex-direction: column;
     padding: 10px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.userInRequest:hover {
+.userInRequestContent:hover {
     cursor: pointer;
     transition: ease 0.3s;
     box-shadow: none;
@@ -33,4 +33,10 @@
     width:50%;
     margin: 5px;
     height: 40px;
+}
+.chosenPerformer{
+    margin-top: 10px;
+    padding: 5px;
+    text-align: center;
+    background-color: rgb(241, 240, 240);
 }

@@ -38,6 +38,25 @@ const Advert = ({ advert, pathToProfile, navigate }) => {
         }
         fetchRequests();
     }, [loading]);
+    const thisAdvertRequest = userRequests?.find(el => el?.advertId === advert?.id);
+
+    function renderSwitch(status) {
+        console.log(status)
+        switch (status) {
+            case 'rejected':
+                return <div >На жаль, власник відхилив Вашу пропозицію</div>
+            case 'generated':
+                return <div >Система підібрала для Вас це оголоення</div>
+            case 'applied':
+                return <div >Ви подали заявку, очікуйте</div>
+            case 'confirmed':
+                if(advert?.status === 'finished') return <div>Ви виконали це замовлення</div>
+                return <div>Ви виконуєте це замовлення</div>
+            default:
+                return <MyButton style={{ backgroundColor: 'lightgreen' }} onClick={sendRequest}>Подати заявку</MyButton>
+        }
+    }
+
     if (loading || loading2) return <MyLoader />
     return (
         <div className='certainAdvertContent'>
@@ -59,13 +78,7 @@ const Advert = ({ advert, pathToProfile, navigate }) => {
                         {advert?.owner?.surname} {advert?.owner?.name}
                     </div>
                     <div className='ownerInfo'>
-                        {
-                            userRequests?.some((el) => el?.advertId === advert?.id)
-                                ? <p>Ви вже подали заявку</p>
-                                :
-                                <MyButton style={{ backgroundColor: 'lightgreen' }} onClick={sendRequest}>Подати заявку</MyButton>
-                        }
-
+                        {renderSwitch(thisAdvertRequest?.status)}
                         <MyButton onClick={() => navigate(pathToProfile)}>Переглянути профіль</MyButton>
                     </div>
                 </div>

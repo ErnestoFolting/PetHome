@@ -1,29 +1,71 @@
-.myAdvert{
+.myAdvert {
     display: flex;
     flex-direction: column;
 }
-.myAdvertHeader{
-    flex:1
+
+.myAdvertHeader {
+    flex: 1
 }
-.myAdvertRequests{
-    flex:1;
+
+.myAdvertRequests {
+    flex: 1;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     min-height: 350px;
 }
-.myAdvertRequests h3{
+
+.myAdvertRequests h3 {
     text-align: center;
     margin-top: 20px;
 }
 
-.myAdvertRequests ul{
+.myAdvertRequests ul {
     list-style: none;
-    padding:0;
-    margin:0;
+    padding: 0;
+    margin: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fit,220px);
-    grid-gap:3em;
+    grid-template-columns: repeat(auto-fit, 220px);
+    grid-gap: 3em;
     padding: 50px;
 }
-.myAdvertRequests img{
+
+.myAdvertRequests img {
     max-width: 100%;
+}
+
+.inProcessStatus {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.inProcessStatusUser {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.inProcessStatusUser button {
+    height: 50px;
+    background-color: rgb(228, 74, 74);
+}
+
+.finishedStatus {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    width: 100%;
+    font-size: 21px;
+    background-color: rgb(241, 240, 239);
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 2px 5px 0 rgba(0, 0, 0, 0.19);
+    margin-top: 50px;
+}
+.finishedStatus button{
+    background-color: rgb(228, 74, 74);
+    height: 100%;
+    margin-top: 10px;
+    padding: 15px;
+    margin-bottom: 10px;
 }

@@ -1,28 +1,48 @@
-.userAdvertButtons{
-    margin-top: 20px;
+.userAdvertButtons {
+    margin-top: 10px;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.userAdvertButtons button{
-    width:50%;
+
+.userAdvertButtons button {
+    width: 50%;
     margin: 5px;
     height: 40px;
 }
 
-.userAdvertItem{   
+.userAdvertItem {
     display: flex;
     flex-direction: column;
     padding: 10px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-.userAdvertItem:hover{
+
+.userAdvertItem:hover {
     cursor: pointer;
     transition: ease 0.3s;
     box-shadow: none;
 }
-.requestsCount{
+
+.confirmedStatus {
+    background-color: rgb(221, 241, 219);
+}
+
+.finishedStatusItem {
+    background-color: rgb(253, 213, 213);
+}
+
+.requestsCount {
+    background-color: rgb(228, 227, 226);
+}
+
+.confirmedStatus,
+.finishedStatusItem,
+.requestsCount {
     text-align: center;
-    color: rgb(146, 141, 141);
+    margin: 0;
+    padding: 5px;
+    margin-top: 10px;
+    width: 100%;
 }
