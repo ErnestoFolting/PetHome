@@ -21,7 +21,6 @@
 .userRequestItem p {
     text-align: center;
     height: 35px;
-    margin: 0px;
     margin-top: 25px;
     display: flex;
     align-items: center;
@@ -54,4 +53,8 @@
     cursor: pointer;
     transition: ease 0.3s;
     box-shadow: none;
+}
+
+.switchPart{
+    margin-top: auto;
 }

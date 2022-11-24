@@ -36,5 +36,19 @@ namespace backendPetHome.Controllers
             await _requestService.rejectRequest(id, userId);
             return Ok();
         }
+        [HttpPut("apply/{id}")]
+        public async Task<IActionResult> applyGeneratedRequest(int id)
+        {
+            string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            await _requestService.applyGeneratedRequest(id, userId);
+            return Ok();
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> deleteRequest(int id)
+        {
+            string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            await _requestService.deleteRequest(id, userId);
+            return Ok();
+        }
     }
 }

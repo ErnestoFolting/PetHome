@@ -34,6 +34,25 @@ namespace backendPetHome.BLL.Services
             await _context.requests.Where(el => el.advertId == requestInDb.advertId && el.id != requestInDb.id).ForEachAsync(el => el.status = DAL.Enums.RequestStatusEnum.rejected); 
             await _context.SaveChangesAsync();
         }
+
+        public async Task applyGeneratedRequest(int requestId, string userId)
+        {
+            var requestInDb = _context.requests.Include(el => el.advert).FirstOrDefault(el => el.id == requestId);
+            if (requestInDb == null) throw new ArgumentException("This request does not exist.");
+            if (requestInDb.userId != userId) throw new ArgumentException("You do not have the access.");
+            requestInDb.status = DAL.Enums.RequestStatusEnum.applied;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task deleteRequest(int requestId, string userId)
+        {
+            var requestInDb = _context.requests.Include(el => el.advert).FirstOrDefault(el => el.id == requestId);
+            if (requestInDb == null) throw new ArgumentException("This request does not exist.");
+            if (requestInDb.userId != userId) throw new ArgumentException("You do not have the access.");
+            _context.requests.Remove(requestInDb);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task rejectRequest(int requestId, string userId)
         {
             var requestInDb = _context.requests.Include(el => el.advert).FirstOrDefault(el => el.id == requestId);

@@ -9,6 +9,7 @@ import { UserRequestItem } from '../../Components/UserRequestItem/UserRequestIte
 export const MyRequests = () => {
     const [myRequests, setMyRequests] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
+    const [update, setUpdate] = useState('');
     const [fetchUserRequests, loading, error] = useFetching(async () => {
         const requestsResponse = await UserDataService.getUserRequests()
         setMyRequests(requestsResponse)
@@ -23,7 +24,7 @@ export const MyRequests = () => {
             }
         }
         fetchData();
-    }, []);
+    }, [update]);
     return (
         <div className='userAdvertsPage'>
             <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{error}</MyModal>
@@ -34,7 +35,11 @@ export const MyRequests = () => {
                     <ul>
                         {myRequests.map((el) =>
                             <UserRequestItem
-                                advert={el.advert} key={el.id} status = {el.status}
+                                advert={el.advert}
+                                key={el.id}
+                                status={el.status}
+                                requestId={el.id}
+                                update={setUpdate}
                             />)}
                     </ul>
                 </div>

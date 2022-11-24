@@ -13,5 +13,13 @@ export default class RequestService {
     static async rejectRequest(requestId) {
         const response = await $api.put('/api/requests/reject/' + requestId)
         return response.errors
-    } 
+    }
+    static async acceptGeneratedRequest(requestId) {
+        const response = await $api.put('/api/requests/apply/' + requestId)
+        return response.errors
+    }
+    static async rejectGeneratedRequest(requestId) {
+        const response = await $api.delete('/api/requests/' + requestId)
+        return response.errors
+    }
 }
