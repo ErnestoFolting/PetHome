@@ -18,8 +18,8 @@ export default class RequestService {
         const response = await $api.put('/api/requests/apply/' + requestId)
         return response.errors
     }
-    static async rejectGeneratedRequest(requestId) {
+    static async deleteRequest(requestId) {
         const response = await $api.delete('/api/requests/' + requestId)
         return response.errors
-    }
+    }    
 }

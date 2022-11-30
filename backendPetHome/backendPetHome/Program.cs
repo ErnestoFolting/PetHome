@@ -1,4 +1,4 @@
-global using Microsoft.EntityFrameworkCore;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      global using Microsoft.EntityFrameworkCore;
 using backendPetHome.BLL.Services;
 using backendPetHome.DAL.Data;
 using backendPetHome.DAL.Models;
@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using backendPetHome.BLL.MappingProfiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -107,7 +108,9 @@ builder.Services.AddSwaggerGen(c =>
             new string []{}
         }
     }); 
-}); 
+});
+
+builder.Services.AddAutoMapper(System.Reflection.Assembly.GetAssembly(typeof(AdvertProfile)));
 
 var app = builder.Build();
 
@@ -133,3 +136,4 @@ app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.MapControllers();
 
 app.Run();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       

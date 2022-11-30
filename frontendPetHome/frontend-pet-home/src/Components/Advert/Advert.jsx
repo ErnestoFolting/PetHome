@@ -9,7 +9,7 @@ import { MyModal } from '../../UI/MyModal/MyModal'
 import { MyLoader } from '../../UI/Loader/MyLoader'
 import UserDataService from '../../API/UserDataService'
 
-const Advert = ({ advert, pathToProfile, navigate }) => {
+const Advert = ({ advert, pathToProfile, navigate, isCreatedByUser }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [userRequests, setUserRequests] = useState([]);
     const [sendRequestOnAdvert, loading, error] = useFetching(async () => {
@@ -50,7 +50,7 @@ const Advert = ({ advert, pathToProfile, navigate }) => {
             case 'applied':
                 return <div >Ви подали заявку, очікуйте</div>
             case 'confirmed':
-                if(advert?.status === 'finished') return <div>Ви виконали це замовлення</div>
+                if (advert?.status === 'finished') return <div>Ви виконали це замовлення</div>
                 return <div>Ви виконуєте це замовлення</div>
             default:
                 return <MyButton style={{ backgroundColor: 'lightgreen' }} onClick={sendRequest}>Подати заявку</MyButton>
@@ -78,7 +78,8 @@ const Advert = ({ advert, pathToProfile, navigate }) => {
                         {advert?.owner?.surname} {advert?.owner?.name}
                     </div>
                     <div className='ownerInfo'>
-                        {renderSwitch(thisAdvertRequest?.status)}
+                        {!isCreatedByUser && renderSwitch(thisAdvertRequest?.status)}
+                        {isCreatedByUser && <p>Це Ваше оголошення</p>}
                         <MyButton onClick={() => navigate(pathToProfile)}>Переглянути профіль</MyButton>
                     </div>
                 </div>

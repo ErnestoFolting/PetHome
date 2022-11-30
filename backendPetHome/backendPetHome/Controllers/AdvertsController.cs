@@ -37,9 +37,9 @@ namespace backendPetHome.Controllers
         public async Task<ActionResult> Post([FromBody] AdvertDTO advertToAdd)
         {
             var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            await _advertService.addAdvert(advertToAdd,userId);
-            await _hub.Clients.All.SendAsync("Send", "check");
-            return Ok();
+            Tuple<IEnumerable<string>,AdvertDTO> possiblePerformers = await _advertService.addAdvert(advertToAdd,userId);
+            await _hub.Clients.Users(possiblePerformers.Item1).SendAsync("Send", possiblePerformers.Item2);
+            return Ok(new {ids = possiblePerformers.Item1,dto =  possiblePerformers.Item2});
         }
         [HttpPut("finish/{advertId}")]
         public async Task<ActionResult> MarkAsFinished(int advertId)

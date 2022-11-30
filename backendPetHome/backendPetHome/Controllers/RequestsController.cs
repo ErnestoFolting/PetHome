@@ -19,7 +19,7 @@ namespace backendPetHome.Controllers
         public async Task<IActionResult> Post([FromBody] int advertId)
         {
             string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            await _requestService.addRequest(userId, advertId);
+            await _requestService.addRequest(userId, advertId, DAL.Enums.RequestStatusEnum.applied);
             return Ok();
         }
         [HttpPut("confirm/{id}")]

@@ -48,6 +48,7 @@ const CertainAdvert = () => {
                     advert={advert}
                     pathToProfile={pathToProfile}
                     navigate={navigate}
+                    isCreatedByUser={store.userId === advert.ownerId}
                 />
             }
         </div>

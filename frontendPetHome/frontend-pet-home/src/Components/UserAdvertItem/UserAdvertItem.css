@@ -1,9 +1,9 @@
 .userAdvertButtons {
-    margin-top: 10px;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: auto;
 }
 
 .userAdvertButtons button {
@@ -41,7 +41,6 @@
 .finishedStatusItem,
 .requestsCount {
     text-align: center;
-    margin: 0;
     padding: 5px;
     margin-top: 10px;
     width: 100%;

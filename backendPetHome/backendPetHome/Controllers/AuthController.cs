@@ -5,7 +5,7 @@ using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-
+using System.Security.Claims;
 
 namespace backendPetHome.Controllers
 {
@@ -32,7 +32,8 @@ namespace backendPetHome.Controllers
         {
             Tuple<SecurityToken, RefreshToken> tokens = await _authService.Login(creds);
             SetTokens(tokens);
-            return Ok(new { accessToken = new JwtSecurityTokenHandler().WriteToken(tokens.Item1), expirationDate = tokens.Item1.ValidTo });
+            string? userId = tokens.Item2.ownerId;
+            return Ok(new { userId = userId });
         }
         [HttpPost("refresh-token")]
         public async Task<ActionResult<string>> Refresh()
@@ -40,7 +41,8 @@ namespace backendPetHome.Controllers
             var refreshToken = Request.Cookies["refreshToken"];
             Tuple<SecurityToken, RefreshToken> tokens = await _authService.Refresh(refreshToken);
             SetTokens(tokens);
-            return Ok(new { accessToken = new JwtSecurityTokenHandler().WriteToken(tokens.Item1), expirationDate = tokens.Item1.ValidTo });
+            string? userId = tokens.Item2.ownerId;
+            return Ok(new { userId = userId });
         }
         [HttpPost("logout")]
         public async Task<ActionResult<string>> Logout()

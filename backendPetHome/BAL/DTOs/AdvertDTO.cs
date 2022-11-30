@@ -8,6 +8,7 @@ namespace backendPetHome.BLL.DTOs
 {
     public class AdvertDTO
     {
+        public int id { get; set; }
         public string name { get; set; }
         public int cost { get; set; }
         public string location { get; set; }

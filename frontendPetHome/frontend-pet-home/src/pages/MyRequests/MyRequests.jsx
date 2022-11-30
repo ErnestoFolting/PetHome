@@ -1,10 +1,11 @@
-import { React, useState, useEffect } from 'react'
+import { React, useState, useEffect, useContext } from 'react'
 import { useFetching } from '../../Hooks/useFetching'
 import { MyModal } from '../../UI/MyModal/MyModal'
 import { MyLoader } from '../../UI/Loader/MyLoader'
 import './MyRequests.css'
 import UserDataService from '../../API/UserDataService'
 import { UserRequestItem } from '../../Components/UserRequestItem/UserRequestItem'
+import { Context } from '../../index.js'
 
 export const MyRequests = () => {
     const [myRequests, setMyRequests] = useState([]);
@@ -14,7 +15,7 @@ export const MyRequests = () => {
         const requestsResponse = await UserDataService.getUserRequests()
         setMyRequests(requestsResponse)
     });
-
+    const { store } = useContext(Context);
     useEffect(() => {
         async function fetchData() {
             try {
@@ -25,6 +26,15 @@ export const MyRequests = () => {
         }
         fetchData();
     }, [update]);
+    useEffect(() => {
+        console.log('CHEEEEEECK')
+        if (store?.myHubConnection) {
+            store?.myHubConnection?.on("Send", (postedAdvert) => {
+                console.log("currentConnection")
+                setUpdate(postedAdvert.id)
+            })
+        }
+    }, [store?.myHubConnection]);
     return (
         <div className='userAdvertsPage'>
             <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{error}</MyModal>
@@ -32,16 +42,21 @@ export const MyRequests = () => {
                 ? <MyLoader />
                 : <div className='userAdvertsContent'>
                     <h1 style={{ textAlign: 'center', marginTop: '30px' }}> Ваші заявки</h1>
-                    <ul>
-                        {myRequests.map((el) =>
-                            <UserRequestItem
-                                advert={el.advert}
-                                key={el.id}
-                                status={el.status}
-                                requestId={el.id}
-                                update={setUpdate}
-                            />)}
-                    </ul>
+                    {
+                        myRequests?.length === 0
+                            ? <h1 style={{ textAlign: 'center' }}>Заявок поки немає.</h1>
+                            : <ul>
+                                {myRequests.map((el) =>
+                                    <UserRequestItem
+                                        advert={el.advert}
+                                        key={el.id}
+                                        status={el.status}
+                                        requestId={el.id}
+                                        update={setUpdate}
+                                    />)}
+                            </ul>
+                    }
+
                 </div>
             }
         </div>

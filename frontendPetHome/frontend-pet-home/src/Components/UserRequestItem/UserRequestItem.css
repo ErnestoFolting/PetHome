@@ -8,14 +8,18 @@
 .requestConfirmationButtons {
     display: flex;
     justify-content: center;
-    margin-top: 15px;
     align-items: center;
 }
 
+.requestConfirmationStatus p {
+    background-color: rgb(228, 227, 226);
+}
+
 .requestConfirmationButtons button {
-    height: 35px;
-    width: 50%;
-    margin: 10px;
+    padding: 10px;
+    margin-top: 10px;
+    width: 40%;
+    margin: 10px 5px 0px 5px;
 }
 
 .userRequestItem p {
@@ -25,21 +29,41 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
 }
 
-.rejectedRequestStatus {
+.rejectedRequestStatus p {
     background-color: rgb(253, 213, 213);
 }
 
-.appliedRequestStatus {
+.appliedRequestStatus p {
     background-color: rgb(228, 227, 226);
 }
 
 .confirmedRequestStatus {
     background-color: rgb(221, 241, 219);
+    margin-bottom: 45px;
 }
-.finishedAdvertStatus{
+
+.finishedAdvertStatus p {
     background-color: rgb(255, 238, 213);
+}
+
+.finishedAdvertStatus button,
+.appliedRequestStatus button,
+.rejectedRequestStatus button {
+    background-color: rgb(228, 74, 74);
+    padding: 10px;
+    margin-top: 10px;
+    width: 50%;
+}
+
+.finishedAdvertStatus,
+.appliedRequestStatus,
+.rejectedRequestStatus {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .userRequestItem {
@@ -55,6 +79,6 @@
     box-shadow: none;
 }
 
-.switchPart{
+.switchPart {
     margin-top: auto;
 }

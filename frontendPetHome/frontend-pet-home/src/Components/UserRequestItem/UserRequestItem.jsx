@@ -19,10 +19,9 @@ export const UserRequestItem = ({ advert, status, requestId, update, ...props })
     const [acceptGeneratedRequest, loader, error] = useFetching(async () => {
         await RequestService.acceptGeneratedRequest(requestId)
     })
-    const [rejectGeneratedRequest, loader2, error2] = useFetching(async () => {
-        await RequestService.rejectGeneratedRequest(requestId)
+    const [fetchDeleteRequest, loader2, error2] = useFetching(async () => {
+        await RequestService.deleteRequest(requestId)
     })
-
     async function acceptRequest() {
         try {
             await acceptGeneratedRequest()
@@ -31,9 +30,9 @@ export const UserRequestItem = ({ advert, status, requestId, update, ...props })
             setModalVisible(true)
         }
     }
-    async function rejectRequest() {
+    async function deleteRequest() {
         try {
-            await rejectGeneratedRequest()
+            await fetchDeleteRequest()
             update(requestId)
         } catch (e) {
             setModalVisible(true)
@@ -42,22 +41,34 @@ export const UserRequestItem = ({ advert, status, requestId, update, ...props })
     function renderSwitch(status) {
         switch (status) {
             case 'rejected':
-                return <p className='rejectedRequestStatus'>На жаль, замовник відмовив Вам</p>
+                return <div className='rejectedRequestStatus'>
+                    <p>На жаль, замовник відмовив Вам</p>
+                    <MyButton onClick={deleteRequest}>Видалити заявку</MyButton>
+                </div>
             case 'generated':
-                return <div className='requestConfirmationButtons'>
-                    <MyButton style={{ backgroundColor: 'rgb(0,190,0)' }} onClick={acceptRequest}>Підтвердити</MyButton>
-                    <MyButton style={{ backgroundColor: 'rgb(200,30,0)' }} onClick={rejectRequest}>Відхилити</MyButton>
+                return <div className='requestConfirmationStatus'>
+                    <p>Пропозиція згенерована системою</p>
+                    <div className='requestConfirmationButtons'>
+                        <MyButton style={{ backgroundColor: 'rgb(0,190,0)' }} onClick={acceptRequest}>Підтвердити</MyButton>
+                        <MyButton style={{ backgroundColor: 'rgb(228, 74, 74)' }} onClick={deleteRequest}>Відхилити</MyButton>
+                    </div>
                 </div>
             case 'applied':
-                return <p className='appliedRequestStatus'>Очікуємо на рішення замовника</p>
+                return <div className='appliedRequestStatus'>
+                    <p>Очікуємо на рішення замовника</p>
+                    <MyButton onClick={deleteRequest}>Відмінити заявку</MyButton>
+                </div>
             case 'confirmed':
-                if (advert?.status === 'finished') return <p className='finishedAdvertStatus'>Ви виконали це замовлення</p>
+                if (advert?.status === 'finished') return <div className='finishedAdvertStatus'>
+                    <p>Ви виконали це замовлення</p>
+                    <MyButton onClick={deleteRequest}>Видалити</MyButton>
+                </div>
                 return <p className='confirmedRequestStatus'>Ви виконуєте це замовлення</p>
             default:
                 return <p>Очікуємо</p>
         }
     }
-    if(loader||loader2) return <MyLoader/>
+    if (loader || loader2) return <MyLoader />
     return (
         <li className='userRequestItem' key={advert?.id} >
             <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{[error, error2]}</MyModal>
