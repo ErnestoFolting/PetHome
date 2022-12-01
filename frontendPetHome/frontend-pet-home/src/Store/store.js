@@ -1,7 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import AuthService from "../API/AuthService";
 import axios from 'axios';
-import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr"
+import { HubConnectionBuilder } from "@microsoft/signalr"
 
 export default class Store {
     isAuth = false;
@@ -68,13 +68,11 @@ export default class Store {
         }
     }
     async createHubConnection() {
-        console.log(this.isAuth)
         if (!this.myHubConnection) {
-            console.log('CREATED')
             const hubConnection = new HubConnectionBuilder().withUrl("https://localhost:7124/performerSelectionHub").withAutomaticReconnect().build()
             try {
                 await hubConnection?.start()
-                console.log('hub start')
+                console.log('HUB START')
                 this.setMyHubConnection(hubConnection)
             } catch (e) {
                 console.log("errorHub", e)

@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { Calendar } from "react-multi-date-picker";
 import "react-multi-date-picker/styles/colors/red.css"
 import "react-multi-date-picker/styles/backgrounds/bg-dark.css"
 import './MyCalendar.css'
 
-export function MyCalendar({ dates, isMultiple, className, monthsShown, props }) {
+export function MyCalendar({ dates, isMultiple, monthsShown, props }) {
     return (
         <div className="myCalendar">
             <Calendar

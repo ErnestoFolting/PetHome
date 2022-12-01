@@ -25,6 +25,18 @@ namespace backendPetHome.BLL.Services
             }
             return _context.SaveChangesAsync();
         }
+        public Task deleteTimeExceptions(string userId, IEnumerable<DateTime> datesToRemove)
+        {
+            var userExceptions = _context.timeExceptions.Where(el => el.userId == userId).ToList();
+            foreach(var userException in userExceptions)
+            {
+                if (datesToRemove.Contains(userException.date))
+                {
+                    _context.Remove(userException);
+                }
+            }
+            return _context.SaveChangesAsync();
+        }
         public bool checkPerformerDates(string userId, DateTime advertStart, DateTime advertEnd)
         {
             var userExceptions = _context.timeExceptions.Where(el => el.userId == userId && el.date >= advertStart && el.date <= advertEnd);

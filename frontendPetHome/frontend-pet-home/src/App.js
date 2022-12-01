@@ -2,7 +2,7 @@ import './Styles/App.css';
 import { BrowserRouter } from "react-router-dom";
 import MyNavBar from './NavBar/MyNavBar';
 import AppRouter from './Components/AppRouter';
-import { React, useEffect, useContext, useState } from 'react';
+import { React, useEffect, useContext } from 'react';
 import { Context } from './index'
 import { observer } from 'mobx-react-lite';
 import Footer from './Footer/Footer';
@@ -19,11 +19,7 @@ function App() {
       await store.checkAuth()
       store.setLoading(false)
     }
-
     checkAuth()
-
-
-
   }, []);
 
   useEffect(() => {
@@ -33,13 +29,13 @@ function App() {
     if (store.isAuth) {
       createHubConnection()
     }
-
   }, [store.isAuth]);
+
   useEffect(() => {
     if (store?.myHubConnection) {
       store?.myHubConnection?.on("Send", (postedAdvert) => {
-        console.log("currentConnection", store.myHubConnection)
-        console.log("postedAdvert", postedAdvert)
+        // console.log("currentConnection", store.myHubConnection)
+        // console.log("postedAdvert", postedAdvert)
         toast(
           <AdvertNotification
             advert={postedAdvert}

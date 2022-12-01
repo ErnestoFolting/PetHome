@@ -13,7 +13,7 @@ export const AdvertNotification = ({ advert, ...props }) => {
     return (
         <div className={classes.notificationBlock}>
             <div className={classes.imgSection}>
-                <img src={require('../../Assets/unhappyDog.png')} alt='photo' />
+                <img src={require('../../Assets/hairy.jpeg')} alt='photo' />
             </div>
             <div className={classes.infoSection}>
                 Ми підібрали для Вас оголошення. Погляньте.

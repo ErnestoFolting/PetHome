@@ -12,7 +12,7 @@ import { MyLoader } from '../../UI/Loader/MyLoader'
 import { MyModal } from '../../UI/MyModal/MyModal'
 
 export const Registration = () => {
-
+  console.log(process.env.REACT_APP_MAPS_KEY)
   const [registrationData, setRegistrationData] = useState({ surname: '', name: '', sex: 0, file: '', email: '', phone: '', username: '', password: '', confirmPassword: '' });
   const { store } = useContext(Context);
   const [modalVisible, setModalVisible] = useState(false);

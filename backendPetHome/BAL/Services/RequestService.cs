@@ -18,6 +18,7 @@ namespace backendPetHome.BLL.Services
             Advert? advertInDb = _context.adverts.Find(advertId);
             if (advertInDb == null) throw new ArgumentException("The advert does not exist");
             if (advertInDb.ownerId == userId) throw new ArgumentException("You can not send a request on your own advert.");
+            if (!_timeExceptionService.checkPerformerDates(userId, advertInDb.startTime, advertInDb.endTime)) throw new ArgumentException("You can not perform at that dates. Remove the time exceptions and try again.");
             Request newRequest = new(); 
             newRequest.userId = userId;
             newRequest.advertId = advertId;
