@@ -10,37 +10,50 @@ import { Context } from '../../index'
 import { useFetching } from '../../Hooks/useFetching'
 import { MyLoader } from '../../UI/Loader/MyLoader'
 import { MyModal } from '../../UI/MyModal/MyModal'
-
+import { LocationAutoComplete } from '../../Components/LocationAutoComplete/LocationAutoComplete'
+import { useJsApiLoader } from '@react-google-maps/api'
+const MAPS_KEY = process.env.REACT_APP_MAPS_KEY
+const libraries = ['places']
 export const Registration = () => {
-  console.log(process.env.REACT_APP_MAPS_KEY)
-  const [registrationData, setRegistrationData] = useState({ surname: '', name: '', sex: 0, file: '', email: '', phone: '', username: '', password: '', confirmPassword: '' });
+  const [registrationData, setRegistrationData] = useState({ surname: '', name: '', sex: 0, file: '', email: '', phone: '', username: '', password: '', confirmPassword: '', locationLat:'', locationLng:'' });
   const { store } = useContext(Context);
   const [modalVisible, setModalVisible] = useState(false);
   const [fetching, isLoading, error] = useFetching(async () => {
     await store.registration(registrationData)
   })
 
+  const { isLoaded } = useJsApiLoader(
+    {
+      id: 'google-map-script',
+      googleMapsApiKey: MAPS_KEY,
+      libraries
+    }
+  )
 
   const navigate = useNavigate()
 
   const register = async (e) => {
     e.preventDefault()
-    try{
+    try {
       await fetching()
       navigate('/login')
-    }catch (e){
+    } catch (e) {
       setModalVisible(true)
-    }finally{
-      setRegistrationData({ surname: '', name: '', sex: 0, file: '', email: '', phone: '', username: '', password: '', confirmPassword: '' })
-    }  
+    } finally {
+      setRegistrationData({ surname: '', name: '', sex: 0, file: '', email: '', phone: '', username: '', password: '', confirmPassword: '', locationLat:'', locationLng:''})
+    }
+  }
+
+  function locationSet(lat,lng){
+    setRegistrationData({ ...registrationData, locationLat: lat, locationLng:lng})
   }
   return (
     <div className='registrationPage'>
-      <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{error}</MyModal> 
+      <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{error}</MyModal>
       {isLoading
         ? <MyLoader />
         :
-        <MyForm title = 'Реєстрація'>
+        <MyForm title='Реєстрація'>
           <div className='names'>
             <InputWithLabel
               type='text'
@@ -105,7 +118,11 @@ export const Registration = () => {
             value={registrationData.confirmPassword}
             onChange={e => setRegistrationData({ ...registrationData, confirmPassword: e.target.value })}
           />
-          <p style={{textAlign:'center', color:'lightsalmon', width:'75%'}}>*В профілі користувача Ви зможете налаштувати дати коли Вам зручно сидіти з тваринами.</p>
+          <LocationAutoComplete
+            isLoaded={isLoaded}
+            locationSet={locationSet}
+          />
+          <p style={{ textAlign: 'center', color: 'rgba(255, 160, 122, 1)', width: '75%' }}>*В профілі користувача Ви зможете налаштувати дати коли Вам зручно сидіти з тваринами.</p>
           <MyButton onClick={register} style={{ height: '35px', marginTop: '20px' }}>Зареєструватись</MyButton>
         </MyForm>}
 

@@ -22,5 +22,7 @@ namespace backendPetHome.BLL.Models
         public string phone { get; set; }
         public string file { get; set; }
         public SexEnum sex { get; set; }
+        public double locationLat { get; set; } = 0;
+        public double locationLng { get; set; } = 0;
     }
 }

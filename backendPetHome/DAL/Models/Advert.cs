@@ -15,7 +15,8 @@ namespace backendPetHome.DAL.Models
         public int Id { get; set; }
         public string name { get; set; } = string.Empty;
         public int cost { get; set; }
-        public string location { get; set; } = string.Empty;
+        public double locationLat { get; set; } = 0;
+        public double locationLng { get; set; } = 0;
         public string description { get; set; } = string.Empty;
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public AdvertStatusEnum status { get; set; }

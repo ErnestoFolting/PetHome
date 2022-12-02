@@ -1,0 +1,36 @@
+.locationInputCoontainer{
+    position: relative;
+    width: 100%;
+}
+.locationInputCoontainer *{
+    box-sizing: border-box;
+}
+.input:focus {
+    border-color: blue;
+    outline: none;
+}
+.suggestions{
+    position: absolute;
+    top:0;
+    transform: translateY(70px);
+    background: white;
+    border: 2px solid rgb(252, 205, 186);
+    border-radius: 10px;
+    width: 100%;
+    z-index: 10;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-align: left;
+    display: block;
+}
+.listItem{
+    width: 100%;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid gray;
+}
+.listItem:hover{
+    transition: 0.3s ease;
+    background-color: rgb(238, 236, 235);
+}

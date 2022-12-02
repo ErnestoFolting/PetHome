@@ -26,6 +26,9 @@ export const User = ({ profile, calendarVisible }) => {
                     <div className='userSex'>
                         Стать: {getSex(profile.sex)}
                     </div>
+                    <div className='userLocation'>
+                        Координати: {profile?.locationLat}, {profile?.locationLng}
+                    </div>
                 </div>
             </div>
             <h3>Контакти</h3>

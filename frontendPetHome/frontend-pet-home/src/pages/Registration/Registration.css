@@ -31,8 +31,9 @@ input:focus {
     width: 100%;
     display: flex;
     justify-content: center;
-    margin-top:10px;
+    margin-top:20px;
     color:rgb(109, 106, 105);
+    margin-bottom:50px ;
 }
 
 .loginRedirect a {
