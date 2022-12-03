@@ -1,12 +1,14 @@
 import React from 'react'
 import './AdvertItemHeader.css'
 import dateConverter from '../../Common/DateConverter'
+import { url } from '../../HTTP/index'
 
-export const AdvertItemHeader = ({advert, ...props}) => {
+export const AdvertItemHeader = ({ advert, ...props }) => {
+    const imgPath = url + advert?.photoFilePath
     return (
         <div className='advertItemHeader' {...props}>
             <div className='imgSection'>
-                <img src={require('../../Assets/hairy.jpeg')} alt='photo' />
+                <img src={imgPath} alt='photo' />
             </div>
             <div className='advertName'><strong> {advert?.name}  </strong></div>
             <div className='infoSection'>

@@ -19,12 +19,24 @@ const libraries = ['places']
 
 export const CreateAdvert = () => {
 
-  const [advertData, setAdvertData] = useState({ name: '', description: '', cost: '', startTime: '', endTime: '', locationLat: '', locationLng: '', location:''});
+  const [advertData, setAdvertData] = useState({ name: '', description: '', cost: '', startTime: '', endTime: '', locationLat: '', locationLng: '', location: '' });
+  const [file, setFile] = useState();
   const [modalVisible, setModalVisible] = useState(false);
   const [calendarVisible, setCalendarVisible] = useState(false);
   const [calendar, setCalendar] = useState([Date.now()]);
   const [fetching, isLoading, error] = useFetching(async () => {
-    await AdvertService.createAdvert(advertData)
+    const formData = new FormData();
+    formData.append('name', advertData?.name)
+    formData.append('description', advertData?.description) 
+    formData.append('cost', advertData?.cost)
+    formData.append('startTime', advertData?.startTime)
+    formData.append('endTime', advertData?.endTime)
+    formData.append('locationLat', String(advertData?.locationLat)?.replace('.',','))
+    formData.append('locationLng', String(advertData?.locationLng)?.replace('.',','))
+    formData.append('location', advertData?.location)
+    formData.append('file', file)
+    console.log('formData',formData)
+    await AdvertService.createAdvert(formData)
   })
 
   const { isLoaded } = useJsApiLoader(
@@ -39,19 +51,19 @@ export const CreateAdvert = () => {
 
   function setCalendarData(values) {
     setCalendar(values)
-    console.log()
     if (values.length === 1) {
       setAdvertData({ ...advertData, startTime: values[0]?.format().split('/').join('-'), endTime: values[0]?.format().split('/').join('-') })
-
     } else {
       setAdvertData({ ...advertData, startTime: values[0]?.format().split('/').join('-'), endTime: values[1]?.format().split('/').join('-') })
     }
   }
 
   function locationSet(lat, lng, description) {
-    setAdvertData({ ...advertData, locationLat: lat, locationLng: lng, location:description })
+    setAdvertData({ ...advertData, locationLat: lat, locationLng: lng, location: description })
   }
-
+  function handleChange(event) {
+    setFile(event.target.files[0])
+  }
   const addNewAdvert = async (e) => {
     e.preventDefault()
     try {
@@ -98,8 +110,7 @@ export const CreateAdvert = () => {
             />
           </div>
           <InputWithLabel
-            value={advertData.photo}
-            onChange={e => setAdvertData({ ...advertData, photo: e.target.value })}
+            onChange={handleChange}
             type="file"
             label='Прикріпіть фото'
           />

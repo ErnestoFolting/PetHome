@@ -10,7 +10,9 @@ namespace backendPetHome.DAL.Models
         public string name { get; set; } = string.Empty;
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public SexEnum sex { get; set; } = SexEnum.male;
+        public string photoFilePath { get; set; } = string.Empty;
         public string location { get; set; } = string.Empty;
+
         public double locationLat { get; set; } = 0;
         public double locationLng { get; set; } = 0;
         public ICollection<Advert> postedAdverts { get; set; } 

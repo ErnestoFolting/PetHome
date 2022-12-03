@@ -18,7 +18,9 @@ export default class AdvertService {
         return response.data
     }
     static async createAdvert(advertData) {
-        const response = await $api.post('/api/adverts/', advertData)
+        const response = await $api.post('/api/adverts/', advertData, {
+            headers: {"Content-Type": "multipart/form-data"}
+        })
         return response.data
     }
     static async markAsFinished(id) {

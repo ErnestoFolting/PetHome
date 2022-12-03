@@ -19,6 +19,7 @@ namespace backendPetHome.DAL.Models
         public double locationLat { get; set; } = 0;
         public double locationLng { get; set; } = 0;
         public string description { get; set; } = string.Empty;
+        public string photoFilePath { get; set; } = string.Empty;
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public AdvertStatusEnum status { get; set; }
         public DateTime startTime { get; set; }

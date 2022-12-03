@@ -34,10 +34,15 @@ namespace backendPetHome.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] AdvertDTO advertToAdd)
+        public async Task<ActionResult> Post([FromForm] AdvertDTO advertToAdd, IFormFile file)
         {
+            var filePath = Path.Combine(Environment.CurrentDirectory,"wwwroot","images",file.FileName);
+            using (var stream = System.IO.File.Create(filePath))
+            {
+                await file.CopyToAsync(stream);
+            }
             var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            Tuple<IEnumerable<string>,AdvertDTO> possiblePerformers = await _advertService.addAdvert(advertToAdd,userId);
+            Tuple<IEnumerable<string>,AdvertDTO> possiblePerformers = await _advertService.addAdvert(advertToAdd,userId,file.FileName);
             await _hub.Clients.Users(possiblePerformers.Item1).SendAsync("Send", possiblePerformers.Item2);
             return Ok(new {ids = possiblePerformers.Item1,dto =  possiblePerformers.Item2});
         }
