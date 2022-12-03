@@ -1,6 +1,6 @@
 .locationInputCoontainer{
     position: relative;
-    width: 100%;
+    width: 50%;
 }
 .locationInputCoontainer *{
     box-sizing: border-box;
@@ -8,6 +8,10 @@
 .input:focus {
     border-color: blue;
     outline: none;
+}
+
+.input{
+    width:50%;
 }
 .suggestions{
     position: absolute;

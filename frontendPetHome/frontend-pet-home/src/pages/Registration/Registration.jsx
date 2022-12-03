@@ -12,10 +12,12 @@ import { MyLoader } from '../../UI/Loader/MyLoader'
 import { MyModal } from '../../UI/MyModal/MyModal'
 import { LocationAutoComplete } from '../../Components/LocationAutoComplete/LocationAutoComplete'
 import { useJsApiLoader } from '@react-google-maps/api'
+
 const MAPS_KEY = process.env.REACT_APP_MAPS_KEY
 const libraries = ['places']
+
 export const Registration = () => {
-  const [registrationData, setRegistrationData] = useState({ surname: '', name: '', sex: 0, file: '', email: '', phone: '', username: '', password: '', confirmPassword: '', locationLat:'', locationLng:'' });
+  const [registrationData, setRegistrationData] = useState({ surname: '', name: '', sex: 0, file: '', email: '', phone: '', username: '', password: '', confirmPassword: '', locationLat:'', locationLng:'', location: '' });
   const { store } = useContext(Context);
   const [modalVisible, setModalVisible] = useState(false);
   const [fetching, isLoading, error] = useFetching(async () => {
@@ -40,12 +42,12 @@ export const Registration = () => {
     } catch (e) {
       setModalVisible(true)
     } finally {
-      setRegistrationData({ surname: '', name: '', sex: 0, file: '', email: '', phone: '', username: '', password: '', confirmPassword: '', locationLat:'', locationLng:''})
+      setRegistrationData({ surname: '', name: '', sex: 0, file: '', email: '', phone: '', username: '', password: '', confirmPassword: '', locationLat:'', locationLng:'',location: ''})
     }
   }
 
-  function locationSet(lat,lng){
-    setRegistrationData({ ...registrationData, locationLat: lat, locationLng:lng})
+  function locationSet(lat,lng,description){
+    setRegistrationData({ ...registrationData, locationLat: lat, locationLng:lng, location: description})
   }
   return (
     <div className='registrationPage'>

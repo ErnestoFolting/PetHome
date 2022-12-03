@@ -11,16 +11,29 @@ import { MyLoader } from '../../UI/Loader/MyLoader'
 import { Calendar } from "react-multi-date-picker";
 import "react-multi-date-picker/styles/colors/red.css"
 import "react-multi-date-picker/styles/backgrounds/bg-dark.css"
+import { LocationAutoComplete } from '../../Components/LocationAutoComplete/LocationAutoComplete'
+import { useJsApiLoader } from '@react-google-maps/api'
+
+const MAPS_KEY = process.env.REACT_APP_MAPS_KEY
+const libraries = ['places']
 
 export const CreateAdvert = () => {
 
-  const [advertData, setAdvertData] = useState({ name: '', description: '', cost: '', location: '', startTime: '', endTime: '' });
+  const [advertData, setAdvertData] = useState({ name: '', description: '', cost: '', startTime: '', endTime: '', locationLat: '', locationLng: '', location:''});
   const [modalVisible, setModalVisible] = useState(false);
   const [calendarVisible, setCalendarVisible] = useState(false);
   const [calendar, setCalendar] = useState([Date.now()]);
   const [fetching, isLoading, error] = useFetching(async () => {
     await AdvertService.createAdvert(advertData)
   })
+
+  const { isLoaded } = useJsApiLoader(
+    {
+      id: 'google-map-script',
+      googleMapsApiKey: MAPS_KEY,
+      libraries
+    }
+  )
 
   const navigate = useNavigate()
 
@@ -33,6 +46,10 @@ export const CreateAdvert = () => {
     } else {
       setAdvertData({ ...advertData, startTime: values[0]?.format().split('/').join('-'), endTime: values[1]?.format().split('/').join('-') })
     }
+  }
+
+  function locationSet(lat, lng, description) {
+    setAdvertData({ ...advertData, locationLat: lat, locationLng: lng, location:description })
   }
 
   const addNewAdvert = async (e) => {
@@ -92,19 +109,15 @@ export const CreateAdvert = () => {
             type="number"
             label='Вартість'
           />
-          <InputWithLabel
-            value={advertData.location}
-            onChange={e => setAdvertData({ ...advertData, location: e.target.value })}
-            type="text"
-            label='Локація'
-            placeholder='Введіть локацію'
+          <LocationAutoComplete
+            isLoaded={isLoaded}
+            locationSet={locationSet}
           />
           <div className='createAdvertButtons'>
             <p>Дати</p>
             <MyButton style={{ marginBottom: '10px', backgroundColor: 'rgba(35, 145, 241, 1)' }} onClick={(e) => { e.preventDefault(); setCalendarVisible(true) }}>Обрати дати</MyButton>
             <MyButton style={{ marginTop: '20px' }} onClick={addNewAdvert}>Створити оголошення</MyButton>
           </div>
-
         </MyForm>
       }
     </div>

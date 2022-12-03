@@ -40,7 +40,8 @@ namespace backendPetHome.BLL.Services
                 PhoneNumber = data.phone,
                 sex = data.sex,
                 locationLat = data.locationLat,
-                locationLng = data.locationLng
+                locationLng = data.locationLng,
+                location = data.location
             };
             var result = await _userManager.CreateAsync(user, data.password);
             if (!result.Succeeded)

@@ -1,4 +1,4 @@
-import {React,useEffect} from 'react'
+import { React, useEffect } from 'react'
 import { MyInput } from '../../UI/inputs/MyInput'
 import s from './LocationAutoComplete.module.css'
 import usePlacesAutocomplete, {
@@ -7,7 +7,7 @@ import usePlacesAutocomplete, {
 } from "use-places-autocomplete";
 import useOnclickOutside from "react-cool-onclickoutside";
 
-export const LocationAutoComplete = ({isLoaded, locationSet}) => {
+export const LocationAutoComplete = ({ isLoaded, locationSet }) => {
     const {
         ready,
         value,
@@ -18,6 +18,9 @@ export const LocationAutoComplete = ({isLoaded, locationSet}) => {
     } = usePlacesAutocomplete({
         initOnMount: false,
         debounce: 300,
+        requestOptions: {
+            country: "us"
+        }
     });
     const ref = useOnclickOutside(() => {
         // When user clicks outside of the component, we can dismiss
@@ -37,13 +40,13 @@ export const LocationAutoComplete = ({isLoaded, locationSet}) => {
                 // by setting the second parameter to "false"
                 setValue(description, false);
                 clearSuggestions();
-                console.log('description',description)
+                console.log('description', description)
 
                 // Get latitude and longitude via utility functions
                 getGeocode({ address: description }).then((results) => {
                     const { lat, lng } = getLatLng(results[0]);
                     console.log("📍 Coordinates: ", { lat, lng });
-                    locationSet(lat,lng);
+                    locationSet(lat, lng, description);
                 });
             };
 
@@ -68,7 +71,7 @@ export const LocationAutoComplete = ({isLoaded, locationSet}) => {
     }, [isLoaded, init]);
     return (
         <div className={s.locationInputCoontainer} ref={ref}>
-        <label>📍Місцеположення(оберіть)</label>
+            <label>📍Місцеположення(оберіть)</label>
             <MyInput
                 type='text'
                 value={value}

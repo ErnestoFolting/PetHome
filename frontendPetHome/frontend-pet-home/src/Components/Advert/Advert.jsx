@@ -10,6 +10,7 @@ import { MyLoader } from '../../UI/Loader/MyLoader'
 import UserDataService from '../../API/UserDataService'
 
 const Advert = ({ advert, pathToProfile, navigate, isCreatedByUser }) => {
+    console.log(advert)
     const [modalVisible, setModalVisible] = useState(false);
     const [userRequests, setUserRequests] = useState([]);
     const [sendRequestOnAdvert, loading, error] = useFetching(async () => {

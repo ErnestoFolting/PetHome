@@ -32,7 +32,6 @@ export const MyProfile = () => {
     await TimeExceptionService.addUserTimeExceptions(getDates())
   });
   const [deleteTimeExceptions, loading3, error3] = useFetching(async () => {
-    console.log('deleted',deletedDates)
     await TimeExceptionService.deleteUserTimeExceptions(deletedDates)
   });
 

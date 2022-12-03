@@ -52,8 +52,10 @@ namespace backendPetHome.BLL.Services
         {
             IEnumerable<User> possiblePerformers = await _context.users.ToListAsync();
             IEnumerable<string> possiblePerformersIds = possiblePerformers
-                .Where(el => _timeExceptionService
-                .checkPerformerDates(el.Id, advert.startTime, advert.endTime) && el.Id != ownerId)
+                .Where(el => 
+                _timeExceptionService.checkPerformerDates(el.Id, advert.startTime, advert.endTime) 
+                && el.Id != ownerId
+                && DistanceEvaluater.DistanceBetweenPlaces(el.locationLng,el.locationLat,advert.locationLng,advert.locationLat) < 30)
                 .Select(el => el.Id)
                 .ToList();
             return possiblePerformersIds;
@@ -65,7 +67,6 @@ namespace backendPetHome.BLL.Services
             advertInDb.status = AdvertStatusEnum.finished;
             return _context.SaveChangesAsync();
         }
-
         public Task deleteAdvert(int advertId, string userId)
         {
             var advertInDb = _context.adverts.FirstOrDefault(el => el.Id == advertId);

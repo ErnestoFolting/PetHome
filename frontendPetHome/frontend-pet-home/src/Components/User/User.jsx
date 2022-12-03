@@ -4,10 +4,12 @@ import './User.css'
 
 export const User = ({ profile, calendarVisible }) => {
     const [timeExceptions, setTimeExceptions] = useState([]);
+
     function getSex(sex) {
         if (sex === 'male') return 'чоловіча'
         else return 'жіноча'
     }
+
     useEffect(() => {
         const times = profile?.timeExceptions?.map(el => new Date(el.date))
         setTimeExceptions(times)
@@ -27,7 +29,7 @@ export const User = ({ profile, calendarVisible }) => {
                         Стать: {getSex(profile.sex)}
                     </div>
                     <div className='userLocation'>
-                        Координати: {profile?.locationLat}, {profile?.locationLng}
+                        📍{profile?.location}
                     </div>
                 </div>
             </div>

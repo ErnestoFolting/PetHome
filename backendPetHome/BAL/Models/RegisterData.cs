@@ -24,5 +24,6 @@ namespace backendPetHome.BLL.Models
         public SexEnum sex { get; set; }
         public double locationLat { get; set; } = 0;
         public double locationLng { get; set; } = 0;
+        public string location { get; set; } = string.Empty;
     }
 }
