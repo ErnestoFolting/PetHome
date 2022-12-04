@@ -8,7 +8,7 @@ export const AdvertItemHeader = ({ advert, ...props }) => {
     return (
         <div className='advertItemHeader' {...props}>
             <div className='imgSection'>
-                <img src={imgPath} alt='photo' />
+                <img src={imgPath} alt='advertPhoto' />
             </div>
             <div className='advertName'><strong> {advert?.name}  </strong></div>
             <div className='infoSection'>

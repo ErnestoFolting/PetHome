@@ -3,14 +3,17 @@ import convertDate from '../../Common/DateConverter'
 import { MyCalendar } from '../MyCalendar/MyCalendar'
 import { DateObject, getAllDatesInRange } from "react-multi-date-picker"
 import './AdvertHeader.css'
+import { url } from '../../HTTP/index'
+
 
 export const AdvertHeader = ({ advert, ...props }) => {
+    const imgPath = url + advert?.photoFilePath
     return (
         <div className='advertHeaderContent'>
             <h3>{advert.name}</h3>
             <div className='imgBlock'>
                 <div className='imageInfo'>
-                    <img src={require('../../Assets/hairy.jpeg')} alt='photo' />
+                    <img src={imgPath} alt='photo' />
                     📍{advert?.location}
                 </div>
                 <div className='headerInfo'>

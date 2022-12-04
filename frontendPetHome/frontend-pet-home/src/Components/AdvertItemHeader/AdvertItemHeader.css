@@ -22,3 +22,8 @@
 .advertInfo > *{
     padding-top: 5px;
 }
+.imgSection img{
+    height:auto;
+    max-height: 200px;
+    max-width: 280px;
+}

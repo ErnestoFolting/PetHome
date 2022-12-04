@@ -21,9 +21,14 @@ namespace backendPetHome.Controllers
         }
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> Register([FromBody]RegisterData data)
+        public async Task<IActionResult> Register([FromForm]RegisterData data, IFormFile userPhoto)
         {
-            await _authService.Register(data);
+            var filePath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "images", userPhoto.FileName);
+            using (var stream = System.IO.File.Create(filePath))
+            {
+                await userPhoto.CopyToAsync(stream);
+            }
+            await _authService.Register(data, userPhoto.FileName);
             return Ok(new Response { Status = "Success", Message = "User created!" });
         }
         [HttpPost]

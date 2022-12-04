@@ -17,11 +17,24 @@ const MAPS_KEY = process.env.REACT_APP_MAPS_KEY
 const libraries = ['places']
 
 export const Registration = () => {
-  const [registrationData, setRegistrationData] = useState({ surname: '', name: '', sex: 0, file: '', email: '', phone: '', username: '', password: '', confirmPassword: '', locationLat:'', locationLng:'', location: '' });
+  const [registrationData, setRegistrationData] = useState({ surname: '', name: '', sex: 0, email: '', phone: '', username: '', password: '', confirmPassword: '', locationLat: '', locationLng: '', location: '' });
+  const [file, setFile] = useState();
   const { store } = useContext(Context);
   const [modalVisible, setModalVisible] = useState(false);
   const [fetching, isLoading, error] = useFetching(async () => {
-    await store.registration(registrationData)
+    const formData = new FormData();
+    formData.append('surname', registrationData?.surname)
+    formData.append('name', registrationData?.name)
+    formData.append('sex', registrationData?.sex)
+    formData.append('email', registrationData?.email)
+    formData.append('phone', registrationData?.phone)
+    formData.append('username', registrationData?.username)
+    formData.append('password', registrationData?.password)
+    formData.append('locationLat',  String(registrationData?.locationLat)?.replace('.',','))
+    formData.append('locationLng', String(registrationData?.locationLng)?.replace('.',','))
+    formData.append('location', registrationData?.location)
+    formData.append('userPhoto', file)
+    await store.registration(formData)
   })
 
   const { isLoaded } = useJsApiLoader(
@@ -42,12 +55,12 @@ export const Registration = () => {
     } catch (e) {
       setModalVisible(true)
     } finally {
-      setRegistrationData({ surname: '', name: '', sex: 0, file: '', email: '', phone: '', username: '', password: '', confirmPassword: '', locationLat:'', locationLng:'',location: ''})
+      setRegistrationData({ surname: '', name: '', sex: 0, email: '', phone: '', username: '', password: '', confirmPassword: '', locationLat: '', locationLng: '', location: '' })
     }
   }
 
-  function locationSet(lat,lng,description){
-    setRegistrationData({ ...registrationData, locationLat: lat, locationLng:lng, location: description})
+  function locationSet(lat, lng, description) {
+    setRegistrationData({ ...registrationData, locationLat: lat, locationLng: lng, location: description })
   }
   return (
     <div className='registrationPage'>
@@ -85,9 +98,8 @@ export const Registration = () => {
           </div>
           <InputWithLabel
             type='file'
-            label="Фото"
-            value={registrationData.file}
-            onChange={e => setRegistrationData({ ...registrationData, file: e.target.value })}
+            label="Ваше фото"
+            onChange={e => setFile(e.target.files[0])}
           />
           <InputWithLabel
             type='email'

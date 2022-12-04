@@ -34,8 +34,7 @@ export const CreateAdvert = () => {
     formData.append('locationLat', String(advertData?.locationLat)?.replace('.',','))
     formData.append('locationLng', String(advertData?.locationLng)?.replace('.',','))
     formData.append('location', advertData?.location)
-    formData.append('file', file)
-    console.log('formData',formData)
+    formData.append('petPhoto', file)
     await AdvertService.createAdvert(formData)
   })
 
@@ -61,9 +60,7 @@ export const CreateAdvert = () => {
   function locationSet(lat, lng, description) {
     setAdvertData({ ...advertData, locationLat: lat, locationLng: lng, location: description })
   }
-  function handleChange(event) {
-    setFile(event.target.files[0])
-  }
+
   const addNewAdvert = async (e) => {
     e.preventDefault()
     try {
@@ -110,9 +107,9 @@ export const CreateAdvert = () => {
             />
           </div>
           <InputWithLabel
-            onChange={handleChange}
+            onChange={e => setFile(e.target.files[0])}
             type="file"
-            label='Прикріпіть фото'
+            label='Фото тварини'
           />
           <InputWithLabel
             value={advertData.cost}

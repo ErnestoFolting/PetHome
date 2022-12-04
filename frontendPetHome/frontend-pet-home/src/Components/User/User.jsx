@@ -1,8 +1,10 @@
 import { React, useState, useEffect } from 'react'
 import { MyCalendar } from '../MyCalendar/MyCalendar'
 import './User.css'
+import { url } from '../../HTTP/index'
 
 export const User = ({ profile, calendarVisible }) => {
+    const imgPath = url + profile?.photoFilePath
     const [timeExceptions, setTimeExceptions] = useState([]);
 
     function getSex(sex) {
@@ -19,7 +21,7 @@ export const User = ({ profile, calendarVisible }) => {
         <div className='profileContent'>
             <div className='headerBlock'>
                 <div className='userImgBlock'>
-                    <img src={require('../../Assets/man.png')} alt='photo' />
+                    <img src={imgPath} alt='userPhoto' />
                 </div>
                 <div className='userNameBlock'>
                     <div className='userName'>

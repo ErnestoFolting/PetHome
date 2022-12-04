@@ -23,7 +23,7 @@ namespace backendPetHome.BLL.Services
             _userManager = userManager;
             _configuration = configuration;
         }
-        public async Task Register(RegisterData data)
+        public async Task Register(RegisterData data, string fileName)
         {
             var userExisted = await _userManager.FindByNameAsync(data.username);
             if (userExisted != null)
@@ -41,7 +41,8 @@ namespace backendPetHome.BLL.Services
                 sex = data.sex,
                 locationLat = data.locationLat,
                 locationLng = data.locationLng,
-                location = data.location
+                location = data.location,
+                photoFilePath = "/images/" + fileName
             };
             var result = await _userManager.CreateAsync(user, data.password);
             if (!result.Succeeded)
