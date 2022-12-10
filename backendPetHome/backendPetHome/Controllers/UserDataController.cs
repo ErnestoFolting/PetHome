@@ -1,4 +1,6 @@
-﻿using backendPetHome.BLL.Services;
+﻿using backendPetHome.BLL.DTOs;
+using backendPetHome.BLL.DTOs.User;
+using backendPetHome.BLL.Services;
 using backendPetHome.DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +36,7 @@ namespace backendPetHome.Controllers
             return Ok(advertInDb);
         }
         [HttpGet("myprofile")]
-        public async Task<ActionResult<User>> GetUserProfile()
+        public async Task<ActionResult<UserDTO>> GetUserProfile()
         {
             string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
             var user = await _userDataService.getCurrentUserProfile(userId);
@@ -47,6 +49,28 @@ namespace backendPetHome.Controllers
             string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
             var requests = _userDataService.getCurrentUserRequests(userId);
             return Ok(requests);
+        }
+        [HttpDelete]
+        public async Task<OkResult> Delete()
+        {
+            string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            await _userDataService.deleteUserProfile(userId);
+            return Ok();
+        }
+        [HttpPut]
+        public async Task<ActionResult> Update([FromForm] UserRedoDTO data, IFormFile? userPhoto)
+        {
+            if(userPhoto != null)
+            {
+                var filePath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "images", userPhoto.FileName);
+                using (var stream = System.IO.File.Create(filePath))
+                {
+                    await userPhoto.CopyToAsync(stream);
+                }
+            }
+            string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            await _userDataService.updateUserProfile(userId,data,userPhoto?.FileName);
+            return Ok();
         }
     }
 }

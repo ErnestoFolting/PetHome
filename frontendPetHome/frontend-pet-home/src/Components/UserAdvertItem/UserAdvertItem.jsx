@@ -5,7 +5,6 @@ import { MyButton } from '../../UI/buttons/MyButton'
 import { AdvertItemHeader } from '../AdvertItemHeader/AdvertItemHeader'
 
 export const UserAdvertItem = ({ advert, ...props }) => {
-  console.log(advert.status)
   const navigate = useNavigate()
   const path = generatePath("/myadverts/:id", {
     id: advert?.id

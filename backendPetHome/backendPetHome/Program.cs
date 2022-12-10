@@ -9,9 +9,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using backendPetHome.BLL.MappingProfiles;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -110,7 +110,7 @@ builder.Services.AddSwaggerGen(c =>
     }); 
 });
 
-builder.Services.AddAutoMapper(System.Reflection.Assembly.GetAssembly(typeof(AdvertProfile)));
+builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(AdvertProfile)), Assembly.GetAssembly(typeof(UserProfile)));
 
 var app = builder.Build();
 

@@ -1,14 +1,9 @@
-.profileContent {
-    margin-top: 25px;
-}
-
 .headerBlock {
     border-bottom: 2px solid rgba(0, 0, 0, 0.2);
     display: flex;
 }
 
 .userImgBlock {
-
     flex: 1;
     display: flex;
     align-items: center;
@@ -39,13 +34,12 @@
     justify-content: center;
 }
 
-.profileContent > h3 {
+.profileContent>h3 {
     text-align: center;
     margin-top: 20px;
 }
 
 .contactsBlock {
-    margin-top: 30px;
     display: flex;
     flex-direction: row;
     height: 150px;
@@ -79,5 +73,31 @@
     margin-top: 30px;
     display: flex;
     align-items: center;
+    justify-content: center;
+}
+
+.profileControlButtons button {
+    height: 35px;
+    margin-top: 10px;
+    margin-right: 10px;
+    right: 0;
+    background-color: transparent;
+    color:black;
+    border: 1px solid black;
+}
+
+.profileControlButtons {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.deleteConfirmButtons button {
+    height: 35px;
+    margin: 10px;
+    width: 50%;
+}
+
+.deleteConfirmButtons {
+    display: flex;
     justify-content: center;
 }

@@ -82,7 +82,6 @@ export const Registration = () => {
               value={registrationData.name}
               onChange={e => setRegistrationData({ ...registrationData, name: e.target.value })}
             />
-
           </div>
           <div className='sex'>
             <RadioButton

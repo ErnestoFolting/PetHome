@@ -1,7 +1,7 @@
 
-import { React, useState, useEffect } from 'react'
+import { React, useState, useEffect, useContext } from 'react'
 import { useFetching } from '../../Hooks/useFetching'
-import UserService from '../../API/UserService'
+import UserDataService from '../../API/UserDataService'
 import { MyModal } from '../../UI/MyModal/MyModal'
 import { MyLoader } from '../../UI/Loader/MyLoader'
 import { User } from '../../Components/User/User'
@@ -11,12 +11,15 @@ import TimeExceptionService from '../../API/TimeEceptionService'
 import convertDate from '../../Common/DateConverter'
 import { TimeExceptionCalendar } from '../../Components/TimeExceptionCalendar/TimeExceptionCalendar'
 import { DateObject } from "react-multi-date-picker";
+import { Context } from '../../index'
 
 export const MyProfile = () => {
   const [profile, setProfile] = useState({});
+  const { store } = useContext(Context);
 
   const [addCalendarVisible, setAddCalendarVisible] = useState(false);
   const [removeCalendarVisible, setRemoveCalendarVisible] = useState(false);
+  const [profileRedoVisible, setProfileRedoVisible] = useState(false);
   const [calendar, setCalendarData] = useState([]);
   const [beforeRemoveCalendar, setBeforeRemoveCalendar] = useState([]);
   const [deletedDates, setDeletedDates] = useState([]);
@@ -24,7 +27,7 @@ export const MyProfile = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const [fetchCertainUser, loading, error] = useFetching(async () => {
-    const userResponse = await UserService.getUserProfile()
+    const userResponse = await UserDataService.getUserProfile()
     setProfile(userResponse)
     setCalendarData(userResponse?.timeExceptions?.map(el => new DateObject(convertDate(el.date).split('.').reverse().join('-'))))
   });
@@ -33,6 +36,9 @@ export const MyProfile = () => {
   });
   const [deleteTimeExceptions, loading3, error3] = useFetching(async () => {
     await TimeExceptionService.deleteUserTimeExceptions(deletedDates)
+  });
+  const [deleteProfile, loading4, error4] = useFetching(async () => {
+    await UserDataService.deleteUserProfile()
   });
 
   useEffect(() => {
@@ -43,11 +49,22 @@ export const MyProfile = () => {
         setModalVisible(true)
       }
     }
-    fetchData();
-  }, [addCalendarVisible, removeCalendarVisible]);
+    if (!addCalendarVisible && !removeCalendarVisible && !profileRedoVisible) {
+      fetchData();
+    }
+  }, [addCalendarVisible, removeCalendarVisible, profileRedoVisible]);
 
   function getDates() {
     return (calendar.map(el => el.format().split('/').join('-')))
+  }
+
+  async function deleteUserProfile() {
+    try {
+      await deleteProfile()
+      store.logout()
+    } catch (e) {
+      setModalVisible(true)
+    }
   }
 
   async function addTimeExceptions(e) {
@@ -75,15 +92,15 @@ export const MyProfile = () => {
       }
       setRemoveCalendarVisible(false)
     }
-    if(deletedDates.length !== 0)
-    removeTimeExceptions()
+    if (deletedDates.length !== 0)
+      removeTimeExceptions()
   }, [deletedDates]);
 
-  if (loading || loading2 || loading3) return <MyLoader />
+  if (loading || loading2 || loading3 || loading4) return <MyLoader />
 
   return (
     <div className='myProfilePage'>
-      <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{[error, error2, error3]}</MyModal>
+      <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{[error, error2, error3, error4]}</MyModal>
       <MyModal title='Оберіть дати' visible={addCalendarVisible} setVisible={setAddCalendarVisible} style={{ backgroundColor: 'rgba(49,47,47,255)' }}>
         <TimeExceptionCalendar
           calendarValue={calendar}
@@ -108,6 +125,9 @@ export const MyProfile = () => {
         <User
           profile={profile}
           calendarVisible={!(addCalendarVisible || removeCalendarVisible)}
+          selfProfile={true}
+          deleteSelfProfile={deleteUserProfile}
+          profileRedoVisible={setProfileRedoVisible}
         />
         <div className='addDatesButton'>
           <MyButton onClick={(e) => { e.preventDefault(); setAddCalendarVisible(true) }} style={{ backgroundColor: 'rgb(0,150,0)' }}>Додати недоступні дати</MyButton>

@@ -6,8 +6,11 @@ import { useFetching } from '../../Hooks/useFetching';
 import { MyModal } from '../../UI/MyModal/MyModal';
 import RequestService from '../../API/RequestService';
 import { MyLoader } from '../../UI/Loader/MyLoader';
+import { url } from '../../HTTP/index'
+
 
 export const UserInRequest = ({ userData, requestId, performer, update, ...props }) => {
+    const userImgPath = url + userData?.photoFilePath
     const navigate = useNavigate();
     function navigateTo() {
         navigate('/users/' + userData.id)
@@ -42,9 +45,9 @@ export const UserInRequest = ({ userData, requestId, performer, update, ...props
             {loader || loader2
                 ? <MyLoader />
                 : <li key={userData?.id} className='userInRequestContent'>
-                    <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{[error,error2]}</MyModal>
+                    <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{[error, error2]}</MyModal>
                     <div className='userInRequestPhoto' onClick={navigateTo} >
-                        <img src={require('../../Assets/man.png')} alt='ownerPhoto' />
+                        <img src={userImgPath} alt='ownerPhoto' />
                         <p style={{ fontWeight: '600' }}>{userData?.surname} {userData?.name}</p>
                     </div>
 

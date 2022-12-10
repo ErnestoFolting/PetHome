@@ -8,9 +8,10 @@ import RequestService from '../../API/RequestService'
 import { MyModal } from '../../UI/MyModal/MyModal'
 import { MyLoader } from '../../UI/Loader/MyLoader'
 import UserDataService from '../../API/UserDataService'
+import { url } from '../../HTTP/index'
 
 const Advert = ({ advert, pathToProfile, navigate, isCreatedByUser }) => {
-    console.log(advert)
+    const userImgPath = url + advert?.owner?.photoFilePath
     const [modalVisible, setModalVisible] = useState(false);
     const [userRequests, setUserRequests] = useState([]);
     const [sendRequestOnAdvert, loading, error] = useFetching(async () => {
@@ -75,7 +76,7 @@ const Advert = ({ advert, pathToProfile, navigate, isCreatedByUser }) => {
                 <h3>Власник</h3>
                 <div className='ownerInfoContent'>
                     <div className='ownerPhoto'>
-                        <img src={require('../../Assets/man.png')} alt='ownerPhoto' />
+                        <img src={userImgPath} alt='ownerPhoto' />
                         {advert?.owner?.surname} {advert?.owner?.name}
                     </div>
                     <div className='ownerInfo'>
