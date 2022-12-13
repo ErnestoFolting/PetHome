@@ -20,6 +20,7 @@ const Advert = ({ advert, pathToProfile, navigate, isCreatedByUser }) => {
     const [checkIfRequestSent, loading2, error2] = useFetching(async () => {
         setUserRequests(await UserDataService.getUserRequests())
     });
+
     function sendRequest() {
         async function sendRequest() {
             try {
@@ -30,6 +31,7 @@ const Advert = ({ advert, pathToProfile, navigate, isCreatedByUser }) => {
         }
         sendRequest();
     }
+
     useEffect(() => {
         async function fetchRequests() {
             try {
@@ -40,6 +42,7 @@ const Advert = ({ advert, pathToProfile, navigate, isCreatedByUser }) => {
         }
         fetchRequests();
     }, [loading]);
+
     const thisAdvertRequest = userRequests?.find(el => el?.advertId === advert?.id);
 
     function renderSwitch(status) {

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using backendPetHome.BLL.DTOs;
+using backendPetHome.BLL.DTOs.Request;
 using backendPetHome.BLL.DTOs.User;
 using backendPetHome.DAL.Data;
 using backendPetHome.DAL.Models;
@@ -34,10 +35,11 @@ namespace backendPetHome.BLL.Services
             UserDTO userDTO = _mapper.Map<UserDTO>(user);
             return userDTO;
         }
-        public IEnumerable<Request> getCurrentUserRequests(string id)
+        public IEnumerable<RequestDTO> getCurrentUserRequests(string id)
         {
-            var user = _context.requests.Include(r => r.advert).Where(el => el.userId == id);
-            return user;
+            IEnumerable<Request> requests= _context.requests.Include(r => r.advert).Where(el => el.userId == id);
+            IEnumerable<RequestDTO> requestDTOs = _mapper.Map<IEnumerable<RequestDTO>>(requests);
+            return requestDTOs;
         }
 
         public Task deleteUserProfile(string userId)

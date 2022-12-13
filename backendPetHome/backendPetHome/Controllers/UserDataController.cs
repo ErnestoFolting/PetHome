@@ -1,4 +1,5 @@
 ﻿using backendPetHome.BLL.DTOs;
+using backendPetHome.BLL.DTOs.Request;
 using backendPetHome.BLL.DTOs.User;
 using backendPetHome.BLL.Services;
 using backendPetHome.DAL.Models;
@@ -44,7 +45,7 @@ namespace backendPetHome.Controllers
             return Ok(user);
         }
         [HttpGet("myrequests")]
-        public async Task<ActionResult<User>> GetUserRequests()
+        public async Task<ActionResult<IEnumerable<RequestDTO>>> GetUserRequests()
         {
             string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
             var requests = _userDataService.getCurrentUserRequests(userId);

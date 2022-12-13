@@ -48,7 +48,6 @@ export const User = ({ profile, calendarVisible, selfProfile, deleteSelfProfile,
                     <MyButton onClick={(e) => { e.preventDefault(); setAcceptModalVisible(false) }} style={{ backgroundColor: 'rgb(228, 74, 74)' }}>Ні</MyButton>
                     <MyButton onClick={(e) => { e.preventDefault(); deleteSelfProfile() }} style={{ backgroundColor: 'rgb(0, 150, 0)' }}>Так</MyButton>
                 </div>
-
             </MyModal>
             {selfProfile &&
                 <div className='profileControlButtons'>

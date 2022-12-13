@@ -82,9 +82,15 @@ export const MyAdvert = ({ advert, update, ...props }) => {
   if (loader || loader2) return <MyLoader />
   return (
     <div className='myAdvert'>
-      <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{[error,error2]}</MyModal>
+      <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{[error, error2]}</MyModal>
       <div className='myAdvertHeader'>
-        <AdvertHeader advert={advert} />
+        <AdvertHeader advert={advert}
+          isCreatedByUser={true}
+        />
+      </div>
+      <div className='advertInfoBlock'>
+        <h3>Опис</h3>
+        <p>{advert.description}</p>
       </div>
       <div className='myAdvertRequests'>
         {renderSwitch(status)}

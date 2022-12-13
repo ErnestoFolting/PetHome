@@ -1,8 +1,7 @@
 import React from 'react'
-import { Calendar, DateObject } from "react-multi-date-picker";
+import { Calendar} from "react-multi-date-picker";
 import "react-multi-date-picker/styles/colors/red.css"
 import { MyButton } from '../../UI/buttons/MyButton';
-import s from './TimeExceptionCalendar.module.css'
 
 export const TimeExceptionCalendar = ({ calendarValue, valueChange, buttonClick, mapDays, deleteStyle }) => {
     return (
