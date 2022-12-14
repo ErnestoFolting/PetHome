@@ -28,12 +28,12 @@ namespace backendPetHome.Controllers
             return Ok(_userDataService.getCurrentUserAdverts(userId));
         }
         [HttpGet("myadverts/{id}")]
-        public async Task<ActionResult<IEnumerable<Advert>>> GetUserCertainAdvert(int id)
+        public async Task<ActionResult<IEnumerable<AdvertUserDTO>>> GetUserCertainAdvert(int id)
         {
             string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            Advert? advertInDb = await _userDataService.getCurrentUserCertainAdvert(id);
+            AdvertUserDTO? advertInDb = await _userDataService.getCurrentUserCertainAdvert(id);
             if (advertInDb == null) return NotFound();
-            if (advertInDb.ownerId != userId) return Forbid();
+            if (advertInDb?.ownerId != userId) return Forbid();
             return Ok(advertInDb);
         }
         [HttpGet("myprofile")]
@@ -59,7 +59,7 @@ namespace backendPetHome.Controllers
             return Ok();
         }
         [HttpPut]
-        public async Task<ActionResult> Update([FromForm] UserRedoDTO data, IFormFile? userPhoto)
+        public async Task<ActionResult> UpdateProfile([FromForm] UserRedoDTO data, IFormFile? userPhoto)
         {
             if(userPhoto != null)
             {
@@ -71,6 +71,21 @@ namespace backendPetHome.Controllers
             }
             string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
             await _userDataService.updateUserProfile(userId,data,userPhoto?.FileName);
+            return Ok();
+        }
+        [HttpPut("myadverts/{id}")]
+        public async Task<ActionResult> UpdateAdvert([FromForm] AdvertDTO data, IFormFile? advertPhoto, int id)
+        {
+            if (advertPhoto != null)
+            {
+                var filePath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "images", advertPhoto.FileName);
+                using (var stream = System.IO.File.Create(filePath))
+                {
+                    await advertPhoto.CopyToAsync(stream);
+                }
+            }
+            string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            await _userDataService.updateUserAdvert(userId, data, id, advertPhoto?.FileName);
             return Ok();
         }
     }

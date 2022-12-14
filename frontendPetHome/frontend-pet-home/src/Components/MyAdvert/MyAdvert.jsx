@@ -9,7 +9,7 @@ import AdvertService from '../../API/AdvertService'
 import { MyLoader } from '../../UI/Loader/MyLoader'
 import { useNavigate } from 'react-router-dom'
 
-export const MyAdvert = ({ advert, update, ...props }) => {
+export const MyAdvert = ({ advert, update, setAdvertRedoVisible, ...props }) => {
 
   const [status, setStatus] = useState(advert?.status);
   const requestsToShow = advert?.requests?.filter(el => el.status === 'applied')
@@ -39,7 +39,6 @@ export const MyAdvert = ({ advert, update, ...props }) => {
     }
   }
   function renderSwitch(status) {
-    console.log(requestsToShow)
     switch (status) {
       case 'search':
         return requestsToShow?.length === 0
@@ -84,8 +83,10 @@ export const MyAdvert = ({ advert, update, ...props }) => {
     <div className='myAdvert'>
       <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{[error, error2]}</MyModal>
       <div className='myAdvertHeader'>
-        <AdvertHeader advert={advert}
+        <AdvertHeader
+          advert={advert}
           isCreatedByUser={true}
+          setAdvertRedoVisible={setAdvertRedoVisible}
         />
       </div>
       <div className='advertInfoBlock'>

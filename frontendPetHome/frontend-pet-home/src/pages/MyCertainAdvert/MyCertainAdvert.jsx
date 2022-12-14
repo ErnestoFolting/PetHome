@@ -11,6 +11,7 @@ export const MyCertainAdvert = () => {
     const params = useParams()
     const [advert, setAdvert] = useState({})
     const [modalVisible, setModalVisible] = useState(false);
+    const [advertRedoVisible, setAdvertRedoVisible] = useState(false);
     const [update, setUpdate] = useState('');
     const [fetchUserCertainAdvert, loading, error] = useFetching(async () => {
         const advertResponse = await AdvertService.getUserCertainAdvert(params.id)
@@ -25,9 +26,10 @@ export const MyCertainAdvert = () => {
                 setModalVisible(true)
             }
         }
-        fetchData();
-
-    }, [update]);
+        if (!advertRedoVisible) {
+            fetchData();
+        }
+    }, [update, advertRedoVisible]);
 
     return (
         <div className='myCertainAdvert'>
@@ -37,6 +39,7 @@ export const MyCertainAdvert = () => {
                 : <MyAdvert
                     advert={advert}
                     update={setUpdate}
+                    setAdvertRedoVisible={setAdvertRedoVisible}
                 />
             }
         </div>

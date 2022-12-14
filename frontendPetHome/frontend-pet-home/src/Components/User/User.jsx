@@ -5,6 +5,7 @@ import { url } from '../../HTTP/index'
 import { MyButton } from '../../UI/buttons/MyButton'
 import { MyModal } from '../../UI/MyModal/MyModal'
 import { UserProfileRedoForm } from '../UserProfileRedoForm/UserProfileRedoForm'
+import { MyModalConfirmation } from '../../UI/MyModal/MyModalConfirmation'
 
 export const User = ({ profile, calendarVisible, selfProfile, deleteSelfProfile, profileRedoVisible }) => {
     const [acceptModalVisible, setAcceptModalVisible] = useState(false);
@@ -42,13 +43,12 @@ export const User = ({ profile, calendarVisible, selfProfile, deleteSelfProfile,
             <MyModal title='Редагування профіля' visible={redoModalVisible} setVisible={setRedoModalVisible} style={{ backgroundColor: 'lightsalmon' }}>
                 <UserProfileRedoForm previousData={profile} setRedoModalVisible={setRedoModalVisible} profileRedoVisible={profileRedoVisible} />
             </MyModal>
-            <MyModal title='Видалення' visible={acceptModalVisible} setVisible={setAcceptModalVisible} style={{ backgroundColor: 'black', color: 'white' }}>
-                Ви впевнені, що хочете видалити профіль? <br />
-                <div className='deleteConfirmButtons'>
-                    <MyButton onClick={(e) => { e.preventDefault(); setAcceptModalVisible(false) }} style={{ backgroundColor: 'rgb(228, 74, 74)' }}>Ні</MyButton>
-                    <MyButton onClick={(e) => { e.preventDefault(); deleteSelfProfile() }} style={{ backgroundColor: 'rgb(0, 150, 0)' }}>Так</MyButton>
-                </div>
-            </MyModal>
+            <MyModalConfirmation
+                confirmationModalVisible={acceptModalVisible}
+                setConfirmationModalVisible={setAcceptModalVisible}
+                confirmedAction={deleteSelfProfile}
+                deleteItem="профіль"
+            />
             {selfProfile &&
                 <div className='profileControlButtons'>
                     <MyButton onClick={redoProfile}>Редагувати дані</MyButton>

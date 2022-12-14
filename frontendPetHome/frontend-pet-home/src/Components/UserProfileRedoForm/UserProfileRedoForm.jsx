@@ -48,9 +48,8 @@ export const UserProfileRedoForm = ({ previousData, setRedoModalVisible, profile
             setRedoModalVisible(false)
             profileRedoVisible(false)
         } catch (e) {
-            setModalVisible()
-        } finally {
-        }
+            setModalVisible(true)
+        } 
     }
     if (isLoading) return <MyLoader />
     return (

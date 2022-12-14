@@ -21,10 +21,14 @@ namespace backendPetHome.BLL.Services
         {
             return _context.adverts.Include(advert => advert.requests).Where(a => a.ownerId == userId);
         }
-        public async Task<Advert?> getCurrentUserCertainAdvert(int advertId)
+        public async Task<AdvertUserDTO?> getCurrentUserCertainAdvert(int advertId)
         {
-            Advert? advertInDb = await _context.adverts.Include(advert => advert.requests).ThenInclude(request=>request.user).FirstOrDefaultAsync(el => el.Id == advertId);
-            return advertInDb;
+            Advert? advertInDb = await _context.adverts
+                .Include(advert => advert.requests)
+                .ThenInclude(request=>request.user)
+                .FirstOrDefaultAsync(el => el.Id == advertId);
+            AdvertUserDTO advertUserDTO = _mapper.Map<AdvertUserDTO>(advertInDb);
+            return advertUserDTO;
         }
         public async Task<UserDTO> getCurrentUserProfile(string id)
         {
@@ -68,6 +72,25 @@ namespace backendPetHome.BLL.Services
                 if(newFileName != null) userInDb.photoFilePath = "/images/" + newFileName;
 
                 _context.Update(userInDb);
+            }
+            return _context.SaveChangesAsync();
+        }
+
+        public Task updateUserAdvert(string userId, AdvertDTO data, int advertId, string? newFileName)
+        {
+            var advertInDb = _context.adverts.FirstOrDefault(el => el.Id == advertId);
+            if (advertInDb == null)
+            {
+                throw new ArgumentException("Advert does not exist.");
+            }
+            else
+            {
+                data.id = advertId;
+                data.photoFilePath = advertInDb.photoFilePath;
+                advertInDb = _mapper.Map(data, advertInDb);
+                if (newFileName != null) advertInDb.photoFilePath = "/images/" + newFileName;
+
+                _context.Update(advertInDb);
             }
             return _context.SaveChangesAsync();
         }
