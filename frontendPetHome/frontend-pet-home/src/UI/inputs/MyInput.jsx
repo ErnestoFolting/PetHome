@@ -1,7 +1,8 @@
 import React from 'react'
 import classes from './MyInput.module.css'
-export const MyInput = (props) => {
+export const MyInput = React.forwardRef(({ isNotValid, ...props }, ref) => {
   return (
-    <input className={classes.MyInput} {...props}/>
+    <input ref={ref} className={isNotValid ? classes.MyInputNotValid : classes.MyInput} {...props} />
   )
 }
+)

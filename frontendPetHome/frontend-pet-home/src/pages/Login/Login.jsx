@@ -8,6 +8,9 @@ import { MyLoader } from '../../UI/Loader/MyLoader'
 import { MyModal } from '../../UI/MyModal/MyModal'
 import { Link } from 'react-router-dom'
 import { InputWithLabel } from '../../UI/inputs/InputWithLabel'
+import { useForm } from 'react-hook-form';
+import { LoginSchema } from '../../ValidationSchemas/LoginSchema'
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -17,48 +20,46 @@ const Login = () => {
     const [fetching, isLoading, error] = useFetching(async () => {
         await store.login(username, password)
     })
-    const login = async (e) => {
-        e.preventDefault()
-        try{
+    const login = async (data) => {
+        console.log('data',data)
+        try {
             await fetching()
-        }catch(e){
+        } catch (e) {
             setModalVisible(true)
-        }finally{
+        } finally {
             setPassword('')
             setUsername('')
-        }        
+        }
     }
+
+    const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(LoginSchema) });
     return (
         <div className='loginPage'>
             <MyModal visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{error}</MyModal>
             <div className='formName'>Авторизація</div>
             <div className='loginContent'>
-
                 <div className='inputsPart'>
-               { isLoading
-                ? <MyLoader/>
-                :
-                    <form className='form'>
-                        <InputWithLabel
-                            onChange={e => setUsername(e.target.value)}
-                            value={username}
-                            type='email'
-                            label='Логін'
-                        >
-                        </InputWithLabel>
-                        <InputWithLabel
-                            onChange={e => setPassword(e.target.value)}
-                            value={password}
-                            type='password'
-                            label='Пароль'
-                        >
-
-                        </InputWithLabel>
-                        <MyButton onClick={login}>Увійти</MyButton>
-                    </form>}
+                    {isLoading
+                        ? <MyLoader />
+                        :
+                        <form className='form' onSubmit={handleSubmit(login)}>
+                            <InputWithLabel
+                                label='Логін'
+                                {...register("username")}
+                                isNotValid={errors?.username}
+                            />
+                            <InputWithLabel
+                                type='password'
+                                label='Пароль'
+                                {...register("password")}
+                                isNotValid={errors?.password}
+                            />
+                            <MyButton type="submit">Увійти</MyButton>
+                        </form>
+                    }
                 </div>
                 <div className='loginImages'>
-                    <img src={require('../../Assets/goldenRetriever.png')} alt='photo' />
+                    <img src={require('../../Assets/goldenRetriever.png')} alt='dogPhoto' />
                 </div>
             </div>
             <div className='registrationRedirect'>
