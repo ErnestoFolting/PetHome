@@ -1,4 +1,4 @@
-import { React, useState, useContext } from 'react'
+import { React, useState, useContext, useEffect } from 'react'
 import { MyButton } from '../../UI/buttons/MyButton'
 import './Login.css'
 import { Context } from '../../index'
@@ -13,24 +13,33 @@ import { LoginSchema } from '../../ValidationSchemas/LoginSchema'
 import { yupResolver } from "@hookform/resolvers/yup";
 
 const Login = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+
+    const [creds, setCreds] = useState();
+    const [needFetch, setNeedFetch] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const { store } = useContext(Context);
     const [fetching, isLoading, error] = useFetching(async () => {
-        await store.login(username, password)
+        await store.login(creds)
     })
     const login = async (data) => {
-        console.log('data',data)
-        try {
-            await fetching()
-        } catch (e) {
-            setModalVisible(true)
-        } finally {
-            setPassword('')
-            setUsername('')
+        if (data) {
+            setCreds(data)
+            setNeedFetch(!needFetch)
         }
     }
+
+    useEffect(() => {
+        async function func() {
+            try {
+                await fetching()
+            } catch (e) {
+                setModalVisible(true)
+            }
+        }
+        if (creds) {
+            func()
+        }
+    }, [needFetch])
 
     const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(LoginSchema) });
     return (

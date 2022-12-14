@@ -28,9 +28,9 @@ export default class Store {
     setMyHubConnection(hubConnection) {
         this.myHubConnection = hubConnection
     }
-    async login(username, password) {
+    async login(creds) {
         try {
-            const response = await AuthService.login(username, password)
+            const response = await AuthService.login(creds)
             this.setAuth(true);
             this.setUserId(response?.data?.userId)
         } catch (e) {
