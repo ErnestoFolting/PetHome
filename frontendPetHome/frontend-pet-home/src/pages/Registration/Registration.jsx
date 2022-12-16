@@ -1,10 +1,9 @@
-import { React, useState, useContext } from 'react'
+import { React, useState, useContext, useEffect } from 'react'
 import '../Registration/Registration.css'
 import { RadioButton } from '../../UI/RadioButton/RadioButton'
 import { MyButton } from '../../UI/buttons/MyButton'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { InputWithLabel } from '../../UI/inputs/InputWithLabel'
-import { Link } from 'react-router-dom'
 import { MyForm } from '../../UI/Form/MyForm'
 import { Context } from '../../index'
 import { useFetching } from '../../Hooks/useFetching'
@@ -12,27 +11,30 @@ import { MyLoader } from '../../UI/Loader/MyLoader'
 import { MyModal } from '../../UI/MyModal/MyModal'
 import { LocationAutoComplete } from '../../Components/LocationAutoComplete/LocationAutoComplete'
 import { useJsApiLoader } from '@react-google-maps/api'
+import { useForm } from 'react-hook-form';
+import { RegistrationSchema } from '../../ValidationSchemas/RegistrationSchema'
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const MAPS_KEY = process.env.REACT_APP_MAPS_KEY
 const libraries = ['places']
 
 export const Registration = () => {
-  const [registrationData, setRegistrationData] = useState({ surname: '', name: '', sex: 0, email: '', phone: '', username: '', password: '', confirmPassword: '', locationLat: '', locationLng: '', location: '' });
+  const [showValidation, setShowValidation] = useState(false);
+  const [location, setLocation] = useState();
   const [file, setFile] = useState();
+  const [registrationData, setRegistrationData] = useState();
+  const [needFetch, setNeedFetch] = useState(false);
   const { store } = useContext(Context);
   const [modalVisible, setModalVisible] = useState(false);
+
   const [fetching, isLoading, error] = useFetching(async () => {
-    const formData = new FormData();
-    formData.append('surname', registrationData?.surname)
-    formData.append('name', registrationData?.name)
-    formData.append('sex', registrationData?.sex)
-    formData.append('email', registrationData?.email)
-    formData.append('phone', registrationData?.phone)
-    formData.append('username', registrationData?.username)
-    formData.append('password', registrationData?.password)
-    formData.append('locationLat',  String(registrationData?.locationLat)?.replace('.',','))
-    formData.append('locationLng', String(registrationData?.locationLng)?.replace('.',','))
-    formData.append('location', registrationData?.location)
+    const formData = new FormData()
+    Object.keys(registrationData).forEach(function (key, index) {
+      formData.append(key, Object.values(registrationData)[index])
+    })
+    Object.keys(location).forEach(function (key, index) {
+      formData.append(key, Object.values(location)[index])
+    })
     formData.append('userPhoto', file)
     await store.registration(formData)
   })
@@ -47,98 +49,119 @@ export const Registration = () => {
 
   const navigate = useNavigate()
 
-  const register = async (e) => {
-    e.preventDefault()
-    try {
-      await fetching()
-      navigate('/login')
-    } catch (e) {
-      setModalVisible(true)
-    } finally {
-      setRegistrationData({ surname: '', name: '', sex: 0, email: '', phone: '', username: '', password: '', confirmPassword: '', locationLat: '', locationLng: '', location: '' })
+  const registration = async (data) => {
+    if (data && location && file) {
+      setRegistrationData(data)
+      setNeedFetch(!needFetch)
+    } else {
+      setShowValidation(true)
     }
   }
 
+  useEffect(() => {
+    async function func() {
+      try {
+        await fetching()
+        navigate('/login')
+      } catch (e) {
+        setModalVisible(true)
+      }
+    }
+    if (registrationData) {
+      func()
+    }
+  }, [needFetch])
+
   function locationSet(lat, lng, description) {
-    setRegistrationData({ ...registrationData, locationLat: lat, locationLng: lng, location: description })
+    setLocation({ locationLat: String(lat)?.replace('.', ','), locationLng: String(lng)?.replace('.', ','), location: description })
   }
+
+  const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(RegistrationSchema) });
+
   return (
     <div className='registrationPage'>
       <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{error}</MyModal>
       {isLoading
         ? <MyLoader />
         :
-        <MyForm title='Реєстрація'>
+        <MyForm title='Реєстрація' onSubmit={handleSubmit(registration)}>
           <div className='names'>
             <InputWithLabel
               type='text'
-              label='Прізвище'
-              value={registrationData.surname}
-              onChange={e => setRegistrationData({ ...registrationData, surname: e.target.value })}
+              label='Прізвище*'
+              {...register("surname")}
+              isNotValid={errors?.surname}
             />
             <InputWithLabel
               type='text'
-              label="Ім'я"
-              value={registrationData.name}
-              onChange={e => setRegistrationData({ ...registrationData, name: e.target.value })}
+              label="Ім'я*"
+              {...register("name")}
+              isNotValid={errors?.name}
             />
           </div>
           <div className='sex'>
             <RadioButton
+              checked
+              type='radio'
               label='Чоловік'
-              value={registrationData.sex === 0}
-              onChange={e => setRegistrationData({ ...registrationData, sex: 0 })}
+              value='male'
+              {...register("sex")}
+              isNotValid={errors?.sex}
             />
             <RadioButton
+              type='radio'
               label='Жінка'
-              value={registrationData.sex === 1}
-              onChange={e => setRegistrationData({ ...registrationData, sex: 1 })}
+              value='female'
+              {...register("sex")}
+              isNotValid={errors?.sex}
             />
           </div>
           <InputWithLabel
             type='file'
-            label="Ваше фото"
+            label="Ваше фото*"
             onChange={e => setFile(e.target.files[0])}
+            isNotValid={!file && showValidation}
           />
           <InputWithLabel
             type='email'
-            label="Email"
-            value={registrationData.email}
-            onChange={e => setRegistrationData({ ...registrationData, email: e.target.value })}
+            label="Email*"
+            {...register("email")}
+            isNotValid={errors?.email}
           />
           <InputWithLabel
             type='tel'
-            label="Номер телефону"
-            value={registrationData.phone}
-            onChange={e => setRegistrationData({ ...registrationData, phone: e.target.value })}
+            label="Номер телефону(+380)*"
+            {...register("phone")}
+            isNotValid={errors?.phone}
           />
           <InputWithLabel
             type='text'
-            label="Логін"
-            value={registrationData.username}
-            onChange={e => setRegistrationData({ ...registrationData, username: e.target.value })}
+            label="Логін*"
+            {...register("username")}
+            isNotValid={errors?.username}
           />
           <InputWithLabel
             type='password'
-            label="Пароль"
-            value={registrationData.password}
-            onChange={e => setRegistrationData({ ...registrationData, password: e.target.value })}
+            label="Пароль*"
+            {...register("password")}
+            isNotValid={errors?.password}
           />
+          {errors?.password && <p style={{ textAlign: 'center', color: 'red' }}>{errors?.password?.message}</p>}
           <InputWithLabel
             type='password'
-            label="Підтвердження"
+            label="Підтвердження*"
             placeholder='Введіть пароль'
-            value={registrationData.confirmPassword}
-            onChange={e => setRegistrationData({ ...registrationData, confirmPassword: e.target.value })}
+            {...register("confirmPassword")}
+            isNotValid={errors?.confirmPassword}
           />
           <LocationAutoComplete
             isLoaded={isLoaded}
             locationSet={locationSet}
+            isNotValid={!location && showValidation}
           />
-          <p style={{ textAlign: 'center', color: 'rgba(255, 160, 122, 1)', width: '75%' }}>*В профілі користувача Ви зможете налаштувати дати коли Вам зручно сидіти з тваринами.</p>
-          <MyButton onClick={register} style={{ height: '35px', marginTop: '20px' }}>Зареєструватись</MyButton>
-        </MyForm>}
-
+          <MyButton type="submit" style={{ height: '35px', marginTop: '20px' }}>Зареєструватись</MyButton>
+        </MyForm>
+      }
       <div className='loginRedirect'>
         <h3>Вже маєте акаунт?<Link to="/login"> Авторизуйтесь</Link></h3>
       </div>

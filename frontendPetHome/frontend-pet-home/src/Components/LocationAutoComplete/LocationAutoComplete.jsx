@@ -7,7 +7,7 @@ import usePlacesAutocomplete, {
 } from "use-places-autocomplete";
 import useOnclickOutside from "react-cool-onclickoutside";
 
-export const LocationAutoComplete = ({ isLoaded, locationSet, previousValue }) => {
+export const LocationAutoComplete = ({ isLoaded, locationSet, previousValue, isNotValid }) => {
     const {
         ready,
         value,
@@ -62,19 +62,20 @@ export const LocationAutoComplete = ({ isLoaded, locationSet, previousValue }) =
         if (isLoaded) {
             init()
             if (previousValue) {
-                setValue(previousValue,false)
+                setValue(previousValue, false)
             }
         }
     }, [isLoaded, init]);
     return (
         <div className={s.locationInputCoontainer} ref={ref}>
-            <label>📍Місцеположення(оберіть)</label>
+            <label>📍Місцеположення(оберіть)*</label>
             <MyInput
                 type='text'
                 value={value}
                 onChange={handleInput}
                 disabled={!ready}
                 placeholder="Звідки Ви?"
+                isNotValid={isNotValid}
             />
             {status === "OK" && <ul className={s.suggestions}>{renderSuggestions()}</ul>}
         </div>

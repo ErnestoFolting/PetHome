@@ -10,13 +10,11 @@ namespace backendPetHome.BLL.Services
     public class AdvertService
     {
         private readonly DataContext _context;
-        private readonly TimeExceptionService _timeExceptionService;
         private readonly RequestService _requestService;
         private readonly IMapper _mapper;
-        public AdvertService(DataContext context, TimeExceptionService timeExceptionService, RequestService requestService, IMapper mapper)
+        public AdvertService(DataContext context, RequestService requestService, IMapper mapper)
         {
             _context = context;
-            _timeExceptionService = timeExceptionService;
             _requestService = requestService;
             _mapper = mapper;
         }
@@ -50,15 +48,8 @@ namespace backendPetHome.BLL.Services
         }
         public async Task<IEnumerable<string>> choosePossiblePerformers(Advert advert, string ownerId)
         {
-            IEnumerable<User> possiblePerformers = await _context.users.ToListAsync();
-            IEnumerable<string> possiblePerformersIds = possiblePerformers
-                .Where(el => 
-                _timeExceptionService.checkPerformerDates(el.Id, advert.startTime, advert.endTime) 
-                && el.Id != ownerId
-                && DistanceEvaluater.DistanceBetweenPlaces(el.locationLng,el.locationLat,advert.locationLng,advert.locationLat) < 30)
-                .Select(el => el.Id)
-                .ToList();
-            return possiblePerformersIds;
+            IEnumerable<string> possiblePerformers = _context.selectPossiblePerformers(advert.startTime, advert.endTime, advert.locationLng, advert.locationLat, ownerId).Select(el=>el.Id).ToList();
+            return possiblePerformers;
         }
         public Task MarkAsFinished(int advertId, string userId) {
             var advertInDb = _context.adverts.FirstOrDefault(el => el.Id == advertId);

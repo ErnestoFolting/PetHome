@@ -16,10 +16,12 @@ namespace backendPetHome.DAL.Data
         public DbSet<TimeException> timeExceptions{ get; set; }
         public DbSet<Request> requests{ get; set; }
 
+        public IQueryable<User> selectPossiblePerformers(DateTime advertStartTime, DateTime advertEndTime, double advertLng, double advertLat, string ownerId) => FromExpression(() => selectPossiblePerformers(advertStartTime, advertEndTime, advertLng, advertLat, ownerId));
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder
-                .Entity<Advert>()
+                .Entity<Advert>()   
                 .HasOne(a => a.owner)
                 .WithMany(u => u.postedAdverts)
                 .HasForeignKey(a => a.ownerId);
@@ -50,6 +52,8 @@ namespace backendPetHome.DAL.Data
                 .HasOne(r => r.owner)
                 .WithMany(u => u.refreshTokens)
                 .HasForeignKey(r => r.ownerId);
+
+            builder.HasDbFunction(() => selectPossiblePerformers(default, default, default, default, default));
 
             base.OnModelCreating(builder);
         }

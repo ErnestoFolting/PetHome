@@ -1,11 +1,12 @@
 import React from 'react'
-import './RadioButton.css'
+import styles from './RadioButton.module.css'
 
-export const RadioButton = ({ label, value, onChange }) => {
+export const RadioButton = React.forwardRef(({ label, isNotValid, ...props }, ref) => {
   return (
     <label>
-      <input type="radio" checked={value} onChange={onChange} />
+      <input ref={ref} className={isNotValid ? styles.inputNotValid : styles.inputValid} type="radio" {...props} />
       {label}
     </label>
   );
 }
+)

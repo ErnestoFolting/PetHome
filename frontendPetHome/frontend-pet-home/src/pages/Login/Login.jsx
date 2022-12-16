@@ -42,6 +42,7 @@ const Login = () => {
     }, [needFetch])
 
     const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(LoginSchema) });
+
     return (
         <div className='loginPage'>
             <MyModal visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{error}</MyModal>

@@ -1,0 +1,26 @@
+.inputValid {
+    appearance: none;
+    color: currentColor;
+    width: 1.15em;
+    height: 1.15em;
+    border: 0.15em solid lightsalmon;
+    border-radius: 30%;
+    transform: translateY(-0.075em);
+    cursor: pointer;
+}
+
+.inputNotValid {
+    appearance: none;
+    color: currentColor;
+    width: 1.15em;
+    height: 1.15em;
+    border: 0.15em solid rgb(247, 177, 168);
+    border-radius: 30%;
+    transform: translateY(-0.075em);
+    cursor: pointer;
+}
+
+.inputValid:checked {
+    background-color: lightsalmon;
+    transition: 0.5s ease;
+}

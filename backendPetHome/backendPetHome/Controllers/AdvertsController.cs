@@ -43,7 +43,7 @@ namespace backendPetHome.Controllers
             }
             var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
             Tuple<IEnumerable<string>,AdvertDTO> possiblePerformers = await _advertService.addAdvert(advertToAdd,userId, petPhoto.FileName);
-            await _hub.Clients.Users(possiblePerformers.Item1).SendAsync("Send", possiblePerformers.Item2);
+            await _hub.Clients.Users(possiblePerformers.Item1).SendAsync("Send", possiblePerformers.Item2); //make a method in hub
             return Ok(new {ids = possiblePerformers.Item1,dto =  possiblePerformers.Item2});
         }
         [HttpPut("finish/{advertId}")]

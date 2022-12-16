@@ -39,9 +39,7 @@ namespace backendPetHome.BLL.Services
         }
         public bool checkPerformerDates(string userId, DateTime advertStart, DateTime advertEnd)
         {
-            var userExceptions = _context.timeExceptions.Where(el => el.userId == userId && el.date >= advertStart && el.date <= advertEnd);
-            if (userExceptions.Count() > 0) return false;
-            return true;
+            return !_context.timeExceptions.Any(el => el.userId == userId && el.date >= advertStart && el.date <= advertEnd);
         }
     }    
 }
