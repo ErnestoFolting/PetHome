@@ -148,7 +148,11 @@ export const CreateAdvert = () => {
           />
           <div className='createAdvertButtons'>
             <p>Дати</p>
-            <MyButton style={{ marginBottom: '10px', backgroundColor: 'rgba(35, 145, 241, 1)' }} isNotValid={!advertDates && showValidation} onClick={(e) => { e.preventDefault(); setCalendarVisible(true) }}>Обрати дати</MyButton>
+            <MyButton
+              style={{ marginBottom: '10px', backgroundColor: 'rgba(35, 145, 241, 1)' }}
+              isNotValid={!advertDates && showValidation}
+              onClick={(e) => { e.preventDefault(); setCalendarVisible(true) }}
+            >Обрати дати</MyButton>
             <MyButton style={{ marginTop: '20px' }} type="submit">Створити оголошення</MyButton>
           </div>
         </MyForm>
