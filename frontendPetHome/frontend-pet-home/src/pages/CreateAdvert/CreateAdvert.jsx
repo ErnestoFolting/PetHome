@@ -1,4 +1,4 @@
-import { React, useState } from 'react'
+import { React, useState, useEffect } from 'react'
 import { MyForm } from '../../UI/Form/MyForm'
 import { InputWithLabel } from '../../UI/inputs/InputWithLabel'
 import { MyButton } from '../../UI/buttons/MyButton'
@@ -13,27 +13,36 @@ import "react-multi-date-picker/styles/colors/red.css"
 import "react-multi-date-picker/styles/backgrounds/bg-dark.css"
 import { LocationAutoComplete } from '../../Components/LocationAutoComplete/LocationAutoComplete'
 import { useJsApiLoader } from '@react-google-maps/api'
+import { useForm } from 'react-hook-form';
+import { yupResolver } from "@hookform/resolvers/yup";
+import { CreateAdvertSchema } from '../../ValidationSchemas/CreateAdvertSchema'
 
 const MAPS_KEY = process.env.REACT_APP_MAPS_KEY
 const libraries = ['places']
 
 export const CreateAdvert = () => {
 
-  const [advertData, setAdvertData] = useState({ name: '', description: '', cost: '', startTime: '', endTime: '', locationLat: '', locationLng: '', location: '' });
+  const [advertData, setAdvertData] = useState();
+  const [showValidation, setShowValidation] = useState(false);
   const [file, setFile] = useState();
+  const [advertDates, setAdvertDates] = useState();
+  const [location, setLocation] = useState();
+  const [needFetch, setNeedFetch] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [calendarVisible, setCalendarVisible] = useState(false);
   const [calendar, setCalendar] = useState([Date.now()]);
+
   const [fetching, isLoading, error] = useFetching(async () => {
     const formData = new FormData();
-    formData.append('name', advertData?.name)
-    formData.append('description', advertData?.description) 
-    formData.append('cost', advertData?.cost)
-    formData.append('startTime', advertData?.startTime)
-    formData.append('endTime', advertData?.endTime)
-    formData.append('locationLat', String(advertData?.locationLat)?.replace('.',','))
-    formData.append('locationLng', String(advertData?.locationLng)?.replace('.',','))
-    formData.append('location', advertData?.location)
+    Object.keys(advertData).forEach(function (key, index) {
+      formData.append(key, Object.values(advertData)[index])
+    })
+    Object.keys(advertDates).forEach(function (key, index) {
+      formData.append(key, Object.values(advertDates)[index])
+    })
+    Object.keys(location).forEach(function (key, index) {
+      formData.append(key, Object.values(location)[index])
+    })
     formData.append('petPhoto', file)
     await AdvertService.createAdvert(formData)
   })
@@ -46,32 +55,46 @@ export const CreateAdvert = () => {
     }
   )
 
-  const navigate = useNavigate()
-
   function setCalendarData(values) {
     setCalendar(values)
     if (values.length === 1) {
-      setAdvertData({ ...advertData, startTime: values[0]?.format().split('/').join('-'), endTime: values[0]?.format().split('/').join('-') })
+      setAdvertDates({ startTime: values[0]?.format().split('/').join('-'), endTime: values[0]?.format().split('/').join('-') })
     } else {
-      setAdvertData({ ...advertData, startTime: values[0]?.format().split('/').join('-'), endTime: values[1]?.format().split('/').join('-') })
+      setAdvertDates({ startTime: values[0]?.format().split('/').join('-'), endTime: values[1]?.format().split('/').join('-') })
     }
   }
+
+  const addNewAdvert = async (data) => {
+    if (data && location && file && advertDates) {
+      setAdvertData(data)
+      setNeedFetch(!needFetch)
+    } else {
+      setShowValidation(true)
+    }
+  }
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    async function func() {
+      try {
+        await fetching()
+        navigate('/adverts')
+      } catch (e) {
+        setModalVisible(true)
+      }
+    }
+    if (advertData) {
+      func()
+    }
+  }, [needFetch])
 
   function locationSet(lat, lng, description) {
-    setAdvertData({ ...advertData, locationLat: lat, locationLng: lng, location: description })
+    setLocation({ locationLat: String(lat)?.replace('.', ','), locationLng: String(lng)?.replace('.', ','), location: description })
   }
 
-  const addNewAdvert = async (e) => {
-    e.preventDefault()
-    try {
-      await fetching()
-      navigate('/adverts')
-    } catch (e) {
-      setModalVisible(true)
-    } finally {
-      setAdvertData({})
-    }
-  }
+  const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(CreateAdvertSchema) });
+
   return (
     <div className='createAdvertPage'>
       <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{error}</MyModal>
@@ -89,42 +112,44 @@ export const CreateAdvert = () => {
       </MyModal>
       {isLoading
         ? <MyLoader />
-        : <MyForm title='Створення оголошення'>
+        : <MyForm title='Створення оголошення' onSubmit={handleSubmit(addNewAdvert)}>
           <InputWithLabel
-            value={advertData.name}
-            onChange={e => setAdvertData({ ...advertData, name: e.target.value })}
+            {...register("name")}
             type="text"
             label='Назва'
             placeholder='Введіть назву'
+            isNotValid={errors?.name}
           />
           <div>
             <label>Опис</label>
             <textarea
-              value={advertData.description}
-              onChange={e => setAdvertData({ ...advertData, description: e.target.value })}
+              {...register("description")}
               type="text"
               placeholder='Введіть опис'
+              style={errors?.description && { boxShadow: "0 1px 8px 0 rgba(252, 9, 9, 0.2), 0 2px 10px 0 rgba(248, 3, 3, 0.19)" }}
             />
           </div>
           <InputWithLabel
             onChange={e => setFile(e.target.files[0])}
             type="file"
             label='Фото тварини'
+            isNotValid={!file && showValidation}
           />
           <InputWithLabel
-            value={advertData.cost}
-            onChange={e => setAdvertData({ ...advertData, cost: e.target.value })}
+            {...register("cost")}
             type="number"
             label='Вартість'
+            isNotValid={errors?.cost}
           />
           <LocationAutoComplete
             isLoaded={isLoaded}
             locationSet={locationSet}
+            isNotValid={!file && showValidation}
           />
           <div className='createAdvertButtons'>
             <p>Дати</p>
-            <MyButton style={{ marginBottom: '10px', backgroundColor: 'rgba(35, 145, 241, 1)' }} onClick={(e) => { e.preventDefault(); setCalendarVisible(true) }}>Обрати дати</MyButton>
-            <MyButton style={{ marginTop: '20px' }} onClick={addNewAdvert}>Створити оголошення</MyButton>
+            <MyButton style={{ marginBottom: '10px', backgroundColor: 'rgba(35, 145, 241, 1)' }} isNotValid={!advertDates && showValidation} onClick={(e) => { e.preventDefault(); setCalendarVisible(true) }}>Обрати дати</MyButton>
+            <MyButton style={{ marginTop: '20px' }} type="submit">Створити оголошення</MyButton>
           </div>
         </MyForm>
       }
