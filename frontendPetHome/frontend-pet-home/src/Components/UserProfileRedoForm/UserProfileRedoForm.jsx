@@ -1,4 +1,4 @@
-import { React, useState } from 'react'
+import { React, useState, useEffect } from 'react'
 import { MyButton } from '../../UI/buttons/MyButton'
 import { MyForm } from '../../UI/Form/MyForm'
 import { InputWithLabel } from '../../UI/inputs/InputWithLabel'
@@ -9,26 +9,33 @@ import { useFetching } from '../../Hooks/useFetching'
 import UserDataService from '../../API/UserDataService'
 import { MyModal } from '../../UI/MyModal/MyModal'
 import { MyLoader } from '../../UI/Loader/MyLoader'
+import { useForm } from 'react-hook-form';
+import { yupResolver } from "@hookform/resolvers/yup";
+import { UserProfileRedoSchema } from '../../ValidationSchemas/UserProfileRedoSchema'
 
 const MAPS_KEY = process.env.REACT_APP_MAPS_KEY
 const libraries = ['places']
 
 export const UserProfileRedoForm = ({ previousData, setRedoModalVisible, profileRedoVisible }) => {
     const [file, setFile] = useState(previousData?.photoFilePath);
-    const [redoData, setRedoData] = useState({ surname: previousData?.surname, name: previousData?.name, email: previousData?.email, phone: previousData?.phoneNumber, locationLat: previousData?.locationLat, locationLng: previousData?.locationLng, location: previousData?.location });
+    const [redoData, setRedoData] = useState();
+    const [location, setLocation] = useState({ locationLat: String(previousData?.locationLat)?.replace('.', ','), locationLng: String(previousData?.locationLng)?.replace('.', ','), location: previousData?.location });
+    const [needFetch, setNeedFetch] = useState(false);
+    const [showValidation, setShowValidation] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
+
     const [fetching, isLoading, error] = useFetching(async () => {
         const formData = new FormData();
-        formData.append('surname', redoData?.surname)
-        formData.append('name', redoData?.name)
-        formData.append('email', redoData?.email)
-        formData.append('PhoneNumber', redoData?.phone)
-        formData.append('locationLat', String(redoData?.locationLat)?.replace('.', ','))
-        formData.append('locationLng', String(redoData?.locationLng)?.replace('.', ','))
-        formData.append('location', redoData?.location)
+        Object.keys(redoData).forEach(function (key, index) {
+            formData.append(key, Object.values(redoData)[index])
+        })
+        Object.keys(location).forEach(function (key, index) {
+            formData.append(key, Object.values(location)[index])
+        })
         formData.append('userPhoto', file)
         await UserDataService.redoUserProfile(formData)
     })
+
     const { isLoaded } = useJsApiLoader(
         {
             id: 'google-map-script',
@@ -38,60 +45,86 @@ export const UserProfileRedoForm = ({ previousData, setRedoModalVisible, profile
     )
 
     function locationSet(lat, lng, description) {
-        setRedoData({ ...redoData, locationLat: lat, locationLng: lng, location: description })
+        setLocation({ locationLat: String(lat)?.replace('.', ','), locationLng: String(lng)?.replace('.', ','), location: description })
     }
 
-    async function redoProfile(e) {
-        e.preventDefault()
-        try {
-            await fetching()
-            setRedoModalVisible(false)
-            profileRedoVisible(false)
-        } catch (e) {
-            setModalVisible(true)
-        } 
+    const redoProfile = async (data) => {
+        if (data && location && file) {
+            setRedoData(data)
+            setNeedFetch(!needFetch)
+        } else {
+            setShowValidation(true)
+        }
     }
+
+    useEffect(() => {
+        async function func() {
+            try {
+                await fetching()
+                setRedoModalVisible(false)
+                profileRedoVisible(false)
+            } catch (e) {
+                setModalVisible(true)
+            }
+        }
+        if (redoData) {
+            func()
+        }
+    }, [needFetch])
+
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        resolver: yupResolver(UserProfileRedoSchema),
+        defaultValues: {
+            surname: previousData?.surname,
+            name: previousData?.name,
+            email: previousData?.email,
+            PhoneNumber: previousData?.phoneNumber
+        }
+    });
+
     if (isLoading) return <MyLoader />
     return (
-        <MyForm className={style.form} id='userRedoForm'>
+        <MyForm className={style.form} id='userRedoForm' onSubmit={handleSubmit(redoProfile)} >
             <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{error}</MyModal>
             <div className='names'>
                 <InputWithLabel
                     type='text'
                     label='Прізвище'
-                    value={redoData.surname}
-                    onChange={e => setRedoData({ ...redoData, surname: e.target.value })}
+                    {...register("surname")}
+                    isNotValid={errors?.surname}
                 />
                 <InputWithLabel
                     type='text'
                     label="Ім'я"
-                    value={redoData.name}
-                    onChange={e => setRedoData({ ...redoData, name: e.target.value })}
+                    {...register("name")}
+                    isNotValid={errors?.name}
                 />
             </div>
             <InputWithLabel
                 type='file'
                 label="Нове фото(якщо потрібно)"
                 onChange={e => setFile(e.target.files[0])}
+                isNotValid={!file && showValidation}
             />
             <InputWithLabel
                 type='email'
                 label="Email"
-                value={redoData.email}
-                onChange={e => setRedoData({ ...redoData, email: e.target.value })}
+                {...register("email")}
+                isNotValid={errors?.email}
             />
             <InputWithLabel
                 type='tel'
                 label="Номер телефону"
-                value={redoData.phone}
-                onChange={e => setRedoData({ ...redoData, phone: e.target.value })}
+                {...register("PhoneNumber")}
+                isNotValid={errors?.phone}
             />
             <LocationAutoComplete
                 isLoaded={isLoaded}
                 locationSet={locationSet}
                 previousValue={previousData?.location}
+                isNotValid={!location && showValidation}
             />
-            <MyButton onClick={redoProfile}>Редагувати</MyButton>
+            <MyButton type="submit">Редагувати</MyButton>
         </MyForm>
     )
 }
