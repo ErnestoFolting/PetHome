@@ -18,9 +18,9 @@ namespace backendPetHome.BLL.Services
             _requestService = requestService;
             _mapper = mapper;
         }
-        public IEnumerable<Advert> getAllAdverts()
+        public IEnumerable<Advert> getAdverts(int limit, int page)
         {
-            return _context.adverts.Where(el=>el.status == AdvertStatusEnum.search);
+            return _context.adverts.Where(el=>el.status == AdvertStatusEnum.search).Skip((page-1) * limit).Take(limit);
         }
 
         public Advert getAdvertById(int advertId)

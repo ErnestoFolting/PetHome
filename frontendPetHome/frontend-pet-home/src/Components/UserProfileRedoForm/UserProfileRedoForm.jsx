@@ -12,6 +12,7 @@ import { MyLoader } from '../../UI/Loader/MyLoader'
 import { useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup";
 import { UserProfileRedoSchema } from '../../ValidationSchemas/UserProfileRedoSchema'
+import FileValidator from '../../ValidationSchemas/FileValidator'
 
 const MAPS_KEY = process.env.REACT_APP_MAPS_KEY
 const libraries = ['places']
@@ -49,11 +50,12 @@ export const UserProfileRedoForm = ({ previousData, setRedoModalVisible, profile
     }
 
     const redoProfile = async (data) => {
-        if (data && location && file) {
+        if (data && location && file && FileValidator(file)) {
             setRedoData(data)
             setNeedFetch(!needFetch)
         } else {
             setShowValidation(true)
+            if (file && !FileValidator(file)) setFile(undefined)
         }
     }
 

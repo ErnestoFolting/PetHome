@@ -16,6 +16,7 @@ import { useJsApiLoader } from '@react-google-maps/api'
 import { useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CreateAdvertSchema } from '../../ValidationSchemas/CreateAdvertSchema'
+import FileValidator from '../../ValidationSchemas/FileValidator'
 
 const MAPS_KEY = process.env.REACT_APP_MAPS_KEY
 const libraries = ['places']
@@ -65,11 +66,12 @@ export const CreateAdvert = () => {
   }
 
   const addNewAdvert = async (data) => {
-    if (data && location && file && advertDates) {
+    if (data && location && file && FileValidator(file) && advertDates) {
       setAdvertData(data)
       setNeedFetch(!needFetch)
     } else {
       setShowValidation(true)
+      if (file && !FileValidator(file)) setFile(undefined)
     }
   }
 
@@ -88,6 +90,7 @@ export const CreateAdvert = () => {
       func()
     }
   }, [needFetch])
+
 
   function locationSet(lat, lng, description) {
     setLocation({ locationLat: String(lat)?.replace('.', ','), locationLng: String(lng)?.replace('.', ','), location: description })
@@ -134,6 +137,7 @@ export const CreateAdvert = () => {
             type="file"
             label='Фото тварини'
             isNotValid={!file && showValidation}
+            accept=".jpg,.jpeg,.png"
           />
           <InputWithLabel
             {...register("cost")}
@@ -144,7 +148,7 @@ export const CreateAdvert = () => {
           <LocationAutoComplete
             isLoaded={isLoaded}
             locationSet={locationSet}
-            isNotValid={!file && showValidation}
+            isNotValid={!location && showValidation}
           />
           <div className='createAdvertButtons'>
             <p>Дати</p>

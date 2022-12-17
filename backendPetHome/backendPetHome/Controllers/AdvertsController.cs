@@ -22,9 +22,9 @@ namespace backendPetHome.Controllers
             _hub = hub;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Advert>>> Get()
+        public async Task<ActionResult<IEnumerable<Advert>>> GetAdverts(int limit = 10,int page = 1)
         {
-            return Ok(_advertService.getAllAdverts());
+            return Ok(_advertService.getAdverts(limit,page));
         }
 
         [HttpGet("{id}")]

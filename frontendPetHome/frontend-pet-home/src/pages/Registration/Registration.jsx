@@ -14,6 +14,7 @@ import { useJsApiLoader } from '@react-google-maps/api'
 import { useForm } from 'react-hook-form';
 import { RegistrationSchema } from '../../ValidationSchemas/RegistrationSchema'
 import { yupResolver } from "@hookform/resolvers/yup";
+import FileValidator from '../../ValidationSchemas/FileValidator'
 
 const MAPS_KEY = process.env.REACT_APP_MAPS_KEY
 const libraries = ['places']
@@ -50,11 +51,12 @@ export const Registration = () => {
   const navigate = useNavigate()
 
   const registration = async (data) => {
-    if (data && location && file) {
+    if (data && location && file && FileValidator(file)) {
       setRegistrationData(data)
       setNeedFetch(!needFetch)
     } else {
       setShowValidation(true)
+      if (file && !FileValidator(file)) setFile(undefined)
     }
   }
 

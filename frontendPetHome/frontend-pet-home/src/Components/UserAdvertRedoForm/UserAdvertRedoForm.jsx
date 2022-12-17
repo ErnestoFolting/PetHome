@@ -13,6 +13,7 @@ import { Calendar, DateObject, getAllDatesInRange } from 'react-multi-date-picke
 import { CreateAdvertSchema } from '../../ValidationSchemas/CreateAdvertSchema'
 import { useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup";
+import FileValidator from '../../ValidationSchemas/FileValidator'
 
 const MAPS_KEY = process.env.REACT_APP_MAPS_KEY
 const libraries = ['places']
@@ -40,6 +41,7 @@ export const UserAdvertRedoForm = ({ previousData, setRedoModalVisible, setAdver
         Object.keys(location).forEach(function (key, index) {
             formData.append(key, Object.values(location)[index])
         })
+        formData.append('advertPhoto', file)
         await UserDataService.redoUserAdvert(formData, previousData?.id)
     })
 
@@ -65,11 +67,12 @@ export const UserAdvertRedoForm = ({ previousData, setRedoModalVisible, setAdver
     }
 
     const redoAdvert = async (data) => {
-        if (data && location && file && advertDates) {
+        if (data && location && file && FileValidator(file) && advertDates) {
             setRedoData(data)
             setNeedFetch(!needFetch)
         } else {
             setShowValidation(true)
+            if (file && !FileValidator(file)) setFile(undefined)
         }
     }
 
@@ -136,6 +139,7 @@ export const UserAdvertRedoForm = ({ previousData, setRedoModalVisible, setAdver
                 type="file"
                 label='Нове фото тварини'
                 isNotValid={!file && showValidation}
+                accept=".jpg,.jpeg,.png"
             />
             <InputWithLabel
                 {...register("cost")}
