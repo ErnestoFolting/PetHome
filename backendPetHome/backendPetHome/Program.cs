@@ -24,6 +24,7 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials()
+            .WithExposedHeaders("X-Pagination-Total-Count")
             .SetIsOriginAllowed(origin => true);
         });
 });

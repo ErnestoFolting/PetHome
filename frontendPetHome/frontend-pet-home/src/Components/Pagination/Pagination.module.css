@@ -1,0 +1,28 @@
+.pagination {
+    border-top: 2px solid black;
+    display: flex;
+    justify-content: center;
+    margin: 0 50px;
+}
+
+.paginationEl {
+    cursor: pointer;
+}
+
+.currentpaginationEl {
+    cursor: pointer;
+}
+
+.paginationEl button {
+    margin-top: 15px;
+    margin-left: 5px;
+    background-color: rgb(94, 92, 92);
+    color: white;
+}
+
+.currentpaginationEl button {
+    margin-top: 15px;
+    margin-left: 5px;
+    background-color: lightsalmon;
+    color: white;
+}

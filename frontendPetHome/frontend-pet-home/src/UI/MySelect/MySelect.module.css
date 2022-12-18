@@ -1,0 +1,28 @@
+.selectWithLabel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+    justify-content: center;
+    text-align: center;
+}
+
+.select {
+    height: 40px;
+    width: 100%;
+    top: 0;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.select:hover {
+    background-color: rgb(240, 240, 240);
+    transition: 0.3s ease;
+}
+
+
+.label {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

@@ -1,12 +1,13 @@
-ul{
+ul {
     list-style: none;
-    padding:0;
-    margin:0;
+    padding: 0;
+    margin: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fit,300px);
-    grid-gap:3em;
+    grid-template-columns: repeat(auto-fit, 300px);
+    grid-gap: 3em;
     padding: 50px;
 }
-img{
+
+img {
     max-width: 100%;
 }

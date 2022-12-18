@@ -11,7 +11,7 @@ export const InputWithLabel = React.forwardRef(({ label, type, isNotValid, ...pr
                 type={type}
                 placeholder={`Введіть ${label?.toLowerCase()}`}
                 {...props}
-                isNotValid = {isNotValid}
+                isNotValid={isNotValid}
             />
         </div>
     )

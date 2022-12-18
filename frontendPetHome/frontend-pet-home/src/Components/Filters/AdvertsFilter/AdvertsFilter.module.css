@@ -1,0 +1,53 @@
+.filters {
+    margin-top: 50px;
+    flex: 1;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 50px 0px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.filters>* {
+    margin: 10px;
+}
+
+.filters>div {
+    padding: 0;
+}
+
+.costFilter {
+    display: flex;
+    width: 50%;
+    min-width: 200px;
+    margin-bottom: 50px;
+    flex-direction: row;
+}
+
+.costFilter input {
+    height: 35px;
+}
+
+.costLabel {
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+.filtersTitle {
+    color: rgb(92, 92, 92);
+}
+
+.fromTo {
+    text-align: center;
+    width: 50px;
+    align-self: center;
+    justify-self: center;
+    font-weight: 500;
+    margin-left: 7px;
+}
+
+.datesCheckbox {
+    width: 100%;
+}

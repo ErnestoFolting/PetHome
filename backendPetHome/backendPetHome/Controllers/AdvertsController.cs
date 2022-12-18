@@ -2,9 +2,11 @@
 using backendPetHome.BLL.Services;
 using backendPetHome.DAL.Models;
 using backendPetHome.Hubs;
+using backendPetHome.Models.QueryParameters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 using System.Security.Claims;
 
 namespace backendPetHome.Controllers
@@ -22,11 +24,13 @@ namespace backendPetHome.Controllers
             _hub = hub;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Advert>>> GetAdverts(int limit = 10,int page = 1)
+        public async Task<ActionResult<IEnumerable<Advert>>> GetAdverts([FromQuery] AdvertsParameters parameters)
         {
-            return Ok(_advertService.getAdverts(limit,page));
+            var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            Tuple<IEnumerable<Advert>, int> advertsAndCount = _advertService.getAdverts(userId, parameters);
+            Response.Headers.Add("X-Pagination-Total-Count", JsonConvert.SerializeObject(advertsAndCount.Item2));
+            return Ok(advertsAndCount.Item1);
         }
-
         [HttpGet("{id}")]
         public async Task<ActionResult<Advert>> Get(int id)
         {

@@ -1,9 +1,17 @@
 import $api from '../HTTP/index'
 
 export default class AdvertService {
-    static async getAllAdverts() {
-        const response = await $api.get('/api/adverts')
-        return response.data
+    static async getAllAdverts(queryParams) {
+        const response = await $api.get('/api/adverts', {
+            params: {
+                PageNumber: queryParams?.currentPage,
+                PageSize: queryParams?.advertsLimit,
+                isDatesFit: queryParams?.isDatesFit,
+                priceFrom: queryParams?.costFrom,
+                priceTo: queryParams?.costTo
+            }
+        })
+        return response
     }
     static async getUserAdverts() {
         const response = await $api.get('/api/userdata/myadverts')
@@ -19,7 +27,7 @@ export default class AdvertService {
     }
     static async createAdvert(advertData) {
         const response = await $api.post('/api/adverts/', advertData, {
-            headers: {"Content-Type": "multipart/form-data"}
+            headers: { "Content-Type": "multipart/form-data" }
         })
         return response.data
     }

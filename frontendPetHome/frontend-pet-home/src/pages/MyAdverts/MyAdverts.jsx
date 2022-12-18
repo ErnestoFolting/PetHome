@@ -5,6 +5,7 @@ import AdvertService from '../../API/AdvertService'
 import { MyModal } from '../../UI/MyModal/MyModal'
 import { MyLoader } from '../../UI/Loader/MyLoader'
 import { AdvertList } from '../../Components/AdvertList/AdvertList'
+import { MyAdvertsFilter } from '../../Components/Filters/MyAdvertsFilter/MyAdvertsFilter'
 
 export const MyAdverts = () => {
     const [myAdverts, setMyAdverts] = useState([]);
@@ -30,11 +31,17 @@ export const MyAdverts = () => {
             {loading
                 ? <MyLoader />
                 : <div className='userAdvertsContent'>
-                    <h1 style={{ textAlign: 'center', marginTop:'30px' }}> Ваші оголошення</h1>
-                    <AdvertList
-                        userAdverts={true}
-                        adverts={myAdverts}
-                    />
+                    <h1 style={{ textAlign: 'center', marginTop: '30px' }}> Ваші оголошення</h1>
+                    <div className='advertsAndFilters'>
+                        <MyAdvertsFilter />
+                        <div className='advertsGrid'>
+                            <AdvertList
+                                userAdverts={true}
+                                adverts={myAdverts}
+                            />
+                        </div>
+                    </div>
+
                 </div>
             }
         </div>

@@ -3,6 +3,7 @@ using backendPetHome.BLL.DTOs;
 using backendPetHome.DAL.Data;
 using backendPetHome.DAL.Enums;
 using backendPetHome.DAL.Models;
+using backendPetHome.Models.QueryParameters;
 using Microsoft.EntityFrameworkCore;
 
 namespace backendPetHome.BLL.Services
@@ -11,16 +12,25 @@ namespace backendPetHome.BLL.Services
     {
         private readonly DataContext _context;
         private readonly RequestService _requestService;
+        private readonly TimeExceptionService _timeExceptionService;
         private readonly IMapper _mapper;
-        public AdvertService(DataContext context, RequestService requestService, IMapper mapper)
+        public AdvertService(DataContext context, RequestService requestService, IMapper mapper, TimeExceptionService timeExceptionService)
         {
             _context = context;
             _requestService = requestService;
+            _timeExceptionService = timeExceptionService;
             _mapper = mapper;
         }
-        public IEnumerable<Advert> getAdverts(int limit, int page)
+        public Tuple<IEnumerable<Advert>,int> getAdverts(string userId, AdvertsParameters parameters)
         {
-            return _context.adverts.Where(el=>el.status == AdvertStatusEnum.search).Skip((page-1) * limit).Take(limit);
+            IEnumerable<Advert> fitAdverts = _context.adverts.Where(
+                el => el.status == AdvertStatusEnum.search
+                && el.cost >= parameters.priceFrom && el.cost <= parameters.priceTo
+                && (parameters.isDatesFit ?
+                !_context.timeExceptions.Any(timeException => timeException.userId == userId && timeException.date >= el.startTime && timeException.date <= el.endTime) : true));
+            return (Tuple.Create(fitAdverts
+                    .Skip((parameters.PageNumber-1) * parameters.PageSize)
+                    .Take(parameters.PageSize),fitAdverts.Count()));
         }
 
         public Advert getAdvertById(int advertId)
