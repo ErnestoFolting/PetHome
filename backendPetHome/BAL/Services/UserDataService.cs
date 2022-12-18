@@ -4,6 +4,7 @@ using backendPetHome.BLL.DTOs.Request;
 using backendPetHome.BLL.DTOs.User;
 using backendPetHome.DAL.Data;
 using backendPetHome.DAL.Models;
+using backendPetHome.Models.QueryParameters;
 using Microsoft.EntityFrameworkCore;
 
 namespace backendPetHome.BLL.Services
@@ -17,9 +18,18 @@ namespace backendPetHome.BLL.Services
             _context = context;
             _mapper = mapper;
         }
-        public IEnumerable<Advert> getCurrentUserAdverts(string userId)
+        public Tuple<IEnumerable<Advert>, int> getCurrentUserAdverts(string userId, UserAdvertsParameters parameters)
         {
-            return _context.adverts.Include(advert => advert.requests).Where(a => a.ownerId == userId);
+            IEnumerable<Advert> fitAdverts = _context.adverts
+                .Include(advert=>advert.requests)
+                .Where(
+                el => el.ownerId == userId 
+                && el.status == parameters.advertsStatus
+                && el.cost >= parameters.priceFrom && el.cost <= parameters.priceTo);
+
+            return (Tuple.Create(fitAdverts
+                    .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+                    .Take(parameters.PageSize), fitAdverts.Count()));
         }
         public async Task<AdvertUserDTO?> getCurrentUserCertainAdvert(int advertId)
         {

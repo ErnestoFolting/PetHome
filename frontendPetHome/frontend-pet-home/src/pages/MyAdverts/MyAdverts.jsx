@@ -5,14 +5,24 @@ import AdvertService from '../../API/AdvertService'
 import { MyModal } from '../../UI/MyModal/MyModal'
 import { MyLoader } from '../../UI/Loader/MyLoader'
 import { AdvertList } from '../../Components/AdvertList/AdvertList'
-import { MyAdvertsFilter } from '../../Components/Filters/MyAdvertsFilter/MyAdvertsFilter'
+import { AdvertsFilter } from '../../Components/Filters/AdvertsFilter/AdvertsFilter'
+import { usePagination } from '../../Hooks/usePagination';
+import { getPagesCount } from '../../Common/pagesCount'
 
 export const MyAdverts = () => {
+
     const [myAdverts, setMyAdverts] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
+
+    const [totalPages, setTotalPages] = useState(0);
+    const [pagesArray] = usePagination(totalPages);
+    const [queryParams, setQueryParams] = useState({ advertsLimit: 6, currentPage: 1, advertsStatus: 'search', costFrom: 1, costTo: 100000 });
+
     const [fetchUserAdverts, loading, error] = useFetching(async () => {
-        const advertsResponse = await AdvertService.getUserAdverts()
-        setMyAdverts(advertsResponse)
+        const response = await AdvertService.getUserAdverts(queryParams)
+        const totalAdverts = response.headers['x-pagination-total-count']
+        setTotalPages(getPagesCount(totalAdverts, queryParams?.advertsLimit))
+        setMyAdverts(response.data)
     });
 
     useEffect(() => {
@@ -24,7 +34,8 @@ export const MyAdverts = () => {
             }
         }
         fetchData();
-    }, []);
+    }, [queryParams]);
+
     return (
         <div className='userAdvertsPage'>
             <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{error}</MyModal>
@@ -33,15 +44,21 @@ export const MyAdverts = () => {
                 : <div className='userAdvertsContent'>
                     <h1 style={{ textAlign: 'center', marginTop: '30px' }}> Ваші оголошення</h1>
                     <div className='advertsAndFilters'>
-                        <MyAdvertsFilter />
+                        <AdvertsFilter
+                            queryParams={queryParams}
+                            setQueryParams={setQueryParams}
+                            isUserAdverts
+                        />
                         <div className='advertsGrid'>
                             <AdvertList
                                 userAdverts={true}
                                 adverts={myAdverts}
+                                pagesArray={pagesArray}
+                                params={queryParams}
+                                setParams={setQueryParams}
                             />
                         </div>
                     </div>
-
                 </div>
             }
         </div>

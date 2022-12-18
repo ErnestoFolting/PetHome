@@ -1,14 +1,14 @@
 import React from 'react'
 import s from './MySelect.module.css'
 
-export const MySelect = ({ options, filters, setFilters, labelText }) => {
+export const MySelect = ({ options, filterValue, setFilter, labelText }) => {
 
     return (
         <div className={s.selectWithLabel}>
             <label className={s.label} htmlFor="mySelect">{labelText}</label>
             <select
-                value={filters?.advertsLimit}
-                onChange={(e) => setFilters({ ...filters, advertsLimit: e.target.value, currentPage: 1 })}
+                value={filterValue}
+                onChange={(e) => setFilter(e.target.value)}
                 className={s.select}
                 id="mySelect"
             >

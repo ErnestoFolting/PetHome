@@ -3,8 +3,10 @@ using backendPetHome.BLL.DTOs.Request;
 using backendPetHome.BLL.DTOs.User;
 using backendPetHome.BLL.Services;
 using backendPetHome.DAL.Models;
+using backendPetHome.Models.QueryParameters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Net;
 using System.Security.Claims;
 
@@ -22,10 +24,12 @@ namespace backendPetHome.Controllers
             _userDataService = userDataService;
         }
         [HttpGet("myadverts")]
-        public async Task<ActionResult<IEnumerable<Advert>>> GetUserAdverts()
+        public async Task<ActionResult<IEnumerable<Advert>>> GetUserAdverts([FromQuery] UserAdvertsParameters parameters)
         {
             string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            return Ok(_userDataService.getCurrentUserAdverts(userId));
+            var advertsAndCount = _userDataService.getCurrentUserAdverts(userId, parameters);
+            Response.Headers.Add("X-Pagination-Total-Count", JsonConvert.SerializeObject(advertsAndCount.Item2));
+            return Ok(advertsAndCount.Item1);
         }
         [HttpGet("myadverts/{id}")]
         public async Task<ActionResult<IEnumerable<AdvertUserDTO>>> GetUserCertainAdvert(int id)

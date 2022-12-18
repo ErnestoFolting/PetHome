@@ -14,8 +14,8 @@ export default function Adverts() {
   const [modalVisible, setModalVisible] = useState(false);
 
   const [totalPages, setTotalPages] = useState(0);
-  const [queryParams, setQueryParams] = useState({ advertsLimit: 6, currentPage: 1, isDatesFit: false, costFrom: 1, costTo: 100000 });
   const [pagesArray] = usePagination(totalPages);
+  const [queryParams, setQueryParams] = useState({ advertsLimit: 6, currentPage: 1, isDatesFit: false, costFrom: 1, costTo: 100000 });
 
   const [fetchAdverts, loader, error] = useFetching(async () => {
     const response = await AdvertService.getAllAdverts(queryParams)
@@ -33,7 +33,6 @@ export default function Adverts() {
       }
     }
     fetchData();
-
   }, [queryParams])
 
   return (
