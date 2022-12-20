@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace backendPetHome.BLL.DTOs.User
+﻿namespace backendPetHome.BLL.DTOs.UserDTOs
 {
     public class UserRedoDTO
     {

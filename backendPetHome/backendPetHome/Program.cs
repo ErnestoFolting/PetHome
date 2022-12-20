@@ -1,4 +1,4 @@
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      global using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore;
 using backendPetHome.BLL.Services;
 using backendPetHome.DAL.Data;
 using backendPetHome.DAL.Models;
@@ -10,8 +10,11 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
-using backendPetHome.BLL.MappingProfiles;
 using System.Reflection;
+using FluentValidation.AspNetCore;
+using backendPetHome.BLL.MappingProfiles.UserProfiles;
+using backendPetHome.BLL.MappingProfiles.AdvertProfiles;
+using backendPetHome.Validators.AdvertValidators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +41,8 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<TimeExceptionService>();
 builder.Services.AddScoped<UserDataService>();
 builder.Services.AddScoped<RequestService>();
+builder.Services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AdvertDTOValidator>());
+
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));

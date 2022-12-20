@@ -1,4 +1,6 @@
-﻿using backendPetHome.BLL.Models;
+﻿using AutoMapper;
+using backendPetHome.BLL.DTOs.UserDTOs;
+using backendPetHome.BLL.Models;
 using backendPetHome.DAL.Data;
 using backendPetHome.DAL.Models;
 using Microsoft.AspNetCore.Identity;
@@ -16,42 +18,37 @@ namespace backendPetHome.BLL.Services
         private readonly DataContext _dataContext;
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public AuthService(DataContext dataContext, UserManager<User> userManager, IConfiguration configuration)
+        public AuthService(DataContext dataContext, UserManager<User> userManager, IMapper mapper, IConfiguration configuration)
         {
             _dataContext = dataContext;
             _userManager = userManager;
             _configuration = configuration;
+            _mapper = mapper;
         }
-        public async Task Register(RegisterData data, string fileName)
+        public async Task Register(UserRegisterDTO data, string fileName)
         {
-            var userExisted = await _userManager.FindByNameAsync(data.username);
+            var userExisted = await _userManager.FindByNameAsync(data.UserName);
             if (userExisted != null)
             {
                 throw new ArgumentException("The user with that userName already existing.");
             }
-            User user = new()
-            {
-                Email = data.email,
-                UserName = data.username,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                surname = data.surname,
-                name = data.name,
-                PhoneNumber = data.phone,
-                sex = data.sex,
-                locationLat = data.locationLat,
-                locationLng = data.locationLng,
-                location = data.location,
-                photoFilePath = "/images/" + fileName
-            };
-            var result = await _userManager.CreateAsync(user, data.password);
+            User newUser = _mapper.Map<User>(data);
+
+            string photoFilePath = "/images/" + fileName;
+
+            newUser.photoFilePath = photoFilePath;
+
+            var result = await _userManager.CreateAsync(newUser, data.password);
+
             if (!result.Succeeded)
             {
                 throw new InvalidOperationException("Can not add a new user.");
             }
         }
 
-        public async Task<Tuple<SecurityToken, RefreshToken>> Login(LoginCreds creds)
+        public async Task<Tuple<SecurityToken, RefreshToken>> Login(UserLoginDTO creds)
         {
             var user = await _userManager.FindByNameAsync(creds.username);
             if (user != null && await _userManager.CheckPasswordAsync(user, creds.password))

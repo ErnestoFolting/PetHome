@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using backendPetHome.BLL.DTOs.UserDTOs;
+using backendPetHome.DAL.Enums;
+using System.Text.Json.Serialization;
 
-namespace backendPetHome.BLL.DTOs
+namespace backendPetHome.BLL.DTOs.AdvertDTOs
 {
     public class AdvertDTO
     {
@@ -14,9 +12,13 @@ namespace backendPetHome.BLL.DTOs
         public string location { get; set; } = string.Empty;
         public double locationLat { get; set; } = 0;
         public double locationLng { get; set; } = 0;
-        public string description { get; set; }
+        public string description { get; set; } = string.Empty;
         public string? photoFilePath { get; set; } = string.Empty;
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public AdvertStatusEnum status { get; set; } = AdvertStatusEnum.search;
         public DateTime startTime { get; set; }
         public DateTime endTime { get; set; }
+        public UserDTO? owner { get; set; } //make some DTOs
+        public string?  ownerId { get; set; }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using backendPetHome.BLL.DTOs;
+using backendPetHome.BLL.DTOs.AdvertDTOs;
+using backendPetHome.BLL.Models.QueryParameters;
 using backendPetHome.DAL.Data;
 using backendPetHome.DAL.Enums;
 using backendPetHome.DAL.Models;
-using backendPetHome.Models.QueryParameters;
 using Microsoft.EntityFrameworkCore;
 
 namespace backendPetHome.BLL.Services
@@ -12,31 +12,34 @@ namespace backendPetHome.BLL.Services
     {
         private readonly DataContext _context;
         private readonly RequestService _requestService;
-        private readonly TimeExceptionService _timeExceptionService;
         private readonly IMapper _mapper;
-        public AdvertService(DataContext context, RequestService requestService, IMapper mapper, TimeExceptionService timeExceptionService)
+        public AdvertService(DataContext context, RequestService requestService, IMapper mapper)
         {
             _context = context;
             _requestService = requestService;
-            _timeExceptionService = timeExceptionService;
             _mapper = mapper;
         }
-        public Tuple<IEnumerable<Advert>,int> getAdverts(string userId, AdvertsParameters parameters)
+        public Tuple<IEnumerable<AdvertDTO>,int> getAdverts(string userId, AdvertsParameters parameters)
         {
             IEnumerable<Advert> fitAdverts = _context.adverts.Where(
                 el => el.status == AdvertStatusEnum.search
                 && el.cost >= parameters.priceFrom && el.cost <= parameters.priceTo
                 && (parameters.isDatesFit ?
                 !_context.timeExceptions.Any(timeException => timeException.userId == userId && timeException.date >= el.startTime && timeException.date <= el.endTime) : true));
-            return (Tuple.Create(fitAdverts
-                    .Skip((parameters.PageNumber-1) * parameters.PageSize)
-                    .Take(parameters.PageSize),fitAdverts.Count()));
+
+            IEnumerable<AdvertDTO> advertsDTO = _mapper.Map<IEnumerable<AdvertDTO>>(
+                    fitAdverts
+                    .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+                    .Take(parameters.PageSize));
+
+            return (Tuple.Create(advertsDTO, fitAdverts.Count()));
         }
 
-        public Advert getAdvertById(int advertId)
+        public AdvertDTO getAdvertById(int advertId)
         {
             var advert = _context.adverts.Include(el => el.owner).FirstOrDefault(a => a.Id == advertId);
-            return advert;
+            AdvertDTO advertDTO = _mapper.Map<AdvertDTO>(advert);
+            return advertDTO;
         }
 
         public async Task<Tuple<IEnumerable<string>,AdvertDTO>> addAdvert(AdvertDTO advertToAdd, string userId,string fileName)
@@ -44,7 +47,6 @@ namespace backendPetHome.BLL.Services
             Advert newAdvert = _mapper.Map<Advert>(advertToAdd);
             newAdvert.photoFilePath = "/images/" + fileName;
             newAdvert.ownerId = userId;
-            newAdvert.status = AdvertStatusEnum.search;
             _context.adverts.Add(newAdvert);
             await _context.SaveChangesAsync();
             IEnumerable<string> possiblePerformers = await choosePossiblePerformers(newAdvert, userId);
@@ -58,7 +60,7 @@ namespace backendPetHome.BLL.Services
         }
         public async Task<IEnumerable<string>> choosePossiblePerformers(Advert advert, string ownerId)
         {
-            IEnumerable<string> possiblePerformers = _context.selectPossiblePerformers(advert.startTime, advert.endTime, advert.locationLng, advert.locationLat, ownerId).Select(el=>el.Id).ToList();
+            IEnumerable<string> possiblePerformers = await _context.selectPossiblePerformers(advert.startTime, advert.endTime, advert.locationLng, advert.locationLat, ownerId).Select(el=>el.Id).ToListAsync();
             return possiblePerformers;
         }
         public Task MarkAsFinished(int advertId, string userId) {
@@ -66,6 +68,7 @@ namespace backendPetHome.BLL.Services
             if (advertInDb == null) throw new ArgumentException("That advert not exists.");
             if (advertInDb.ownerId!= userId) throw new ArgumentException("You do not have the access.");
             advertInDb.status = AdvertStatusEnum.finished;
+            _context.Update(advertInDb);
             return _context.SaveChangesAsync();
         }
         public Task deleteAdvert(int advertId, string userId)

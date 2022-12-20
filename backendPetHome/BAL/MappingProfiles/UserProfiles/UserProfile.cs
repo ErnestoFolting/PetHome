@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using backendPetHome.BLL.DTOs;
+using backendPetHome.BLL.DTOs.UserDTOs;
 using backendPetHome.DAL.Models;
 
-namespace backendPetHome.BLL.MappingProfiles
+namespace backendPetHome.BLL.MappingProfiles.UserProfiles
 {
     public class UserProfile : Profile
     {
@@ -12,5 +12,5 @@ namespace backendPetHome.BLL.MappingProfiles
                 .ForMember(destination => destination.ifHaveRequests, opt => opt.MapFrom(source => source.requests.Any()));
             CreateMap<UserDTO, User>();
         }
-    }   
+    }
 }

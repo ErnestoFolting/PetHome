@@ -36,7 +36,6 @@ const CertainAdvert = () => {
             } 
         }
         fetchData();
-
     }, []);
 
     return (

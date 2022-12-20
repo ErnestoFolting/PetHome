@@ -133,7 +133,7 @@ export const Registration = () => {
           <InputWithLabel
             type='tel'
             label="Номер телефону(+380)*"
-            {...register("phone")}
+            {...register("phoneNumber")}
             isNotValid={errors?.phone}
           />
           <InputWithLabel

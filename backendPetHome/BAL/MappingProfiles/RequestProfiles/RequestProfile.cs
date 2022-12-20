@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using backendPetHome.BLL.DTOs.Request;
+using backendPetHome.BLL.DTOs.RequestDTOs;
 using backendPetHome.DAL.Models;
 
 namespace backendPetHome.BLL.MappingProfiles

@@ -46,12 +46,11 @@ const Advert = ({ advert, pathToProfile, navigate, isCreatedByUser }) => {
     const thisAdvertRequest = userRequests?.find(el => el?.advertId === advert?.id);
 
     function renderSwitch(status) {
-        console.log(status)
         switch (status) {
             case 'rejected':
                 return <div >На жаль, власник відхилив Вашу пропозицію</div>
             case 'generated':
-                return <div >Система підібрала для Вас це оголоення</div>
+                return <div >Система підібрала для Вас це оголошення</div>
             case 'applied':
                 return <div >Ви подали заявку, очікуйте</div>
             case 'confirmed':

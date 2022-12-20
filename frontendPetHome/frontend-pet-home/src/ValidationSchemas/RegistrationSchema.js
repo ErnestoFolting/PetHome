@@ -8,7 +8,7 @@ export const RegistrationSchema = yup.object().shape({
     name: yup.string().required().min(2),
     email: yup.string().email().required(),
     phone: yup.string().matches(phoneRegExp, 'Phone number is not valid').min(10).max(13),
-    username: yup.string().required(),
+    username: yup.string().required().min(5),
     password: yup.string().required().min(8).matches(passwordRegExp, "Password have to contain at least 1 upper case, 1 lower case, 8 symbols, 1 special symbol."),
     confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match')
 });

@@ -55,7 +55,7 @@ namespace backendPetHome.BLL.Services
             var requestInDb = _context.requests.Include(el => el.advert).FirstOrDefault(el => el.id == requestId);
             if (requestInDb == null) throw new ArgumentException("This request does not exist.");
             if (requestInDb.userId != userId) throw new ArgumentException("You do not have the access.");
-            requestInDb.status = DAL.Enums.RequestStatusEnum.applied;
+            requestInDb.status = DAL.Enums.RequestStatusEnum.applied; //update?
             await _context.SaveChangesAsync();
         }
 

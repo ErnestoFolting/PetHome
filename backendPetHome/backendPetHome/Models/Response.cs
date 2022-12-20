@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL.Models
+namespace backendPetHome.Models
 {
     public class Response
     {
-        public string Status{ get; set; }
-        public string Message{ get; set; }
+        public string Status { get; set; }
+        public string Message { get; set; }
     }
 }

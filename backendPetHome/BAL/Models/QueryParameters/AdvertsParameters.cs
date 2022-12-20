@@ -1,6 +1,6 @@
-﻿namespace backendPetHome.Models.QueryParameters
+﻿namespace backendPetHome.BLL.Models.QueryParameters
 {
-    public class AdvertsParameters: QueryStringParameters
+    public class AdvertsParameters : QueryStringParameters
     {
         public int priceFrom { get; set; } = 0;
         public int priceTo { get; set; } = int.MaxValue;
@@ -15,7 +15,7 @@
             }
             set
             {
-                _kmRadius = (value > _maxKmRadius) ? _maxKmRadius : value;
+                _kmRadius = value > _maxKmRadius ? _maxKmRadius : value;
             }
         }
     }

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using backendPetHome.BLL.DTOs;
+using backendPetHome.BLL.DTOs.AdvertDTOs;
 using backendPetHome.DAL.Models;
 
-namespace backendPetHome.BLL.MappingProfiles
+namespace backendPetHome.BLL.MappingProfiles.AdvertProfiles
 {
     public class AdvertProfile : Profile
     {

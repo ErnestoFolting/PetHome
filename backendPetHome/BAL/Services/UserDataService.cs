@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using backendPetHome.BLL.DTOs;
-using backendPetHome.BLL.DTOs.Request;
-using backendPetHome.BLL.DTOs.User;
+using backendPetHome.BLL.DTOs.AdvertDTOs;
+using backendPetHome.BLL.DTOs.RequestDTOs;
+using backendPetHome.BLL.DTOs.UserDTOs;
+using backendPetHome.BLL.Models.QueryParameters;
 using backendPetHome.DAL.Data;
 using backendPetHome.DAL.Models;
-using backendPetHome.Models.QueryParameters;
 using Microsoft.EntityFrameworkCore;
 
 namespace backendPetHome.BLL.Services
@@ -18,7 +18,7 @@ namespace backendPetHome.BLL.Services
             _context = context;
             _mapper = mapper;
         }
-        public Tuple<IEnumerable<Advert>, int> getCurrentUserAdverts(string userId, UserAdvertsParameters parameters)
+        public Tuple<IEnumerable<AdvertUserDTO>, int> getCurrentUserAdverts(string userId, UserAdvertsParameters parameters)
         {
             IEnumerable<Advert> fitAdverts = _context.adverts
                 .Include(advert=>advert.requests)
@@ -26,10 +26,11 @@ namespace backendPetHome.BLL.Services
                 el => el.ownerId == userId 
                 && el.status == parameters.advertsStatus
                 && el.cost >= parameters.priceFrom && el.cost <= parameters.priceTo);
-
-            return (Tuple.Create(fitAdverts
+            IEnumerable<AdvertUserDTO> advertsDTO = _mapper.Map<IEnumerable<AdvertUserDTO>>(
+                     fitAdverts
                     .Skip((parameters.PageNumber - 1) * parameters.PageSize)
-                    .Take(parameters.PageSize), fitAdverts.Count()));
+                    .Take(parameters.PageSize));
+            return (Tuple.Create(advertsDTO, fitAdverts.Count()));
         }
         public async Task<AdvertUserDTO?> getCurrentUserCertainAdvert(int advertId)
         {
@@ -80,7 +81,6 @@ namespace backendPetHome.BLL.Services
             {
                 userInDb = _mapper.Map(redoData, userInDb);
                 if(newFileName != null) userInDb.photoFilePath = "/images/" + newFileName;
-
                 _context.Update(userInDb);
             }
             return _context.SaveChangesAsync();
@@ -99,7 +99,6 @@ namespace backendPetHome.BLL.Services
                 data.photoFilePath = advertInDb.photoFilePath;
                 advertInDb = _mapper.Map(data, advertInDb);
                 if (newFileName != null) advertInDb.photoFilePath = "/images/" + newFileName;
-
                 _context.Update(advertInDb);
             }
             return _context.SaveChangesAsync();

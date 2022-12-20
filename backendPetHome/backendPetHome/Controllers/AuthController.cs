@@ -1,11 +1,11 @@
-﻿using backendPetHome.BLL.Models;
+﻿using backendPetHome.BLL.DTOs.UserDTOs;
+using backendPetHome.BLL.Models;
 using backendPetHome.BLL.Services;
 using backendPetHome.DAL.Models;
-using DAL.Models;
+using backendPetHome.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 namespace backendPetHome.Controllers
 {
@@ -21,7 +21,7 @@ namespace backendPetHome.Controllers
         }
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> Register([FromForm]RegisterData data, IFormFile userPhoto)
+        public async Task<IActionResult> Register([FromForm]UserRegisterDTO data, IFormFile userPhoto)
         {
             var filePath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "images", userPhoto.FileName);
             using (var stream = System.IO.File.Create(filePath))
@@ -33,7 +33,7 @@ namespace backendPetHome.Controllers
         }
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login([FromBody]LoginCreds creds)
+        public async Task<IActionResult> Login([FromBody]UserLoginDTO creds)
         {
             Tuple<SecurityToken, RefreshToken> tokens = await _authService.Login(creds);
             SetTokens(tokens);

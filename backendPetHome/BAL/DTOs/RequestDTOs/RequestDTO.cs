@@ -1,8 +1,10 @@
-﻿using backendPetHome.DAL.Enums;
+﻿using backendPetHome.BLL.DTOs.AdvertDTOs;
+using backendPetHome.BLL.DTOs.UserDTOs;
+using backendPetHome.DAL.Enums;
 using System.Text.Json.Serialization;
 
 
-namespace backendPetHome.BLL.DTOs.Request
+namespace backendPetHome.BLL.DTOs.RequestDTOs
 {
     public class RequestDTO
     {

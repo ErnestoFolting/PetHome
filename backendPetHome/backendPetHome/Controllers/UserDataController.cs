@@ -1,13 +1,12 @@
-﻿using backendPetHome.BLL.DTOs;
-using backendPetHome.BLL.DTOs.Request;
-using backendPetHome.BLL.DTOs.User;
+﻿using backendPetHome.BLL.DTOs.AdvertDTOs;
+using backendPetHome.BLL.DTOs.RequestDTOs;
+using backendPetHome.BLL.DTOs.UserDTOs;
+using backendPetHome.BLL.Models.QueryParameters;
 using backendPetHome.BLL.Services;
 using backendPetHome.DAL.Models;
-using backendPetHome.Models.QueryParameters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Net;
 using System.Security.Claims;
 
 namespace backendPetHome.Controllers
