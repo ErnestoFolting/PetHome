@@ -23,17 +23,16 @@ namespace backendPetHome.Controllers
             _hub = hub;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AdvertDTO>>> GetAdverts([FromQuery] AdvertsParameters parameters)
+        public async Task<ActionResult<IEnumerable<AdvertDTO>>> GetAdverts([FromQuery] QueryStringParameters parameters)
         {
-            var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            Tuple<IEnumerable<AdvertDTO>, int> advertsAndCount = _advertService.getAdverts(userId, parameters);
-            Response.Headers.Add("X-Pagination-Total-Count", JsonConvert.SerializeObject(advertsAndCount.Item2));
-            return Ok(advertsAndCount.Item1);
+            var advertsAndCount = await _advertService.getAdverts(parameters);
+            Response.Headers.Add("X-Pagination-Total-Count", JsonConvert.SerializeObject(advertsAndCount.totalCount));
+            return Ok(advertsAndCount.fitAdvertsDTO);
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<AdvertDTO>> Get(int id)
         {
-            return Ok(_advertService.getAdvertById(id));
+            return Ok(await _advertService.getAdvertById(id));
         }
 
         [HttpPost]

@@ -1,5 +1,4 @@
 ﻿using backendPetHome.DAL.Entities;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -16,7 +15,7 @@ namespace backendPetHome.DAL.Data
         public DbSet<TimeException> timeExceptions{ get; set; }
         public DbSet<Request> requests{ get; set; }
 
-        public IQueryable<User> selectPossiblePerformers(DateTime advertStartTime, DateTime advertEndTime, double advertLng, double advertLat, string ownerId) => FromExpression(() => selectPossiblePerformers(advertStartTime, advertEndTime, advertLng, advertLat, ownerId));
+        public IQueryable<User> selectPossiblePerformers(DateTime advertStartTime, DateTime advertEndTime, double advertLng, double advertLat, string? ownerId) => FromExpression(() => selectPossiblePerformers(advertStartTime, advertEndTime, advertLng, advertLat, ownerId));
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

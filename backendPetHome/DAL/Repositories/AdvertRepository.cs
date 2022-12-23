@@ -1,6 +1,8 @@
 ﻿using backendPetHome.DAL.Data;
 using backendPetHome.DAL.Entities;
 using backendPetHome.DAL.Interfaces.RepositoryInterfaces;
+using backendPetHome.DAL.Specifications;
+using Microsoft.EntityFrameworkCore;
 
 namespace backendPetHome.DAL.Repositories
 {
@@ -12,9 +14,41 @@ namespace backendPetHome.DAL.Repositories
             _context = context;
         }
 
-        public Task<Advert?> GetById(int id)
+        public async Task Add(Advert advertToAdd)
         {
-            return _context.Set<Advert>().FindAsync(id).AsTask();
+            await _context.Set<Advert>().AddAsync(advertToAdd);
+        }
+
+        public Task<Advert?> GetByIdSpecification(Specification<Advert> spec)
+        {
+            return ApplySpecification(spec).SingleOrDefaultAsync();
+        }
+
+        public Task<List<Advert>> GetBySpecification(Specification<Advert> spec)
+        {
+            return ApplySpecification(spec).ToListAsync();
+        }
+
+        public async Task<(List<Advert> fitAdverts, int totalCount)> GetBySpecificationAndPaging(Specification<Advert> spec)
+        {
+            var fitAdvertsWithPaging = await ApplySpecification(spec).ToListAsync();
+            spec.RemovePagination();
+            var totalCount = await ApplySpecification(spec).CountAsync();
+            return(fitAdvertsWithPaging,totalCount);
+        }
+        public async Task Update(Advert advertToUpdate)
+        { 
+            _context.Set<Advert>().Attach(advertToUpdate);
+            _context.Entry(advertToUpdate).State = EntityState.Modified;
+        }
+        public async Task Delete(Advert entity)
+        {
+            _context.Set<Advert>().Remove(entity);
+        }
+
+        private IQueryable<Advert> ApplySpecification(Specification<Advert> specification)
+        {
+            return SpecificationEvaluator.getQuery(_context.Set<Advert>(), specification);
         }
     }
 }

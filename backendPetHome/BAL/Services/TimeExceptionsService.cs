@@ -1,18 +1,22 @@
-﻿using backendPetHome.DAL.Data;
+﻿using AutoMapper;
+using backendPetHome.BLL.Services.Abstract;
 using backendPetHome.DAL.Entities;
+using backendPetHome.DAL.Interfaces;
+using backendPetHome.DAL.Specifications.RequestSpecifications;
 
 namespace backendPetHome.BLL.Services
 {
-    public class TimeExceptionService
+    public class TimeExceptionService : BaseService
     {
-        private readonly DataContext _context;
-        public TimeExceptionService(DataContext context)
+        public TimeExceptionService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
-            _context = context;
         }
-        public Task addTimeExceptions(string userId, IEnumerable<DateTime> dates)
+        public async Task addTimeExceptions(string userId, IEnumerable<DateTime> dates)
         {
-            var userExceptions = _context.timeExceptions.Where(el => el.userId == userId).ToList();
+            var userExceptions = await _unitOfWork
+                .TimeExceptionRepository
+                .GetBySpecification(new TimeExceptionCurrentUserSpecification(userId));
+
             foreach (var date in dates)
             {
                 TimeException exception = new();
@@ -20,26 +24,37 @@ namespace backendPetHome.BLL.Services
                 exception.date = date;
                 if (userExceptions.FindIndex(el => el.date == exception.date) == -1)
                 {
-                    _context.timeExceptions.Add(exception);
+                    await _unitOfWork.TimeExceptionRepository.Add(exception);
                 }
             }
-            return _context.SaveChangesAsync();
+
+            await _unitOfWork.SaveChangesAsync();
         }
-        public Task deleteTimeExceptions(string userId, IEnumerable<DateTime> datesToRemove)
+
+        public async Task deleteTimeExceptions(string userId, IEnumerable<DateTime> datesToRemove)
         {
-            var userExceptions = _context.timeExceptions.Where(el => el.userId == userId).ToList();
-            foreach(var userException in userExceptions)
+            var userExceptions = await _unitOfWork
+                .TimeExceptionRepository
+                .GetBySpecification(new TimeExceptionCurrentUserSpecification(userId));
+
+            foreach (var userException in userExceptions)
             {
                 if (datesToRemove.Contains(userException.date))
                 {
-                    _context.Remove(userException);
+                    await _unitOfWork.TimeExceptionRepository.Delete(userException);
                 }
             }
-            return _context.SaveChangesAsync();
+
+            await _unitOfWork.SaveChangesAsync();
         }
-        public bool checkPerformerDates(string userId, DateTime advertStart, DateTime advertEnd)
+
+        public async Task<bool> checkPerformerDates(string userId, DateTime advertStart, DateTime advertEnd)
         {
-            return !_context.timeExceptions.Any(el => el.userId == userId && el.date >= advertStart && el.date <= advertEnd);
+            List<TimeException> fitExceptions = await 
+                _unitOfWork
+                .TimeExceptionRepository
+                .GetBySpecification(new TimeExceptionCurrentUserFitAdvertTimeSpecification(userId, advertStart, advertEnd));
+            return fitExceptions.Any();
         }
     }    
 }

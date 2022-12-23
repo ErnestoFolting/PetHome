@@ -6,7 +6,9 @@ using backendPetHome.BLL.Services.Abstract;
 using backendPetHome.DAL.Data;
 using backendPetHome.DAL.Entities;
 using backendPetHome.DAL.Interfaces;
+using backendPetHome.DAL.Specifications.AdvertSpecifications;
 using backendPetHome.DAL.Specifications.QueryParameters;
+using backendPetHome.DAL.Specifications.RequestSpecifications;
 using Microsoft.EntityFrameworkCore;
 
 namespace backendPetHome.BLL.Services
@@ -18,26 +20,21 @@ namespace backendPetHome.BLL.Services
         {
             _context = context;
         }
-        public Tuple<IEnumerable<AdvertUserDTO>, int> getCurrentUserAdverts(string userId, UserAdvertsParameters parameters)
+        public async Task<(List<AdvertUserDTO> fitAdvertsDTO, int totalCount)> getCurrentUserAdverts(string userId, QueryStringParameters parameters)
         {
-            IEnumerable<Advert> fitAdverts = _context.adverts
-                .Include(advert=>advert.requests)
-                .Where(
-                el => el.ownerId == userId 
-                && el.status == parameters.advertsStatus
-                && el.cost >= parameters.priceFrom && el.cost <= parameters.priceTo);
-            IEnumerable<AdvertUserDTO> advertsDTO = _mapper.Map<IEnumerable<AdvertUserDTO>>(
-                     fitAdverts
-                    .Skip((parameters.PageNumber - 1) * parameters.PageSize)
-                    .Take(parameters.PageSize));
-            return (Tuple.Create(advertsDTO, fitAdverts.Count()));
+            var tuple = await 
+                _unitOfWork.AdvertRepository
+                .GetBySpecificationAndPaging(new AdvertCurrentUserWithParamsAndPaginationIncludesRequestSpecification(userId, parameters));
+            List<AdvertUserDTO> fitAdvertsDTO = _mapper.Map<List<AdvertUserDTO>>(tuple.fitAdverts);
+            return (fitAdvertsDTO, tuple.totalCount);
         }
-        public async Task<AdvertUserDTO?> getCurrentUserCertainAdvert(int advertId)
+        public async Task<AdvertUserDTO?> getCurrentUserCertainAdvert(string userId, int advertId)
         {
-            Advert? advertInDb = await _context.adverts
-                .Include(advert => advert.requests)
-                .ThenInclude(request=>request.user)
-                .FirstOrDefaultAsync(el => el.Id == advertId);
+            Advert? advertInDb = await 
+                _unitOfWork.AdvertRepository
+                .GetByIdSpecification(new AdvertByIdIncludesRequestAndUserSpecification(advertId));
+            if (advertInDb == null) throw new ArgumentException("Advert not found.");
+            if (advertInDb.ownerId != userId) throw new ArgumentException("This is not your advert.");
             AdvertUserDTO advertUserDTO = _mapper.Map<AdvertUserDTO>(advertInDb);
             return advertUserDTO;
         }
@@ -47,11 +44,12 @@ namespace backendPetHome.BLL.Services
             UserDTO userDTO = _mapper.Map<UserDTO>(user);
             return userDTO;
         }
-        public async Task<List<RequestDTO>> getCurrentUserRequests(string id)
+        public async Task<List<Request>> getCurrentUserRequests(string id)
         {
-            List<Request> requests = await _unitOfWork.RequestRepository.GetCurrentUserRequests(id);
-            List<RequestDTO> requestDTOs = _mapper.Map<List<RequestDTO>>(requests);
-            return requestDTOs;
+            //List<Request> requests = await _unitOfWork.RequestRepository.GetBySpecification(new RequestCurrentUserSpecification(id));
+            List<Request> requests = await _context.requests.ToListAsync();
+            //List<RequestDTO> requestDTOs = _mapper.Map<List<RequestDTO>>(requests);
+            return requests;
         }
 
         public async Task<int> deleteUserProfile(string userId)

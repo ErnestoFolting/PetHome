@@ -1,6 +1,7 @@
 ﻿using backendPetHome.DAL.Entities.Abstract;
 using backendPetHome.DAL.Enums;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace backendPetHome.DAL.Entities
 {
@@ -11,7 +12,7 @@ namespace backendPetHome.DAL.Entities
         public User user { get; set; }
         public int advertId { get; set; }
         public Advert advert { get; set; }
-        [JsonConverter(typeof(JsonStringEnumConverter))]
+        [JsonConverter(typeof(StringEnumConverter))]
         public RequestStatusEnum status { get; set; }
 
     }

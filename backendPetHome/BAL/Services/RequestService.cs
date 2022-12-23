@@ -2,6 +2,8 @@
 using backendPetHome.BLL.Services.Abstract;
 using backendPetHome.DAL.Entities;
 using backendPetHome.DAL.Interfaces;
+using backendPetHome.DAL.Specifications.AdvertSpecifications;
+using backendPetHome.DAL.Specifications.RequestSpecifications;
 
 namespace backendPetHome.BLL.Services
 {
@@ -14,10 +16,10 @@ namespace backendPetHome.BLL.Services
         }
         public async Task addRequest(string userId, int advertId, DAL.Enums.RequestStatusEnum status)
         {
-            Advert? advertInDb = await _unitOfWork.AdvertRepository.GetById(advertId);
+            Advert? advertInDb = await _unitOfWork.AdvertRepository.GetByIdSpecification(new AdvertByIdSpecification(advertId));
             if (advertInDb == null) throw new ArgumentException("The advert does not exist");
             if (advertInDb.ownerId == userId) throw new ArgumentException("You can not send a request on your own advert.");
-            if (!_timeExceptionService.checkPerformerDates(userId, advertInDb.startTime, advertInDb.endTime)) throw new ArgumentException("You can not perform at that dates. Remove the time exceptions and try again.");
+            if (! await _timeExceptionService.checkPerformerDates(userId, advertInDb.startTime, advertInDb.endTime)) throw new ArgumentException("You can not perform at that dates. Remove the time exceptions and try again.");
             
             Request newRequest = new();
             newRequest.userId = userId;
@@ -29,10 +31,10 @@ namespace backendPetHome.BLL.Services
         }
         public async Task confirmRequest(int requestId, string userId)
         {
-            var requestInDb = await _unitOfWork.RequestRepository.GetByIdIncludesAdvert(requestId);
+            var requestInDb = await _unitOfWork.RequestRepository.GetByIdSpecification(new RequestByIdWithAdvertSpecification(requestId));
             if (requestInDb == null) throw new ArgumentException("This request does not exist.");
             if (requestInDb.advert.ownerId!= userId)throw new ArgumentException("You do not have the access.");
-            if (!_timeExceptionService.checkPerformerDates(requestInDb.userId, requestInDb.advert.startTime, requestInDb.advert.endTime)) throw new ArgumentException("This user can not perform at that dates.");
+            if (!await _timeExceptionService.checkPerformerDates(requestInDb.userId, requestInDb.advert.startTime, requestInDb.advert.endTime)) throw new ArgumentException("This user can not perform at that dates.");
             
             requestInDb.advert.performerId = requestInDb.userId;
             requestInDb.advert.status = DAL.Enums.AdvertStatusEnum.process;
@@ -40,14 +42,14 @@ namespace backendPetHome.BLL.Services
 
             List<DateTime> datesToExceptAtPerformer = getListOfDates(requestInDb.advert.startTime, requestInDb.advert.endTime);
             await _timeExceptionService.addTimeExceptions(requestInDb.userId, datesToExceptAtPerformer);
-            var requestsToReject = await _unitOfWork.RequestRepository.GetCurrentAdvertNotCurrent(requestInDb);
+            var requestsToReject = await _unitOfWork.RequestRepository.GetBySpecification(new RequestCurrentAdvertNotCurrentSpecification(requestInDb));
             requestsToReject.ForEach(r => r.status = DAL.Enums.RequestStatusEnum.rejected);
             await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task applyGeneratedRequest(int requestId, string userId)
         {
-            var requestInDb = await _unitOfWork.RequestRepository.GetByIdIncludesAdvert(requestId);
+            var requestInDb = await _unitOfWork.RequestRepository.GetByIdSpecification(new RequestByIdWithAdvertSpecification(requestId));
             if (requestInDb == null) throw new ArgumentException("This request does not exist.");
             if (requestInDb.userId != userId) throw new ArgumentException("You do not have the access.");
             requestInDb.status = DAL.Enums.RequestStatusEnum.applied; //update?
@@ -56,7 +58,7 @@ namespace backendPetHome.BLL.Services
 
         public async Task deleteRequest(int requestId, string userId)
         {
-            var requestInDb = await _unitOfWork.RequestRepository.GetByIdIncludesAdvert(requestId);
+            var requestInDb = await _unitOfWork.RequestRepository.GetByIdSpecification(new RequestByIdWithAdvertSpecification(requestId));
             if (requestInDb == null) throw new ArgumentException("This request does not exist.");
             if (requestInDb.userId != userId) throw new ArgumentException("You do not have the access.");
             await _unitOfWork.RequestRepository.Delete(requestInDb);
@@ -65,7 +67,7 @@ namespace backendPetHome.BLL.Services
 
         public async Task rejectRequest(int requestId, string userId)
         {
-            var requestInDb = await _unitOfWork.RequestRepository.GetByIdIncludesAdvert(requestId);
+            var requestInDb = await _unitOfWork.RequestRepository.GetByIdSpecification(new RequestByIdWithAdvertSpecification(requestId));
             if (requestInDb == null) throw new ArgumentException("This request does not exist.");
             if (requestInDb.advert.ownerId != userId) throw new ArgumentException("You do not have the access.");
             requestInDb.status = DAL.Enums.RequestStatusEnum.rejected;

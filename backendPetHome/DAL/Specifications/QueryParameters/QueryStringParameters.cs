@@ -1,10 +1,14 @@
-﻿namespace backendPetHome.DAL.Specifications.QueryParameters
+﻿using backendPetHome.DAL.Enums;
+
+namespace backendPetHome.DAL.Specifications.QueryParameters
 {
-    public abstract class QueryStringParameters
+    public class QueryStringParameters
     {
         const int maxPageSize = 36;
         public int PageNumber { get; set; } = 1;
-        private int _pageSize = 12;
+        private int _pageSize = 9;
+        public int priceFrom { get; set; } = 0;
+        public int priceTo { get; set; } = int.MaxValue;
         public int PageSize
         {
             get
@@ -16,5 +20,7 @@
                 _pageSize = value > maxPageSize ? maxPageSize : value;
             }
         }
+        public AdvertStatusEnum? advertsStatus { get; set; } = AdvertStatusEnum.search;
+        public bool isDatesFit { get; set; } = false;
     }
 }

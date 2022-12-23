@@ -23,20 +23,18 @@ namespace backendPetHome.Controllers
             _userDataService = userDataService;
         }
         [HttpGet("myadverts")]
-        public async Task<ActionResult<IEnumerable<Advert>>> GetUserAdverts([FromQuery] UserAdvertsParameters parameters)
+        public async Task<ActionResult<IEnumerable<Advert>>> GetUserAdverts([FromQuery] QueryStringParameters parameters)
         {
             string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            var advertsAndCount = _userDataService.getCurrentUserAdverts(userId, parameters);
-            Response.Headers.Add("X-Pagination-Total-Count", JsonConvert.SerializeObject(advertsAndCount.Item2));
-            return Ok(advertsAndCount.Item1);
+            var advertsAndCount = await _userDataService.getCurrentUserAdverts(userId, parameters);
+            Response.Headers.Add("X-Pagination-Total-Count", JsonConvert.SerializeObject(advertsAndCount.totalCount));
+            return Ok(advertsAndCount.fitAdvertsDTO);
         }
         [HttpGet("myadverts/{id}")]
         public async Task<ActionResult<IEnumerable<AdvertUserDTO>>> GetUserCertainAdvert(int id)
         {
             string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            AdvertUserDTO? advertInDb = await _userDataService.getCurrentUserCertainAdvert(id);
-            if (advertInDb == null) return NotFound();
-            if (advertInDb?.ownerId != userId) return Forbid();
+            AdvertUserDTO? advertInDb = await _userDataService.getCurrentUserCertainAdvert(userId,id);
             return Ok(advertInDb);
         }
         [HttpGet("myprofile")]
@@ -48,7 +46,7 @@ namespace backendPetHome.Controllers
             return Ok(user);
         }
         [HttpGet("myrequests")]
-        public async Task<ActionResult<IEnumerable<RequestDTO>>> GetUserRequests()
+        public async Task<ActionResult<IEnumerable<Request>>> GetUserRequests()
         {
             string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
             var requests = _userDataService.getCurrentUserRequests(userId);

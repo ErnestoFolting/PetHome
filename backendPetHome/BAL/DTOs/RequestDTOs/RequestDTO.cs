@@ -3,7 +3,6 @@ using backendPetHome.BLL.DTOs.UserDTOs;
 using backendPetHome.DAL.Enums;
 using System.Text.Json.Serialization;
 
-
 namespace backendPetHome.BLL.DTOs.RequestDTOs
 {
     public class RequestDTO
@@ -14,6 +13,6 @@ namespace backendPetHome.BLL.DTOs.RequestDTOs
         public int advertId { get; set; }
         public AdvertDTO advert { get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public RequestStatusEnum status { get; set; }
+        public RequestStatusEnum status { get; set; } = RequestStatusEnum.applied;
     }
 }

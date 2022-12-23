@@ -15,7 +15,7 @@ namespace backendPetHome.BLL.DTOs.AdvertDTOs
         public string description { get; set; } = string.Empty;
         public string? photoFilePath { get; set; } = string.Empty;
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public AdvertStatusEnum status { get; set; } = AdvertStatusEnum.search;
+        public AdvertStatusEnum status { get; set; }
         public DateTime startTime { get; set; }
         public DateTime endTime { get; set; }
         public UserDTO? owner { get; set; } //make some DTOs
