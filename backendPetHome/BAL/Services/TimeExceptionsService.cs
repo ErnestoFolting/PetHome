@@ -1,5 +1,5 @@
 ﻿using backendPetHome.DAL.Data;
-using backendPetHome.DAL.Models;
+using backendPetHome.DAL.Entities;
 
 namespace backendPetHome.BLL.Services
 {

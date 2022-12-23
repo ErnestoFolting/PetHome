@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using backendPetHome.BLL.DTOs.AdvertDTOs;
-using backendPetHome.BLL.Models.QueryParameters;
 using backendPetHome.DAL.Data;
+using backendPetHome.DAL.Entities;
 using backendPetHome.DAL.Enums;
-using backendPetHome.DAL.Models;
+using backendPetHome.DAL.Specifications.QueryParameters;
 using Microsoft.EntityFrameworkCore;
 
 namespace backendPetHome.BLL.Services

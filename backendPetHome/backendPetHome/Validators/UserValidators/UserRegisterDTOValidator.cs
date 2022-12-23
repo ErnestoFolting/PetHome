@@ -8,7 +8,7 @@ namespace backendPetHome.Validators.UserValidators
     {
         public UserRegisterDTOValidator()
         {
-            Include(new UserRedoDTOValidator());
+            Include(new UserRedoDTOValidator()); //maybe another class hierarchy
             RuleFor(u => u.UserName).NotEmpty().MinimumLength(5);
             RuleFor(u => u.password).NotEmpty().Must(p => p!= null && p.IsValidPassword());
             RuleFor(u => u.sex).NotEmpty().IsInEnum();

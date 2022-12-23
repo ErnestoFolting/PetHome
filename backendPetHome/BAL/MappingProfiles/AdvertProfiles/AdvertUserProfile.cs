@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using backendPetHome.BLL.DTOs.AdvertDTOs;
-using backendPetHome.DAL.Models;
+using backendPetHome.DAL.Entities;
 
 namespace backendPetHome.BLL.MappingProfiles.AdvertProfiles
 {

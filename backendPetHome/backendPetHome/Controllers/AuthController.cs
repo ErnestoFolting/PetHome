@@ -1,7 +1,6 @@
 ﻿using backendPetHome.BLL.DTOs.UserDTOs;
-using backendPetHome.BLL.Models;
 using backendPetHome.BLL.Services;
-using backendPetHome.DAL.Models;
+using backendPetHome.DAL.Entities;
 using backendPetHome.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;

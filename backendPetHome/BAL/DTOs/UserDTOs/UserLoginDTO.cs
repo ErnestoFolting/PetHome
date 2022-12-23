@@ -1,4 +1,4 @@
-﻿namespace backendPetHome.BLL.Models
+﻿namespace backendPetHome.BLL.DTOs.UserDTOs
 {
     public class UserLoginDTO
     {

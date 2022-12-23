@@ -1,14 +1,10 @@
-﻿using backendPetHome.DAL.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using backendPetHome.DAL.Entities.Abstract;
+using backendPetHome.DAL.Enums;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
-namespace backendPetHome.DAL.Models
+namespace backendPetHome.DAL.Entities
 {
-    public class Request
+    public class Request : BaseEntity
     {
         public int id { get; set; }
         public string userId { get; set; }

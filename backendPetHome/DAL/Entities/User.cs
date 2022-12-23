@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using System.Text.Json.Serialization;
 
-namespace backendPetHome.DAL.Models
+namespace backendPetHome.DAL.Entities
 {
     public class User : IdentityUser
     {
@@ -14,10 +14,10 @@ namespace backendPetHome.DAL.Models
         public string location { get; set; } = string.Empty;
         public double locationLat { get; set; } = 0;
         public double locationLng { get; set; } = 0;
-        public ICollection<Advert> postedAdverts { get; set; } 
-        public ICollection<Advert> performAtAdverts { get; set; } 
-        public ICollection<Request> requests { get; set; } 
-        public ICollection<TimeException> timeExceptions{ get; set; } 
+        public ICollection<Advert> postedAdverts { get; set; }
+        public ICollection<Advert> performAtAdverts { get; set; }
+        public ICollection<Request> requests { get; set; }
+        public ICollection<TimeException> timeExceptions { get; set; }
         public ICollection<RefreshToken> refreshTokens { get; set; }
     }
 }

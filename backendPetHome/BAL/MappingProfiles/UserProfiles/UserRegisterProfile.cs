@@ -1,6 +1,6 @@
 ﻿using backendPetHome.BLL.DTOs.UserDTOs;
-using backendPetHome.DAL.Models;
 using AutoMapper;
+using backendPetHome.DAL.Entities;
 
 namespace backendPetHome.BLL.MappingProfiles.UserProfiles
 {

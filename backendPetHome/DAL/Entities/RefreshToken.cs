@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using backendPetHome.DAL.Entities.Abstract;
+using Microsoft.EntityFrameworkCore;
 
-namespace backendPetHome.DAL.Models
+namespace backendPetHome.DAL.Entities
 {
-    public class RefreshToken
+    public class RefreshToken : BaseEntity
     {
+        public static EntityState Modified { get; internal set; }
         public int id { get; set; }
         public string token { get; set; } = string.Empty;
         public DateTime created { get; set; } = DateTime.Now;

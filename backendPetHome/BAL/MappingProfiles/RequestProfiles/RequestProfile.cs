@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using backendPetHome.BLL.DTOs.RequestDTOs;
-using backendPetHome.DAL.Models;
+using backendPetHome.DAL.Entities;
 
-namespace backendPetHome.BLL.MappingProfiles
+namespace backendPetHome.BLL.MappingProfiles.RequestProfiles
 {
     public class RequestProfile : Profile
     {

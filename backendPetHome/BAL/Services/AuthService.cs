@@ -1,31 +1,25 @@
 ﻿using AutoMapper;
 using backendPetHome.BLL.DTOs.UserDTOs;
-using backendPetHome.BLL.Models;
-using backendPetHome.DAL.Data;
-using backendPetHome.DAL.Models;
+using backendPetHome.BLL.Services.Abstract;
+using backendPetHome.DAL.Entities;
+using backendPetHome.DAL.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace backendPetHome.BLL.Services
 {
-    public class AuthService
+    public class AuthService: BaseService
     {
-        private readonly DataContext _dataContext;
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
-        private readonly IMapper _mapper;
-
-        public AuthService(DataContext dataContext, UserManager<User> userManager, IMapper mapper, IConfiguration configuration)
+        public AuthService(IUnitOfWork unitOfWork, UserManager<User> userManager, IMapper mapper, IConfiguration configuration):base(unitOfWork,mapper)
         {
-            _dataContext = dataContext;
             _userManager = userManager;
             _configuration = configuration;
-            _mapper = mapper;
         }
         public async Task Register(UserRegisterDTO data, string fileName)
         {
@@ -61,7 +55,7 @@ namespace backendPetHome.BLL.Services
 
         public async Task<Tuple<SecurityToken, RefreshToken>> Refresh(string? refreshToken)
         {
-            RefreshToken? refreshTokenInDb = _dataContext.refreshTokens.FirstOrDefault(t => t.token == refreshToken);
+            RefreshToken? refreshTokenInDb = await _unitOfWork.RefreshTokenRepository.GetByToken(refreshToken);
             if (refreshTokenInDb == null)
             {
                 throw new KeyNotFoundException("The refresh token does not exist.");
@@ -73,7 +67,7 @@ namespace backendPetHome.BLL.Services
             else if (validateToken(refreshToken))
             {
                 refreshTokenInDb.isNotActual = true;
-                _dataContext.Update(refreshTokenInDb);
+                await _unitOfWork.RefreshTokenRepository.Update(refreshTokenInDb);
                 var user = await _userManager.FindByIdAsync(refreshTokenInDb.ownerId);
                 var newTokens = await getTokens(user);
                 return newTokens;
@@ -85,6 +79,7 @@ namespace backendPetHome.BLL.Services
         }
         private bool validateToken(string? token)
         {
+            if (token == null) return false;
             var tokenHandler = new JwtSecurityTokenHandler();
             try
             {
@@ -110,8 +105,8 @@ namespace backendPetHome.BLL.Services
         {
             var securityToken = GetSecurityToken(user, DateTime.Now.AddMinutes(15));
             var newRefreshToken = GetRefreshToken(user);
-            _dataContext.refreshTokens.Add(newRefreshToken);
-            await _dataContext.SaveChangesAsync();
+            await _unitOfWork.RefreshTokenRepository.Add(newRefreshToken);
+            await _unitOfWork.SaveChangesAsync();
             Tuple<SecurityToken, RefreshToken> tokens = new(securityToken, newRefreshToken);
             return tokens;
         }

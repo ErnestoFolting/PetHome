@@ -1,16 +1,10 @@
-﻿using backendPetHome.DAL.Enums;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
+﻿using backendPetHome.DAL.Entities.Abstract;
+using backendPetHome.DAL.Enums;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
-namespace backendPetHome.DAL.Models
+namespace backendPetHome.DAL.Entities
 {
-    public class Advert
+    public class Advert : BaseEntity
     {
         public int Id { get; set; }
         public string name { get; set; } = string.Empty;

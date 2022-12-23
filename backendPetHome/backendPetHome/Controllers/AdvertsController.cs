@@ -1,6 +1,6 @@
 ﻿using backendPetHome.BLL.DTOs.AdvertDTOs;
-using backendPetHome.BLL.Models.QueryParameters;
 using backendPetHome.BLL.Services;
+using backendPetHome.DAL.Specifications.QueryParameters;
 using backendPetHome.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

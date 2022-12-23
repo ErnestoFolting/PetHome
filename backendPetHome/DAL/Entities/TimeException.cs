@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using backendPetHome.DAL.Entities.Abstract;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace backendPetHome.DAL.Models
+namespace backendPetHome.DAL.Entities
 {
-    public class TimeException
+    public class TimeException : BaseEntity
     {
         public int id { get; set; }
         public string userId { get; set; }

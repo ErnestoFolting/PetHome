@@ -2,21 +2,21 @@
 using backendPetHome.BLL.DTOs.AdvertDTOs;
 using backendPetHome.BLL.DTOs.RequestDTOs;
 using backendPetHome.BLL.DTOs.UserDTOs;
-using backendPetHome.BLL.Models.QueryParameters;
+using backendPetHome.BLL.Services.Abstract;
 using backendPetHome.DAL.Data;
-using backendPetHome.DAL.Models;
+using backendPetHome.DAL.Entities;
+using backendPetHome.DAL.Interfaces;
+using backendPetHome.DAL.Specifications.QueryParameters;
 using Microsoft.EntityFrameworkCore;
 
 namespace backendPetHome.BLL.Services
 {
-    public class UserDataService
+    public class UserDataService : BaseService
     {
         private readonly DataContext _context;
-        private readonly IMapper _mapper;
-        public UserDataService(DataContext context, IMapper mapper)
+        public UserDataService(DataContext context, IUnitOfWork unitOfWork, IMapper mapper): base(unitOfWork, mapper)
         {
             _context = context;
-            _mapper = mapper;
         }
         public Tuple<IEnumerable<AdvertUserDTO>, int> getCurrentUserAdverts(string userId, UserAdvertsParameters parameters)
         {
@@ -43,36 +43,33 @@ namespace backendPetHome.BLL.Services
         }
         public async Task<UserDTO> getCurrentUserProfile(string id)
         {
-            User? user = await _context.users
-                .Include(u => u.timeExceptions)
-                .Include(u => u.requests)
-                .FirstOrDefaultAsync(u => u.Id == id);
+            User? user = await _unitOfWork.UserRepository.GetByIdIncludesTimeException(id);
             UserDTO userDTO = _mapper.Map<UserDTO>(user);
             return userDTO;
         }
-        public IEnumerable<RequestDTO> getCurrentUserRequests(string id)
+        public async Task<List<RequestDTO>> getCurrentUserRequests(string id)
         {
-            IEnumerable<Request> requests= _context.requests.Include(r => r.advert).Where(el => el.userId == id);
-            IEnumerable<RequestDTO> requestDTOs = _mapper.Map<IEnumerable<RequestDTO>>(requests);
+            List<Request> requests = await _unitOfWork.RequestRepository.GetCurrentUserRequests(id);
+            List<RequestDTO> requestDTOs = _mapper.Map<List<RequestDTO>>(requests);
             return requestDTOs;
         }
 
-        public Task deleteUserProfile(string userId)
+        public async Task<int> deleteUserProfile(string userId)
         {
-            var userInDb = _context.users.FirstOrDefault(el => el.Id == userId);
+            var userInDb = await _unitOfWork.UserRepository.GetById(userId);
             if(userInDb != null)
             {
-                _context.users.Remove(userInDb);
+                await _unitOfWork.UserRepository.Delete(userInDb);
             }
             else
             {
                 throw new ArgumentException("User does not exist.");
             }
-            return _context.SaveChangesAsync();
+            return await _unitOfWork.SaveChangesAsync();
         }
-        public Task updateUserProfile(string userId, UserRedoDTO redoData, string newFileName)
+        public async Task<int> updateUserProfile(string userId, UserRedoDTO redoData, string newFileName)
         {
-            var userInDb = _context.users.FirstOrDefault(el => el.Id == userId);
+            var userInDb = await _unitOfWork.UserRepository.GetById(userId);
             if(userInDb == null)
             {
                 throw new ArgumentException("User does not exist.");
@@ -81,12 +78,12 @@ namespace backendPetHome.BLL.Services
             {
                 userInDb = _mapper.Map(redoData, userInDb);
                 if(newFileName != null) userInDb.photoFilePath = "/images/" + newFileName;
-                _context.Update(userInDb);
+                await _unitOfWork.UserRepository.Update(userInDb);
             }
-            return _context.SaveChangesAsync();
+            return await _unitOfWork.SaveChangesAsync();
         }
 
-        public Task updateUserAdvert(string userId, AdvertDTO data, int advertId, string? newFileName)
+        public async Task<int> updateUserAdvert(string userId, AdvertDTO data, int advertId, string? newFileName)
         {
             var advertInDb = _context.adverts.FirstOrDefault(el => el.Id == advertId);
             if (advertInDb == null)
@@ -101,7 +98,7 @@ namespace backendPetHome.BLL.Services
                 if (newFileName != null) advertInDb.photoFilePath = "/images/" + newFileName;
                 _context.Update(advertInDb);
             }
-            return _context.SaveChangesAsync();
+            return await _unitOfWork.SaveChangesAsync();
         }
     }
 }

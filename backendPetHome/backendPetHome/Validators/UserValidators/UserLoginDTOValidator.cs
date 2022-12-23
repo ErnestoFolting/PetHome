@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using backendPetHome.BLL.Models;
+using backendPetHome.BLL.DTOs.UserDTOs;
 
 namespace backendPetHome.Validators.UserValidators
 {

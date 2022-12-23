@@ -1,9 +1,9 @@
 ﻿using backendPetHome.BLL.DTOs.AdvertDTOs;
 using backendPetHome.BLL.DTOs.RequestDTOs;
 using backendPetHome.BLL.DTOs.UserDTOs;
-using backendPetHome.BLL.Models.QueryParameters;
 using backendPetHome.BLL.Services;
-using backendPetHome.DAL.Models;
+using backendPetHome.DAL.Entities;
+using backendPetHome.DAL.Specifications.QueryParameters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;

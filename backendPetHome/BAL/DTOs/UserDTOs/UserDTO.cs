@@ -1,4 +1,5 @@
-﻿using backendPetHome.DAL.Enums;
+﻿using backendPetHome.BLL.DTOs.TimeExceptionDTOs;
+using backendPetHome.DAL.Enums;
 using System.Text.Json.Serialization;
 
 namespace backendPetHome.BLL.DTOs.UserDTOs

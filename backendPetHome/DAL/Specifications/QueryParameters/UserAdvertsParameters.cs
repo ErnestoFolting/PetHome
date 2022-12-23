@@ -1,6 +1,6 @@
 ﻿using backendPetHome.DAL.Enums;
 
-namespace backendPetHome.BLL.Models.QueryParameters
+namespace backendPetHome.DAL.Specifications.QueryParameters
 {
     public class UserAdvertsParameters : QueryStringParameters
     {

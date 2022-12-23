@@ -1,4 +1,4 @@
-﻿namespace backendPetHome.BLL.Models.QueryParameters
+﻿namespace backendPetHome.DAL.Specifications.QueryParameters
 {
     public abstract class QueryStringParameters
     {

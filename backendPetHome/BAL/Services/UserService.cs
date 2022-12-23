@@ -1,22 +1,19 @@
 ﻿using AutoMapper;
 using backendPetHome.BLL.DTOs.UserDTOs;
-using backendPetHome.DAL.Data;
-using Microsoft.EntityFrameworkCore;
+using backendPetHome.BLL.Services.Abstract;
+using backendPetHome.DAL.Entities;
+using backendPetHome.DAL.Interfaces;
 
 namespace backendPetHome.BLL.Services
 {
-    public class UserService
+    public class UserService: BaseService
     {
-        private readonly DataContext _context;
-        private readonly IMapper _mapper;
-        public UserService(DataContext context, IMapper mapper)
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper):base(unitOfWork, mapper)
         {
-            _context = context;
-            _mapper = mapper;
         }
         public async Task<UserDTO> getCertainUser(string id)
         {
-            var user = await _context.users.Include(u => u.timeExceptions).FirstOrDefaultAsync(u=>u.Id==id);
+            User? user = await _unitOfWork.UserRepository.GetByIdIncludesTimeException(id);
             if (user == null) throw new ArgumentException("That user not exists.");
             UserDTO userDTO = _mapper.Map<UserDTO>(user);
             return userDTO;
