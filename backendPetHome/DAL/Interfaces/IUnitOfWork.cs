@@ -9,6 +9,7 @@ namespace backendPetHome.DAL.Interfaces
         ITimeExceptionRepository TimeExceptionRepository { get; }
         IRefreshTokenRepository RefreshTokenRepository { get; }
         IUserRepository UserRepository { get; }
+        IFileRepository FileRepository { get; }
         Task<int> SaveChangesAsync();
     }
 }

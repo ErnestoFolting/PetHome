@@ -9,6 +9,7 @@ using backendPetHome.DAL.Specifications.AdvertSpecifications;
 using backendPetHome.DAL.Specifications.QueryParameters;
 using backendPetHome.DAL.Specifications.RequestSpecifications;
 using backendPetHome.DAL.Specifications.UserSpecifications;
+using Microsoft.AspNetCore.Http;
 
 namespace backendPetHome.BLL.Services
 {
@@ -56,25 +57,33 @@ namespace backendPetHome.BLL.Services
             await _unitOfWork.UserRepository.Delete(userInDb);
             return await _unitOfWork.SaveChangesAsync();
         }
-        public async Task<int> updateUserProfile(string userId, UserRedoDTO redoData, string newFileName)
+        public async Task<int> updateUserProfile(string userId, UserRedoDTO redoData, IFormFile? userPhoto)
         {
             var userInDb = await _unitOfWork.UserRepository.GetByIdSpecification(new UserByIdSpecification(userId));
             if(userInDb == null) throw new ArgumentException("User does not exist.");
 
             userInDb = _mapper.Map(redoData, userInDb);
-            if(newFileName != null) userInDb.photoFilePath = "/images/" + newFileName;
+            if (userPhoto != null) {
+                userInDb.photoFilePath = "/images/" + userPhoto.FileName;
+                await _unitOfWork.FileRepository.Add(userPhoto);
+            }
+            
             await _unitOfWork.UserRepository.Update(userInDb);
             return await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<int> updateUserAdvert(string userId, AdvertCreateRedoDTO data, int advertId, string? newFileName)
+        public async Task<int> updateUserAdvert(string userId, AdvertCreateRedoDTO data, int advertId, IFormFile? advertPhoto)
         {
             Advert? advertInDb = await _unitOfWork.AdvertRepository.GetByIdSpecification(new AdvertByIdSpecification(advertId));
             if (advertInDb == null) throw new ArgumentException("Advert does not exist.");
             if (advertInDb.ownerId != userId) throw new ArgumentException("It is not your advert.");
 
             advertInDb = _mapper.Map(data, advertInDb);
-            if (newFileName != null) advertInDb.photoFilePath = "/images/" + newFileName;
+            if (advertPhoto != null) {
+                advertInDb.photoFilePath = "/images/" + advertPhoto.FileName;
+                await _unitOfWork.FileRepository.Add(advertPhoto);
+            }
+            
             await _unitOfWork.AdvertRepository.Update(advertInDb);
             return await _unitOfWork.SaveChangesAsync();
         }

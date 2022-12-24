@@ -13,6 +13,7 @@ namespace backendPetHome.DAL
         public ITimeExceptionRepository TimeExceptionRepository { get; }
         public IRefreshTokenRepository RefreshTokenRepository { get; }
         public IUserRepository UserRepository { get; }
+        public IFileRepository FileRepository { get; }
         public UnitOfWork(DataContext context)
         {
             _context = context;
@@ -21,6 +22,7 @@ namespace backendPetHome.DAL
             TimeExceptionRepository = new TimeExceptionRepository(context);
             RefreshTokenRepository = new RefreshTokenRepository(context);
             UserRepository = new UserRepository(context);
+            FileRepository = new FileRepository(Path.Combine(Environment.CurrentDirectory, "wwwroot", "images"));
         }
         public Task<int> SaveChangesAsync()
         {

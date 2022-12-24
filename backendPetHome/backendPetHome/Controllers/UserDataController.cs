@@ -61,31 +61,15 @@ namespace backendPetHome.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateProfile([FromForm] UserRedoDTO data, IFormFile? userPhoto)
         {
-            if(userPhoto != null)
-            {
-                var filePath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "images", userPhoto.FileName);
-                using (var stream = System.IO.File.Create(filePath))
-                {
-                    await userPhoto.CopyToAsync(stream);
-                }
-            }
             string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            await _userDataService.updateUserProfile(userId,data,userPhoto?.FileName);
+            await _userDataService.updateUserProfile(userId,data,userPhoto);
             return Ok();
         }
         [HttpPut("myadverts/{id}")]
         public async Task<ActionResult> UpdateAdvert([FromForm] AdvertCreateRedoDTO data, IFormFile? advertPhoto, int id)
         {
-            if (advertPhoto != null)
-            {
-                var filePath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "images", advertPhoto.FileName);
-                using (var stream = System.IO.File.Create(filePath))
-                {
-                    await advertPhoto.CopyToAsync(stream);
-                }
-            }
             string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            await _userDataService.updateUserAdvert(userId, data, id, advertPhoto?.FileName);
+            await _userDataService.updateUserAdvert(userId, data, id, advertPhoto);
             return Ok();
         }
     }

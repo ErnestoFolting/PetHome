@@ -4,6 +4,7 @@ using backendPetHome.BLL.Services.Abstract;
 using backendPetHome.DAL.Entities;
 using backendPetHome.DAL.Interfaces;
 using backendPetHome.DAL.Specifications.RefreshTokenSpecifications;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -22,7 +23,7 @@ namespace backendPetHome.BLL.Services
             _userManager = userManager;
             _configuration = configuration;
         }
-        public async Task Register(UserRegisterDTO data, string fileName)
+        public async Task Register(UserRegisterDTO data, IFormFile userFile)
         {
             var userExisted = await _userManager.FindByNameAsync(data.UserName);
             if (userExisted != null)
@@ -31,11 +32,12 @@ namespace backendPetHome.BLL.Services
             }
             User newUser = _mapper.Map<User>(data);
 
-            string photoFilePath = "/images/" + fileName;
+            string photoFilePath = "/images/" + userFile.FileName;
 
             newUser.photoFilePath = photoFilePath;
 
             var result = await _userManager.CreateAsync(newUser, data.password);
+            await _unitOfWork.FileRepository.Add(userFile);
 
             if (!result.Succeeded)
             {

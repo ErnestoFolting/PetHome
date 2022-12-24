@@ -8,6 +8,7 @@ using backendPetHome.DAL.Interfaces;
 using backendPetHome.DAL.Specifications.AdvertSpecifications;
 using backendPetHome.DAL.Specifications.QueryParameters;
 using backendPetHome.DAL.Specifications.RequestSpecifications;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace backendPetHome.BLL.Services
@@ -38,12 +39,13 @@ namespace backendPetHome.BLL.Services
             return advertDTO;
         }
 
-        public async Task<Tuple<IEnumerable<string>,AdvertDTO>> addAdvert(AdvertCreateRedoDTO advertToAdd, string userId,string fileName)
+        public async Task<Tuple<IEnumerable<string>,AdvertDTO>> addAdvert(AdvertCreateRedoDTO advertToAdd, string userId, IFormFile advertFile)
         {
             Advert newAdvert = _mapper.Map<Advert>(advertToAdd);
-            newAdvert.photoFilePath = "/images/" + fileName;
+            newAdvert.photoFilePath = "/images/" + advertFile.FileName;
             newAdvert.ownerId = userId;
             await _unitOfWork.AdvertRepository.Add(newAdvert);
+            await _unitOfWork.FileRepository.Add(advertFile);
             await _unitOfWork.SaveChangesAsync();
 
             IEnumerable<string> possiblePerformers = await choosePossiblePerformers(newAdvert, userId);
