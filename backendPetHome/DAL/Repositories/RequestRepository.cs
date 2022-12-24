@@ -28,6 +28,11 @@ namespace backendPetHome.DAL.Repositories
         {
             await _context.Set<Request>().AddAsync(requestToAdd);
         }
+        public async Task Update(Request requestToUpdate)
+        {
+            _context.Set<Request>().Attach(requestToUpdate);
+            _context.Entry(requestToUpdate).State = EntityState.Modified;
+        }
 
         public async Task Delete(Request requestToRemove)
         {

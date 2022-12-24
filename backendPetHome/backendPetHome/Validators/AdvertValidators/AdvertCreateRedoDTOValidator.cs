@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace backendPetHome.Validators.AdvertValidators
 {
-    public class AdvertDTOValidator : AbstractValidator<AdvertDTO>
+    public class AdvertCreateRedoDTOValidator : AbstractValidator<AdvertCreateRedoDTO>
     {
-        public AdvertDTOValidator()
+        public AdvertCreateRedoDTOValidator()
         {
             RuleFor(a => a.name).NotEmpty().MinimumLength(5);
             RuleFor(a => a.description).NotEmpty().MinimumLength(10).MaximumLength(500);

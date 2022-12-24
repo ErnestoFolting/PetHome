@@ -67,6 +67,7 @@ export const UserAdvertRedoForm = ({ previousData, setRedoModalVisible, setAdver
     }
 
     const redoAdvert = async (data) => {
+        console.log('check')
         if (data && location && file && FileValidator(file) && advertDates) {
             setRedoData(data)
             setNeedFetch(!needFetch)

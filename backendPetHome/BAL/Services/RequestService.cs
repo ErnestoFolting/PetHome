@@ -19,7 +19,9 @@ namespace backendPetHome.BLL.Services
             Advert? advertInDb = await _unitOfWork.AdvertRepository.GetByIdSpecification(new AdvertByIdSpecification(advertId));
             if (advertInDb == null) throw new ArgumentException("The advert does not exist");
             if (advertInDb.ownerId == userId) throw new ArgumentException("You can not send a request on your own advert.");
-            if (! await _timeExceptionService.checkPerformerDates(userId, advertInDb.startTime, advertInDb.endTime)) throw new ArgumentException("You can not perform at that dates. Remove the time exceptions and try again.");
+            if (!await _timeExceptionService
+                .checkPerformerDates(userId, advertInDb.startTime, advertInDb.endTime)) 
+                    throw new ArgumentException("You can not perform at that dates. Remove the time exceptions and try again.");
             
             Request newRequest = new();
             newRequest.userId = userId;
@@ -43,7 +45,10 @@ namespace backendPetHome.BLL.Services
             List<DateTime> datesToExceptAtPerformer = getListOfDates(requestInDb.advert.startTime, requestInDb.advert.endTime);
             await _timeExceptionService.addTimeExceptions(requestInDb.userId, datesToExceptAtPerformer);
             var requestsToReject = await _unitOfWork.RequestRepository.GetBySpecification(new RequestCurrentAdvertNotCurrentSpecification(requestInDb));
-            requestsToReject.ForEach(r => r.status = DAL.Enums.RequestStatusEnum.rejected);
+            requestsToReject.ForEach(r => {
+                r.status = DAL.Enums.RequestStatusEnum.rejected;
+                _unitOfWork.RequestRepository.Update(r);
+            });
             await _unitOfWork.SaveChangesAsync();
         }
 
@@ -53,6 +58,7 @@ namespace backendPetHome.BLL.Services
             if (requestInDb == null) throw new ArgumentException("This request does not exist.");
             if (requestInDb.userId != userId) throw new ArgumentException("You do not have the access.");
             requestInDb.status = DAL.Enums.RequestStatusEnum.applied; //update?
+            await _unitOfWork.RequestRepository.Update(requestInDb);
             await _unitOfWork.SaveChangesAsync();
         }
 
@@ -71,6 +77,7 @@ namespace backendPetHome.BLL.Services
             if (requestInDb == null) throw new ArgumentException("This request does not exist.");
             if (requestInDb.advert.ownerId != userId) throw new ArgumentException("You do not have the access.");
             requestInDb.status = DAL.Enums.RequestStatusEnum.rejected;
+            await _unitOfWork.RequestRepository.Update(requestInDb);
             await _unitOfWork.SaveChangesAsync(); ;
         }
         public List<DateTime> getListOfDates(DateTime date1, DateTime date2)

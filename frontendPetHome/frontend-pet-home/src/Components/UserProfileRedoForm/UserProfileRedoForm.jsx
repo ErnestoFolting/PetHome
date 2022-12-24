@@ -50,6 +50,7 @@ export const UserProfileRedoForm = ({ previousData, setRedoModalVisible, profile
     }
 
     const redoProfile = async (data) => {
+        console.log(data)
         if (data && location && file && FileValidator(file)) {
             setRedoData(data)
             setNeedFetch(!needFetch)
@@ -118,7 +119,7 @@ export const UserProfileRedoForm = ({ previousData, setRedoModalVisible, profile
                 type='tel'
                 label="Номер телефону"
                 {...register("PhoneNumber")}
-                isNotValid={errors?.phone}
+                isNotValid={errors?.PhoneNumber}
             />
             <LocationAutoComplete
                 isLoaded={isLoaded}

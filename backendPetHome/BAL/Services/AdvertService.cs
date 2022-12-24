@@ -38,7 +38,7 @@ namespace backendPetHome.BLL.Services
             return advertDTO;
         }
 
-        public async Task<Tuple<IEnumerable<string>,AdvertDTO>> addAdvert(AdvertDTO advertToAdd, string userId,string fileName)
+        public async Task<Tuple<IEnumerable<string>,AdvertDTO>> addAdvert(AdvertCreateRedoDTO advertToAdd, string userId,string fileName)
         {
             Advert newAdvert = _mapper.Map<Advert>(advertToAdd);
             newAdvert.photoFilePath = "/images/" + fileName;

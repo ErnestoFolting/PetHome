@@ -54,7 +54,7 @@ namespace backendPetHome.BLL.Services
                 _unitOfWork
                 .TimeExceptionRepository
                 .GetBySpecification(new TimeExceptionCurrentUserFitAdvertTimeSpecification(userId, advertStart, advertEnd));
-            return fitExceptions.Any();
+            return !fitExceptions.Any();
         }
     }    
 }

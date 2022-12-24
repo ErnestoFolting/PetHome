@@ -2,7 +2,6 @@
 using backendPetHome.BLL.DTOs.RequestDTOs;
 using backendPetHome.BLL.DTOs.UserDTOs;
 using backendPetHome.BLL.Services;
-using backendPetHome.DAL.Entities;
 using backendPetHome.DAL.Specifications.QueryParameters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +22,7 @@ namespace backendPetHome.Controllers
             _userDataService = userDataService;
         }
         [HttpGet("myadverts")]
-        public async Task<ActionResult<IEnumerable<Advert>>> GetUserAdverts([FromQuery] QueryStringParameters parameters)
+        public async Task<ActionResult<IEnumerable<AdvertUserDTO>>> GetUserAdverts([FromQuery] QueryStringParameters parameters)
         {
             string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
             var advertsAndCount = await _userDataService.getCurrentUserAdverts(userId, parameters);
@@ -46,14 +45,14 @@ namespace backendPetHome.Controllers
             return Ok(user);
         }
         [HttpGet("myrequests")]
-        public async Task<ActionResult<IEnumerable<Request>>> GetUserRequests()
+        public async Task<ActionResult<IEnumerable<RequestDTO>>> GetUserRequests()
         {
             string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            var requests = _userDataService.getCurrentUserRequests(userId);
+            IEnumerable<RequestDTO> requests = await _userDataService.getCurrentUserRequests(userId);
             return Ok(requests);
         }
         [HttpDelete]
-        public async Task<OkResult> Delete()
+        public async Task<ActionResult> Delete()
         {
             string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
             await _userDataService.deleteUserProfile(userId);
@@ -75,7 +74,7 @@ namespace backendPetHome.Controllers
             return Ok();
         }
         [HttpPut("myadverts/{id}")]
-        public async Task<ActionResult> UpdateAdvert([FromForm] AdvertDTO data, IFormFile? advertPhoto, int id)
+        public async Task<ActionResult> UpdateAdvert([FromForm] AdvertCreateRedoDTO data, IFormFile? advertPhoto, int id)
         {
             if (advertPhoto != null)
             {

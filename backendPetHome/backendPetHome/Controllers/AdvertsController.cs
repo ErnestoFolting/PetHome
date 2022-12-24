@@ -36,7 +36,7 @@ namespace backendPetHome.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromForm] AdvertDTO advertToAdd, IFormFile petPhoto)
+        public async Task<ActionResult> Post([FromForm] AdvertCreateRedoDTO advertToAdd, IFormFile petPhoto)
         {
             var filePath = Path.Combine(Environment.CurrentDirectory,"wwwroot","images", petPhoto.FileName);
             using (var stream = System.IO.File.Create(filePath))

@@ -2,7 +2,6 @@
 using backendPetHome.DAL.Entities;
 using backendPetHome.DAL.Interfaces.RepositoryInterfaces;
 using backendPetHome.DAL.Specifications;
-using backendPetHome.DAL.Specifications.UserSpecifications;
 using Microsoft.EntityFrameworkCore;
 
 namespace backendPetHome.DAL.Repositories
@@ -18,15 +17,9 @@ namespace backendPetHome.DAL.Repositories
         {
             _context.Set<User>().Remove(useToDelete);
         }
-
-        public Task<User?> GetById(string id)
+        public Task<User?> GetByIdSpecification(Specification<User> spec)
         {
-            return _context.Set<User>().FindAsync(id).AsTask();
-        }
-
-        public Task<User?> GetByIdIncludesTimeException(string id)
-        {
-            return ApplySpecification(new UserByIdWithTimeExceptionSpecification(id)).SingleOrDefaultAsync();
+            return ApplySpecification(spec).SingleOrDefaultAsync();
         }
 
         public async Task Update(User userToUpdate)

@@ -1,12 +1,12 @@
 ﻿using backendPetHome.DAL.Entities;
+using backendPetHome.DAL.Specifications;
 
 namespace backendPetHome.DAL.Interfaces.RepositoryInterfaces
 {
     public interface IUserRepository
     {
-        Task<User?> GetByIdIncludesTimeException(string id);
-        Task Delete(User useToDelete);
+        Task<User?> GetByIdSpecification(Specification<User> spec);
         Task Update(User entity);
-        Task<User?> GetById(string id);
+        Task Delete(User useToDelete);
     }
 }

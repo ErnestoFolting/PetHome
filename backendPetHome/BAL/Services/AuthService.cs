@@ -3,6 +3,7 @@ using backendPetHome.BLL.DTOs.UserDTOs;
 using backendPetHome.BLL.Services.Abstract;
 using backendPetHome.DAL.Entities;
 using backendPetHome.DAL.Interfaces;
+using backendPetHome.DAL.Specifications.RefreshTokenSpecifications;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -53,9 +54,9 @@ namespace backendPetHome.BLL.Services
             throw new ArgumentException("Invalid credentials.");
         }
 
-        public async Task<Tuple<SecurityToken, RefreshToken>> Refresh(string? refreshToken)
+        public async Task<Tuple<SecurityToken, RefreshToken>> Refresh(string refreshToken)
         {
-            RefreshToken? refreshTokenInDb = await _unitOfWork.RefreshTokenRepository.GetByToken(refreshToken);
+            RefreshToken? refreshTokenInDb = await _unitOfWork.RefreshTokenRepository.GetBySpecification(new RefreshTokenGetByTokenSpecification(refreshToken));
             if (refreshTokenInDb == null)
             {
                 throw new KeyNotFoundException("The refresh token does not exist.");

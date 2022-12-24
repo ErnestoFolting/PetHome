@@ -43,6 +43,7 @@ namespace backendPetHome.Controllers
         public async Task<ActionResult<string>> Refresh()
         {
             var refreshToken = Request.Cookies["refreshToken"];
+            if (refreshToken == null) return Forbid();
             Tuple<SecurityToken, RefreshToken> tokens = await _authService.Refresh(refreshToken);
             SetTokens(tokens);
             string? userId = tokens.Item2.ownerId;

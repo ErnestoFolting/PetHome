@@ -1,6 +1,7 @@
 ﻿using backendPetHome.DAL.Data;
 using backendPetHome.DAL.Entities;
 using backendPetHome.DAL.Interfaces.RepositoryInterfaces;
+using backendPetHome.DAL.Specifications;
 using Microsoft.EntityFrameworkCore;
 
 namespace backendPetHome.DAL.Repositories
@@ -17,14 +18,18 @@ namespace backendPetHome.DAL.Repositories
             await _context.Set<RefreshToken>().AddAsync(tokenToAdd);
         }
 
-        public Task<RefreshToken?> GetByToken(string? token)
+        public Task<RefreshToken?> GetBySpecification(Specification<RefreshToken> spec)
         {
-            return Task.FromResult(_context.Set<RefreshToken>().FirstOrDefault(el => el.token == token));
+            return ApplySpecification(spec).SingleOrDefaultAsync();
         }
         public async Task Update(RefreshToken tokenToUpdate)
         {
             _context.Set<RefreshToken>().Attach(tokenToUpdate);
             _context.Entry(tokenToUpdate).State = EntityState.Modified;
+        }
+        private IQueryable<RefreshToken> ApplySpecification(Specification<RefreshToken> specification)
+        {
+            return SpecificationEvaluator.getQuery(_context.Set<RefreshToken>(), specification);
         }
     }
 }
