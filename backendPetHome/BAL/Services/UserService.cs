@@ -15,7 +15,7 @@ namespace backendPetHome.BLL.Services
         public async Task<UserDTO> getCertainUser(string id)
         {
             User? user = await _unitOfWork.UserRepository.GetByIdSpecification(new UserByIdWithTimeExceptionSpecification(id));
-            if (user == null) throw new ArgumentException("That user not exists.");
+            if (user == null) throw new KeyNotFoundException("User not found.");
             UserDTO userDTO = _mapper.Map<UserDTO>(user);
             return userDTO;
         }

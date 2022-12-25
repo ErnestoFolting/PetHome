@@ -31,7 +31,7 @@ namespace backendPetHome.BLL.Services
             Advert? advertInDb = await 
                 _unitOfWork.AdvertRepository
                 .GetByIdSpecification(new AdvertByIdIncludesRequestAndUserSpecification(advertId));
-            if (advertInDb == null) throw new ArgumentException("Advert not found.");
+            if (advertInDb == null) throw new KeyNotFoundException("Advert not found.");
             if (advertInDb.ownerId != userId) throw new ArgumentException("This is not your advert.");
             AdvertUserDTO advertUserDTO = _mapper.Map<AdvertUserDTO>(advertInDb);
             return advertUserDTO;
@@ -39,6 +39,7 @@ namespace backendPetHome.BLL.Services
         public async Task<UserDTO> getCurrentUserProfile(string id)
         {
             User? user = await _unitOfWork.UserRepository.GetByIdSpecification(new UserByIdWithTimeExceptionSpecification(id));
+            if (user == null) throw new KeyNotFoundException("User not found");
             UserDTO userDTO = _mapper.Map<UserDTO>(user);
             return userDTO;
         }
@@ -52,7 +53,7 @@ namespace backendPetHome.BLL.Services
         public async Task<int> deleteUserProfile(string userId)
         {
             var userInDb = await _unitOfWork.UserRepository.GetByIdSpecification(new UserByIdSpecification(userId));
-            if(userInDb == null) throw new ArgumentException("User does not exist.");
+            if(userInDb == null) throw new KeyNotFoundException("User does not exist.");
 
             await _unitOfWork.UserRepository.Delete(userInDb);
             return await _unitOfWork.SaveChangesAsync();
@@ -60,7 +61,7 @@ namespace backendPetHome.BLL.Services
         public async Task<int> updateUserProfile(string userId, UserRedoDTO redoData, IFormFile? userPhoto)
         {
             var userInDb = await _unitOfWork.UserRepository.GetByIdSpecification(new UserByIdSpecification(userId));
-            if(userInDb == null) throw new ArgumentException("User does not exist.");
+            if(userInDb == null) throw new KeyNotFoundException("User does not exist.");
 
             userInDb = _mapper.Map(redoData, userInDb);
             if (userPhoto != null) {
@@ -75,7 +76,7 @@ namespace backendPetHome.BLL.Services
         public async Task<int> updateUserAdvert(string userId, AdvertCreateRedoDTO data, int advertId, IFormFile? advertPhoto)
         {
             Advert? advertInDb = await _unitOfWork.AdvertRepository.GetByIdSpecification(new AdvertByIdSpecification(advertId));
-            if (advertInDb == null) throw new ArgumentException("Advert does not exist.");
+            if (advertInDb == null) throw new KeyNotFoundException("Advert does not exist.");
             if (advertInDb.ownerId != userId) throw new ArgumentException("It is not your advert.");
 
             advertInDb = _mapper.Map(data, advertInDb);

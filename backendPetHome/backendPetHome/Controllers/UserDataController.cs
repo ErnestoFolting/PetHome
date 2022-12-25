@@ -38,7 +38,6 @@ namespace backendPetHome.Controllers
         public async Task<ActionResult<UserDTO>> GetUserProfile()
         {
             var user = await _userDataService.getCurrentUserProfile(UserId);
-            if (user == null) return BadRequest("User not found");
             return Ok(user);
         }
 

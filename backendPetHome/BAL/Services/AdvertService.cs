@@ -34,7 +34,7 @@ namespace backendPetHome.BLL.Services
         public async Task<AdvertDTO> getAdvertById(int advertId)
         { 
             Advert? advert = await _unitOfWork.AdvertRepository.GetByIdSpecification(new AdvertByIdWithOwnerSpecification(advertId));
-            if (advert == null) throw new ArgumentException("Advert not found");
+            if (advert == null) throw new KeyNotFoundException("Advert not found");
             AdvertDTO advertDTO = _mapper.Map<AdvertDTO>(advert);
             return advertDTO;
         }
@@ -68,7 +68,7 @@ namespace backendPetHome.BLL.Services
         }
         public async Task MarkAsFinished(int advertId, string userId) {
             var advertInDb = await _unitOfWork.AdvertRepository.GetByIdSpecification(new AdvertByIdSpecification(advertId));
-            if (advertInDb == null) throw new ArgumentException("That advert not exists.");
+            if (advertInDb == null) throw new KeyNotFoundException("Advert not found.");
             if (advertInDb.ownerId!= userId) throw new ArgumentException("You do not have the access.");
             advertInDb.status = AdvertStatusEnum.finished;
             await _unitOfWork.AdvertRepository.Update(advertInDb);
@@ -77,7 +77,7 @@ namespace backendPetHome.BLL.Services
         public async Task deleteAdvert(int advertId, string userId)
         {
             var advertInDb = await _unitOfWork.AdvertRepository.GetByIdSpecification(new AdvertByIdSpecification(advertId));
-            if (advertInDb == null) throw new ArgumentException("That advert not exists.");
+            if (advertInDb == null) throw new KeyNotFoundException("Advert not found.");
             if (advertInDb.ownerId != userId) throw new ArgumentException("You do not have the access.");
             await _unitOfWork.AdvertRepository.Delete(advertInDb);
             await _unitOfWork.SaveChangesAsync();

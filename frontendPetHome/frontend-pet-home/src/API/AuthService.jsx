@@ -1,7 +1,6 @@
 import $api from '../HTTP/index'
 export default class AdvertService {
     static async login(creds) {
-        console.log('creds check', creds)
         const response = await $api.post('/api/auth/login', creds)
         return response
     }
