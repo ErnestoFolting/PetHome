@@ -17,6 +17,7 @@ using backendPetHome.Validators.AdvertValidators;
 using backendPetHome.DAL.Interfaces;
 using backendPetHome.DAL;
 using backendPetHome.DAL.Entities;
+using backendPetHome.Attributes;
 
 var builder = WebApplication.CreateBuilder(args);
 

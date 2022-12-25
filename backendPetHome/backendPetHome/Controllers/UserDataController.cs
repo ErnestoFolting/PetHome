@@ -2,18 +2,15 @@
 using backendPetHome.BLL.DTOs.RequestDTOs;
 using backendPetHome.BLL.DTOs.UserDTOs;
 using backendPetHome.BLL.Services;
+using backendPetHome.Controllers.Abstract;
 using backendPetHome.DAL.Specifications.QueryParameters;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Security.Claims;
 
 namespace backendPetHome.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
-    [ApiController]
-    public class UserDataController : ControllerBase
+    public class UserDataController : BaseController
     {
         private readonly UserDataService _userDataService;
 
@@ -21,55 +18,55 @@ namespace backendPetHome.Controllers
         {
             _userDataService = userDataService;
         }
+
         [HttpGet("myadverts")]
         public async Task<ActionResult<IEnumerable<AdvertUserDTO>>> GetUserAdverts([FromQuery] QueryStringParameters parameters)
         {
-            string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            var advertsAndCount = await _userDataService.getCurrentUserAdverts(userId, parameters);
+            var advertsAndCount = await _userDataService.getCurrentUserAdverts(UserId, parameters);
             Response.Headers.Add("X-Pagination-Total-Count", JsonConvert.SerializeObject(advertsAndCount.totalCount));
             return Ok(advertsAndCount.fitAdvertsDTO);
         }
+
         [HttpGet("myadverts/{id}")]
         public async Task<ActionResult<IEnumerable<AdvertUserDTO>>> GetUserCertainAdvert(int id)
         {
-            string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            AdvertUserDTO? advertInDb = await _userDataService.getCurrentUserCertainAdvert(userId,id);
+            AdvertUserDTO? advertInDb = await _userDataService.getCurrentUserCertainAdvert(UserId, id);
             return Ok(advertInDb);
         }
+
         [HttpGet("myprofile")]
         public async Task<ActionResult<UserDTO>> GetUserProfile()
         {
-            string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            var user = await _userDataService.getCurrentUserProfile(userId);
+            var user = await _userDataService.getCurrentUserProfile(UserId);
             if (user == null) return BadRequest("User not found");
             return Ok(user);
         }
+
         [HttpGet("myrequests")]
         public async Task<ActionResult<IEnumerable<RequestDTO>>> GetUserRequests()
         {
-            string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            IEnumerable<RequestDTO> requests = await _userDataService.getCurrentUserRequests(userId);
+            IEnumerable<RequestDTO> requests = await _userDataService.getCurrentUserRequests(UserId);
             return Ok(requests);
         }
+
         [HttpDelete]
         public async Task<ActionResult> Delete()
         {
-            string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            await _userDataService.deleteUserProfile(userId);
+            await _userDataService.deleteUserProfile(UserId);
             return Ok();
         }
+
         [HttpPut]
         public async Task<ActionResult> UpdateProfile([FromForm] UserRedoDTO data, IFormFile? userPhoto)
         {
-            string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            await _userDataService.updateUserProfile(userId,data,userPhoto);
+            await _userDataService.updateUserProfile(UserId, data,userPhoto);
             return Ok();
         }
+
         [HttpPut("myadverts/{id}")]
         public async Task<ActionResult> UpdateAdvert([FromForm] AdvertCreateRedoDTO data, IFormFile? advertPhoto, int id)
         {
-            string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            await _userDataService.updateUserAdvert(userId, data, id, advertPhoto);
+            await _userDataService.updateUserAdvert(UserId, data, id, advertPhoto);
             return Ok();
         }
     }

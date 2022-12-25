@@ -1,19 +1,17 @@
-﻿using backendPetHome.BLL.DTOs.AdvertDTOs;
+﻿using backendPetHome.Attributes;
+using backendPetHome.BLL.DTOs.AdvertDTOs;
 using backendPetHome.BLL.Services;
+using backendPetHome.Controllers.Abstract;
 using backendPetHome.DAL.Specifications.QueryParameters;
 using backendPetHome.Hubs;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
-using System.Security.Claims;
 
 namespace backendPetHome.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
-    [ApiController]
-    public class AdvertsController : ControllerBase
+    public class AdvertsController : BaseController
     {
         private readonly AdvertService _advertService;
         private readonly IHubContext<PerformerSelectionHub> _hub;
@@ -22,6 +20,7 @@ namespace backendPetHome.Controllers
             _advertService = advertService;
             _hub = hub;
         }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AdvertDTO>>> GetAdverts([FromQuery] QueryStringParameters parameters)
         {
@@ -29,32 +28,35 @@ namespace backendPetHome.Controllers
             Response.Headers.Add("X-Pagination-Total-Count", JsonConvert.SerializeObject(advertsAndCount.totalCount));
             return Ok(advertsAndCount.fitAdvertsDTO);
         }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<AdvertDTO>> Get(int id)
         {
             return Ok(await _advertService.getAdvertById(id));
         }
 
+        [UserId]
         [HttpPost]
         public async Task<ActionResult> Post([FromForm] AdvertCreateRedoDTO advertToAdd, IFormFile petPhoto)
         {
-            var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            Tuple<IEnumerable<string>, AdvertDTO> possiblePerformers = await _advertService.addAdvert(advertToAdd,userId,petPhoto);
+            Tuple<IEnumerable<string>, AdvertDTO> possiblePerformers = await _advertService.addAdvert(advertToAdd,UserId,petPhoto);
             await _hub.Clients.Users(possiblePerformers.Item1).SendAsync("Send", possiblePerformers.Item2); //make a method in hub
             return Ok(new {ids = possiblePerformers.Item1,dto =  possiblePerformers.Item2});
         }
+
+        [UserId]
         [HttpPut("finish/{advertId}")]
         public async Task<ActionResult> MarkAsFinished(int advertId)
         {
-            var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            await _advertService.MarkAsFinished(advertId, userId);
+            await _advertService.MarkAsFinished(advertId, UserId);
             return Ok();
         }
+
+        [UserId]
         [HttpDelete("{advertId}")]
         public async Task<ActionResult> deleteAdvert(int advertId)
         {
-            var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            await _advertService.deleteAdvert(advertId, userId);
+            await _advertService.deleteAdvert(advertId, UserId);
             return Ok();
         }
     }

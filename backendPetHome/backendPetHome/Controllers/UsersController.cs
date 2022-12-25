@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using backendPetHome.BLL.Services;
 using backendPetHome.BLL.DTOs.UserDTOs;
+using backendPetHome.Controllers.Abstract;
 
 namespace backendPetHome.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseController
     {
         private readonly UserService _userService;
 

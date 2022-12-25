@@ -1,12 +1,11 @@
 ﻿using backendPetHome.BLL.Services;
+using backendPetHome.Controllers.Abstract;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace backendPetHome.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    public class RequestsController : ControllerBase
+    public class RequestsController : BaseController
     {
 
         private readonly RequestService _requestService;
@@ -15,39 +14,39 @@ namespace backendPetHome.Controllers
         {
             _requestService = requestService;
         }
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] int advertId)
         {
-            string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            await _requestService.addRequest(userId, advertId, DAL.Enums.RequestStatusEnum.applied);
+            await _requestService.addRequest(UserId, advertId, DAL.Enums.RequestStatusEnum.applied);
             return Ok();
         }
+
         [HttpPut("confirm/{id}")]
         public async Task<IActionResult> ConfirmRequest(int id)
         {
-            string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            await _requestService.confirmRequest(id,userId);
+            await _requestService.confirmRequest(id, UserId);
             return Ok();
         }
+
         [HttpPut("reject/{id}")]
         public async Task<IActionResult> Reject(int id)
         {
-            string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            await _requestService.rejectRequest(id, userId);
+            await _requestService.rejectRequest(id, UserId);
             return Ok();
         }
+
         [HttpPut("apply/{id}")]
         public async Task<IActionResult> applyGeneratedRequest(int id)
         {
-            string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            await _requestService.applyGeneratedRequest(id, userId);
+            await _requestService.applyGeneratedRequest(id, UserId);
             return Ok();
         }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> deleteRequest(int id)
         {
-            string? userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            await _requestService.deleteRequest(id, userId);
+            await _requestService.deleteRequest(id, UserId);
             return Ok();
         }
     }

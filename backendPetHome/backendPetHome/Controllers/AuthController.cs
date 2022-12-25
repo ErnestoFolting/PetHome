@@ -18,6 +18,7 @@ namespace backendPetHome.Controllers
         {
              _authService = authService;
         }
+
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register([FromForm]UserRegisterDTO data, IFormFile userPhoto)
@@ -25,6 +26,7 @@ namespace backendPetHome.Controllers
             await _authService.Register(data, userPhoto);
             return Ok(new Response { Status = "Success", Message = "User created!" });
         }
+
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody]UserLoginDTO creds)
@@ -34,6 +36,7 @@ namespace backendPetHome.Controllers
             string? userId = tokens.Item2.ownerId;
             return Ok(new { userId = userId });
         }
+
         [HttpPost("refresh-token")]
         public async Task<ActionResult<string>> Refresh()
         {
@@ -44,6 +47,7 @@ namespace backendPetHome.Controllers
             string? userId = tokens.Item2.ownerId;
             return Ok(new { userId = userId });
         }
+
         [HttpPost("logout")]
         public async Task<ActionResult<string>> Logout()
         {
@@ -58,6 +62,7 @@ namespace backendPetHome.Controllers
             Response.Cookies.Append("refreshToken", "", cookieOption);
             return Ok(new Response{Status = "200", Message = "Logged out"});
         }
+
         private void SetTokens(Tuple<SecurityToken, RefreshToken> tokens)
         {
             var accessOption = new CookieOptions
