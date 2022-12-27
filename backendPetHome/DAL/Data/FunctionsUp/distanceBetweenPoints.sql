@@ -1,3 +1,5 @@
+use testdb;
+go
 CREATE FUNCTION DistanceBetweenPlaces (
     @lon1 float,
     @lat1 float,

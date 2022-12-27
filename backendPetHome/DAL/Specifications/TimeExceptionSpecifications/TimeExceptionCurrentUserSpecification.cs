@@ -1,6 +1,6 @@
 ﻿using backendPetHome.DAL.Entities;
 
-namespace backendPetHome.DAL.Specifications.RequestSpecifications
+namespace backendPetHome.DAL.Specifications.TimeExceptionSpecifications
 {
     public class TimeExceptionCurrentUserSpecification : Specification<TimeException>
     {

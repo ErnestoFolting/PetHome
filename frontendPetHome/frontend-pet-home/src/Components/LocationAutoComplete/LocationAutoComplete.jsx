@@ -35,11 +35,8 @@ export const LocationAutoComplete = ({ isLoaded, locationSet, previousValue, isN
             () => {
                 setValue(description, false);
                 clearSuggestions();
-                console.log('description', description)
-
                 getGeocode({ address: description }).then((results) => {
                     const { lat, lng } = getLatLng(results[0]);
-                    console.log("📍 Coordinates: ", { lat, lng });
                     locationSet(lat, lng, description);
                 });
             };
@@ -65,7 +62,7 @@ export const LocationAutoComplete = ({ isLoaded, locationSet, previousValue, isN
                 setValue(previousValue, false)
             }
         }
-    }, [isLoaded, init]);
+    }, [isLoaded, init, previousValue]);
     return (
         <div className={s.locationInputCoontainer} ref={ref}>
             <label>📍Місцеположення(оберіть)*</label>

@@ -4,8 +4,8 @@ namespace backendPetHome.BLL.DTOs.UserDTOs
 {
     public class UserRegisterDTO : UserRedoDTO
     {
-        public string UserName { get; set; } = string.Empty;
-        public string password { get; set; } = string.Empty;
-        public SexEnum sex { get; set; } = SexEnum.male;
+        public string UserName { get; set; } 
+        public string password { get; set; }
+        public SexEnum sex { get; set; }
     }
 }

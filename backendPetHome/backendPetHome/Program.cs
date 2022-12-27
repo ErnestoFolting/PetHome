@@ -44,7 +44,7 @@ builder.Services.AddScoped<TimeExceptionService>();
 builder.Services.AddScoped<UserDataService>();
 builder.Services.AddScoped<RequestService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddTransient<PerformerSelectionHubMethods>();
+builder.Services.AddSingleton<PerformerSelectionHub>();
 builder.Services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AdvertCreateRedoDTOValidator>());
 
 builder.Services.AddDbContext<DataContext>(options =>

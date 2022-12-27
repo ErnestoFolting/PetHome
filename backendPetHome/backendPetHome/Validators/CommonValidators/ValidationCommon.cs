@@ -6,7 +6,7 @@ namespace backendPetHome.Validators.CommonValidators
     {
         const string emailPattern = @"^([a-zA-z0-9]+([._\-][a-zA-z0-9]+)?)+@([a-zA-z0-9]+([.\-][a-zA-Z0-9]+)?)+\.[a-zA-Z]{2,4}$";
         const string phoneNumberPattern = @"^(\+38\d{10}|\d{10})$";
-        const string passwordPattern = @"/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,}$/";
+        const string passwordPattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,}$";
         public static bool IsValidEmail(this string value)
         {
             return Regex.IsMatch(value, emailPattern);

@@ -13,11 +13,11 @@ namespace backendPetHome.Controllers
     public class AdvertsController : BaseController
     {
         private readonly AdvertService _advertService;
-        private readonly PerformerSelectionHubMethods _hubMethods;
-        public AdvertsController(AdvertService advertService, PerformerSelectionHubMethods hubMethods)
+        private readonly PerformerSelectionHub _hub;
+        public AdvertsController(AdvertService advertService, PerformerSelectionHub hub)
         {
             _advertService = advertService;
-            _hubMethods = hubMethods;
+            _hub = hub;
         }
 
         [HttpGet]
@@ -39,7 +39,7 @@ namespace backendPetHome.Controllers
         public async Task<ActionResult> Post([FromForm] AdvertCreateRedoDTO advertToAdd, IFormFile petPhoto)
         {
             Tuple<IEnumerable<string>, AdvertDTO> possiblePerformers = await _advertService.addAdvert(advertToAdd,UserId,petPhoto);
-            if (possiblePerformers.Item1 != null) await _hubMethods.PostAdvert(possiblePerformers.Item1, possiblePerformers.Item2);
+            if (possiblePerformers.Item1 != null) await _hub.Send(possiblePerformers.Item1, possiblePerformers.Item2);
             return Ok(new {ids = possiblePerformers.Item1,dto =  possiblePerformers.Item2});
         }
 

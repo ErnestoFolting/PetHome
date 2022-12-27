@@ -1,4 +1,10 @@
 use testdb;
+
+go
+CREATE TYPE IdListType AS TABLE (
+    Id nvarchar(450)
+);
+
 go
 CREATE FUNCTION selectPossiblePerformers (
     @advertStartTime dateTime,
@@ -7,9 +13,10 @@ CREATE FUNCTION selectPossiblePerformers (
 	@advertLocationLat float,
 	@ownerId nvarchar(450)
 )
-RETURNS TABLE 
+RETURNS @UserIds table(id nvarchar (450))
 AS
-RETURN (
+BEGIN
+INSERT INTO @UserIds
 SELECT Id
 FROM AspNetUsers
 WHERE NOT EXISTS (
@@ -21,5 +28,6 @@ WHERE NOT EXISTS (
 )
 AND Id <> @ownerId
 AND [dbo].DistanceBetweenPlaces(AspNetUsers.locationLng, AspNetUsers.locationLat, @advertLocationLng, @advertLocationLat) < 30
-)
+RETURN ;
+END
 go

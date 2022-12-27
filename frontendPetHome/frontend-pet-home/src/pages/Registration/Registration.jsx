@@ -15,12 +15,14 @@ import { useForm } from 'react-hook-form';
 import { RegistrationSchema } from '../../ValidationSchemas/RegistrationSchema'
 import { yupResolver } from "@hookform/resolvers/yup";
 import FileValidator from '../../ValidationSchemas/FileValidator'
+import { getUserLocation } from '../../Common/geo'
 
 const MAPS_KEY = process.env.REACT_APP_MAPS_KEY
 const libraries = ['places']
 
 export const Registration = () => {
   const [showValidation, setShowValidation] = useState(false);
+  const [modalLocErrorVisible, setModalLocErrorVisible] = useState(false);
   const [location, setLocation] = useState();
   const [file, setFile] = useState();
   const [registrationData, setRegistrationData] = useState();
@@ -74,6 +76,16 @@ export const Registration = () => {
     }
   }, [needFetch])
 
+  async function setUserLoc(e) {
+    e.preventDefault()
+    const loc = await getUserLocation()
+    if (loc?.location !== 'default') {
+      locationSet(loc.locationLat, loc.locationLng, loc.location)
+    } else {
+      setModalLocErrorVisible(true)
+    }
+  }
+
   function locationSet(lat, lng, description) {
     setLocation({ locationLat: String(lat)?.replace('.', ','), locationLng: String(lng)?.replace('.', ','), location: description })
   }
@@ -83,6 +95,7 @@ export const Registration = () => {
   return (
     <div className='registrationPage'>
       <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{error}</MyModal>
+      <MyModal title='Geolocation error' visible={modalLocErrorVisible} setVisible={setModalLocErrorVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>Перевірте дозвіл на доступ до геологації.</MyModal>
       {isLoading
         ? <MyLoader />
         :
@@ -159,8 +172,10 @@ export const Registration = () => {
           <LocationAutoComplete
             isLoaded={isLoaded}
             locationSet={locationSet}
+            previousValue={location?.location}
             isNotValid={!location && showValidation}
           />
+          <MyButton onClick={e => setUserLoc(e)}>Моя локація</MyButton>
           <MyButton type="submit" style={{ height: '35px', marginTop: '20px' }}>Зареєструватись</MyButton>
         </MyForm>
       }

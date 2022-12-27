@@ -17,6 +17,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CreateAdvertSchema } from '../../ValidationSchemas/CreateAdvertSchema'
 import FileValidator from '../../ValidationSchemas/FileValidator'
+import { getUserLocation } from '../../Common/geo'
 
 const MAPS_KEY = process.env.REACT_APP_MAPS_KEY
 const libraries = ['places']
@@ -30,6 +31,7 @@ export const CreateAdvert = () => {
   const [location, setLocation] = useState();
   const [needFetch, setNeedFetch] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalLocErrorVisible, setModalLocErrorVisible] = useState(false);
   const [calendarVisible, setCalendarVisible] = useState(false);
   const [calendar, setCalendar] = useState([Date.now()]);
 
@@ -91,6 +93,15 @@ export const CreateAdvert = () => {
     }
   }, [needFetch])
 
+  async function setUserLoc(e) {
+    e.preventDefault()
+    const loc = await getUserLocation()
+    if (loc?.location !== 'default') {
+      locationSet(loc.locationLat, loc.locationLng, loc.location)
+    } else {
+      setModalLocErrorVisible(true)
+    }
+  }
 
   function locationSet(lat, lng, description) {
     setLocation({ locationLat: String(lat)?.replace('.', ','), locationLng: String(lng)?.replace('.', ','), location: description })
@@ -101,6 +112,7 @@ export const CreateAdvert = () => {
   return (
     <div className='createAdvertPage'>
       <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{error}</MyModal>
+      <MyModal title='Geolocation error' visible={modalLocErrorVisible} setVisible={setModalLocErrorVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>Перевірте дозвіл на доступ до геологації.</MyModal>
       <MyModal title='Оберіть дати' visible={calendarVisible} setVisible={setCalendarVisible} style={{ backgroundColor: 'rgba(49,47,47,255)' }}>
         <Calendar
           rangeHover
@@ -148,8 +160,10 @@ export const CreateAdvert = () => {
           <LocationAutoComplete
             isLoaded={isLoaded}
             locationSet={locationSet}
+            previousValue={location?.location}
             isNotValid={!location && showValidation}
           />
+          <MyButton onClick={e => setUserLoc(e)}>Моя локація</MyButton>
           <div className='createAdvertButtons'>
             <p>Дати</p>
             <MyButton

@@ -5,23 +5,11 @@ using Microsoft.AspNetCore.SignalR;
 namespace backendPetHome.Hubs
 {
     [Authorize]
-    public class PerformerSelectionHub : Hub 
+    public class PerformerSelectionHub : Hub
     {
-        private readonly PerformerSelectionHubMethods _hubMethods;
-
-        public PerformerSelectionHub(PerformerSelectionHubMethods hubMethods)
+        public async Task Send(IEnumerable<string> possiblePerformers, AdvertDTO advertToSend)
         {
-            _hubMethods = hubMethods;
+            await Clients.Users(possiblePerformers).SendAsync("Send",advertToSend);
         }
-
-        //public async Task Check(AdvertDTO adv)
-        //{
-        //    AdvertDTO check = new AdvertDTO
-        //    {
-        //        id = 2,
-        //        name = "Check"
-        //    };
-        //    await this.Clients.All.SendAsync("Send", check);
-        //}
     }
 }
