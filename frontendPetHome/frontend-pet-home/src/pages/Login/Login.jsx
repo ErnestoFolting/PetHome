@@ -45,7 +45,7 @@ const Login = () => {
 
     return (
         <div className='loginPage'>
-            <MyModal visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{error}</MyModal>
+            <MyModal title = 'Error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{error}</MyModal>
             <div className='formName'>Авторизація</div>
             <div className='loginContent'>
                 <div className='inputsPart'>

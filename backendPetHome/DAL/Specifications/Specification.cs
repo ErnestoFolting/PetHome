@@ -10,6 +10,7 @@ namespace backendPetHome.DAL.Specifications
             Criteria = criteria;
         }
         public QueryStringParameters? QueryParameters;
+        public string userWhoRequestsId = string.Empty;
         public Expression<Func<TEntity, bool>>? Criteria { get; }
         public List<Expression<Func<TEntity, object>>> IncludeExpressions { get; } = new();
         protected void AddInclude(Expression<Func<TEntity, object>> includeExpression)
@@ -28,6 +29,10 @@ namespace backendPetHome.DAL.Specifications
         public void RemovePagination()
         {
             QueryParameters = null;
+        }
+        protected virtual void AddFitDates(string userWhoRequestsId)
+        {
+            this.userWhoRequestsId = userWhoRequestsId;
         }
     }
 }

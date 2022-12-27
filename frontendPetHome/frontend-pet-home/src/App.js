@@ -34,8 +34,6 @@ function App() {
   useEffect(() => {
     if (store?.myHubConnection) {
       store?.myHubConnection?.on("Send", (postedAdvert) => {
-        // console.log("currentConnection", store.myHubConnection)
-        // console.log("postedAdvert", postedAdvert)
         toast(
           <AdvertNotification
             advert={postedAdvert}

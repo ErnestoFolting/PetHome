@@ -5,7 +5,6 @@ using backendPetHome.Controllers.Abstract;
 using backendPetHome.DAL.Specifications.QueryParameters;
 using backendPetHome.Hubs;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 
 namespace backendPetHome.Controllers
@@ -14,11 +13,11 @@ namespace backendPetHome.Controllers
     public class AdvertsController : BaseController
     {
         private readonly AdvertService _advertService;
-        private readonly IHubContext<PerformerSelectionHub> _hub;
-        public AdvertsController(AdvertService advertService, IHubContext<PerformerSelectionHub> hub)
+        private readonly PerformerSelectionHubMethods _hubMethods;
+        public AdvertsController(AdvertService advertService, PerformerSelectionHubMethods hubMethods)
         {
             _advertService = advertService;
-            _hub = hub;
+            _hubMethods = hubMethods;
         }
 
         [HttpGet]
@@ -40,7 +39,7 @@ namespace backendPetHome.Controllers
         public async Task<ActionResult> Post([FromForm] AdvertCreateRedoDTO advertToAdd, IFormFile petPhoto)
         {
             Tuple<IEnumerable<string>, AdvertDTO> possiblePerformers = await _advertService.addAdvert(advertToAdd,UserId,petPhoto);
-            await _hub.Clients.Users(possiblePerformers.Item1).SendAsync("Send", possiblePerformers.Item2); //make a method in hub
+            if (possiblePerformers.Item1 != null) await _hubMethods.PostAdvert(possiblePerformers.Item1, possiblePerformers.Item2);
             return Ok(new {ids = possiblePerformers.Item1,dto =  possiblePerformers.Item2});
         }
 

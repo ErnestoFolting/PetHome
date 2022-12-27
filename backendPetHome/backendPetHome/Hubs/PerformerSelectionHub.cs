@@ -1,16 +1,27 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using backendPetHome.BLL.DTOs.AdvertDTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using System.Security.Claims;
 
 namespace backendPetHome.Hubs
 {
-    public class PerformerSelectionHub : Hub
+    [Authorize]
+    public class PerformerSelectionHub : Hub 
     {
-        [Authorize]
-        public async Task Send(string message)
+        private readonly PerformerSelectionHubMethods _hubMethods;
+
+        public PerformerSelectionHub(PerformerSelectionHubMethods hubMethods)
         {
-            string? userId = Context.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            await this.Clients.All.SendAsync("Send", userId);
+            _hubMethods = hubMethods;
         }
+
+        //public async Task Check(AdvertDTO adv)
+        //{
+        //    AdvertDTO check = new AdvertDTO
+        //    {
+        //        id = 2,
+        //        name = "Check"
+        //    };
+        //    await this.Clients.All.SendAsync("Send", check);
+        //}
     }
 }

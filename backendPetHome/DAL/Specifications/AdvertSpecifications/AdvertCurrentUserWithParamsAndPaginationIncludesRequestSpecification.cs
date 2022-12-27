@@ -11,6 +11,7 @@ namespace backendPetHome.DAL.Specifications.AdvertSpecifications
         {
             AddInclude(el => el.requests);
             AddPagination(parameters);
+            AddFitDates(userId);
         }
     }
 }
