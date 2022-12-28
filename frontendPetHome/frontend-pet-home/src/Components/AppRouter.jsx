@@ -12,7 +12,7 @@ import { UserProfile } from '../pages/UserProfile/UserProfile'
 import { MyProfile } from '../pages/MyProfile/MyProfile';
 import { MyAdverts } from '../pages/MyAdverts/MyAdverts';
 import { MyCertainAdvert } from '../pages/MyCertainAdvert/MyCertainAdvert';
-import { MyRequests } from '../pages/MyRequests/MyRequests';
+import MyRequests from '../pages/MyRequests/MyRequests';
 
 function AppRouter() {
   const { store } = useContext(Context);

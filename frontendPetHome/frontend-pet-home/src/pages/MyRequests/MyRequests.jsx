@@ -6,16 +6,19 @@ import './MyRequests.css'
 import UserDataService from '../../API/UserDataService'
 import { UserRequestItem } from '../../Components/UserRequestItem/UserRequestItem'
 import { Context } from '../../index.js'
+import { observer } from 'mobx-react-lite'
 
-export const MyRequests = () => {
+const MyRequests = () => {
     const [myRequests, setMyRequests] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
-    const [update, setUpdate] = useState('');
+    const [update, setUpdate] = useState(0);
     const [fetchUserRequests, loading, error] = useFetching(async () => {
         const requestsResponse = await UserDataService.getUserRequests()
         setMyRequests(requestsResponse)
     });
+
     const { store } = useContext(Context);
+
     useEffect(() => {
         async function fetchData() {
             try {
@@ -26,15 +29,17 @@ export const MyRequests = () => {
         }
         fetchData();
     }, [update]);
+
     useEffect(() => {
-        console.log('CHEEEEEECK')
+        console.log('heeeere')
         if (store?.myHubConnection) {
             store?.myHubConnection?.on("Send", (postedAdvert) => {
-                console.log("currentConnection")
+                console.log(postedAdvert.id)
                 setUpdate(postedAdvert.id)
             })
         }
     }, [store?.myHubConnection]);
+
     return (
         <div className='userAdvertsPage'>
             <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{error}</MyModal>
@@ -52,7 +57,8 @@ export const MyRequests = () => {
                                         key={el.id}
                                         status={el.status}
                                         requestId={el.id}
-                                        update={setUpdate}
+                                        update={update}
+                                        setUpdate={setUpdate}
                                     />)}
                             </ul>
                     }
@@ -62,3 +68,5 @@ export const MyRequests = () => {
         </div>
     )
 }
+
+export default observer(MyRequests)

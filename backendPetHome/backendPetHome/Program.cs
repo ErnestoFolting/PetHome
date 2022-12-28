@@ -45,6 +45,8 @@ builder.Services.AddScoped<UserDataService>();
 builder.Services.AddScoped<RequestService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddSingleton<PerformerSelectionHub>();
+builder.Services.AddScoped<PerformerSelectionService>();
+builder.Services.AddSingleton<UserToConnectionIdManager>();
 builder.Services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AdvertCreateRedoDTOValidator>());
 
 builder.Services.AddDbContext<DataContext>(options =>

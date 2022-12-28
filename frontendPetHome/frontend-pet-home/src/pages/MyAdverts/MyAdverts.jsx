@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from 'react'
+import { React, useState, useEffect, useContext } from 'react'
 import { useFetching } from '../../Hooks/useFetching'
 import './MyAdverts.css'
 import AdvertService from '../../API/AdvertService'
@@ -8,11 +8,14 @@ import { AdvertList } from '../../Components/AdvertList/AdvertList'
 import { AdvertsFilter } from '../../Components/Filters/AdvertsFilter/AdvertsFilter'
 import { usePagination } from '../../Hooks/usePagination';
 import { getPagesCount } from '../../Common/pagesCount'
+import { Context } from '../../index.js'
 
 export const MyAdverts = () => {
 
     const [myAdverts, setMyAdverts] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
+
+    const [update, setUpdate] = useState(0);
 
     const [totalPages, setTotalPages] = useState(0);
     const [pagesArray] = usePagination(totalPages);
@@ -34,7 +37,17 @@ export const MyAdverts = () => {
             }
         }
         fetchData();
-    }, [queryParams]);
+    }, [queryParams, update]);
+
+    const { store } = useContext(Context);
+
+    useEffect(() => {
+        if (store?.myHubConnection) {
+            store?.myHubConnection?.on("Apply", (postedAdvert) => {
+                setUpdate(postedAdvert.id)
+            })
+        }
+    }, [store?.myHubConnection]);
 
     return (
         <div className='userAdvertsPage'>

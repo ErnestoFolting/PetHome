@@ -8,7 +8,7 @@ import RequestService from '../../API/RequestService'
 import { MyModal } from '../../UI/MyModal/MyModal'
 import { MyLoader } from '../../UI/Loader/MyLoader'
 
-export const UserRequestItem = ({ advert, status, requestId, update, ...props }) => {
+export const UserRequestItem = ({ advert, status, requestId, update, setUpdate, ...props }) => {
     const navigate = useNavigate()
     const path = generatePath("/adverts/:id", {
         id: advert?.id
@@ -25,7 +25,7 @@ export const UserRequestItem = ({ advert, status, requestId, update, ...props })
     async function acceptRequest() {
         try {
             await acceptGeneratedRequest()
-            update(requestId)
+            setUpdate(update + requestId)
         } catch (e) {
             setModalVisible(true)
         }
@@ -33,7 +33,7 @@ export const UserRequestItem = ({ advert, status, requestId, update, ...props })
     async function deleteRequest() {
         try {
             await fetchDeleteRequest()
-            update(requestId)
+            setUpdate(update + requestId)
         } catch (e) {
             setModalVisible(true)
         }

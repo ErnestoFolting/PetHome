@@ -1,5 +1,7 @@
-﻿using backendPetHome.BLL.Services;
+﻿using backendPetHome.BLL.DTOs.RequestDTOs;
+using backendPetHome.BLL.Services;
 using backendPetHome.Controllers.Abstract;
+using backendPetHome.Hubs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backendPetHome.Controllers
@@ -7,13 +9,14 @@ namespace backendPetHome.Controllers
     [Route("api/[controller]")]
     public class RequestsController : BaseController
     {
-
         private readonly RequestService _requestService;
+        private readonly PerformerSelectionHub _hub;
 
-        public RequestsController(RequestService requestService)
+        public RequestsController(RequestService requestService, PerformerSelectionHub hub)
         {
             _requestService = requestService;
-        }
+            _hub = hub;
+    }
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] int advertId)
@@ -39,7 +42,8 @@ namespace backendPetHome.Controllers
         [HttpPut("apply/{id}")]
         public async Task<IActionResult> applyGeneratedRequest(int id)
         {
-            await _requestService.applyGeneratedRequest(id, UserId);
+            RequestDTO requestDTO = await _requestService.applyGeneratedRequest(id, UserId);
+            await _hub.ApplyRequest(requestDTO);
             return Ok();
         }
 

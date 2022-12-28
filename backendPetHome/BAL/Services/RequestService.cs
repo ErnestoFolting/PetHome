@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using backendPetHome.BLL.DTOs.RequestDTOs;
 using backendPetHome.BLL.Services.Abstract;
 using backendPetHome.DAL.Entities;
 using backendPetHome.DAL.Interfaces;
@@ -52,14 +53,16 @@ namespace backendPetHome.BLL.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task applyGeneratedRequest(int requestId, string userId)
+        public async Task<RequestDTO> applyGeneratedRequest(int requestId, string userId)
         {
-            var requestInDb = await _unitOfWork.RequestRepository.GetByIdSpecification(new RequestByIdWithAdvertSpecification(requestId));
+            var requestInDb = await _unitOfWork.RequestRepository.GetByIdSpecification(new RequestByIdWithAdvertAndUserSpecification(requestId));
             if (requestInDb == null) throw new KeyNotFoundException("Request not found");
             if (requestInDb.userId != userId) throw new ArgumentException("You do not have the access.");
-            requestInDb.status = DAL.Enums.RequestStatusEnum.applied; //update?
+            requestInDb.status = DAL.Enums.RequestStatusEnum.applied;
             await _unitOfWork.RequestRepository.Update(requestInDb);
             await _unitOfWork.SaveChangesAsync();
+            RequestDTO requestDTO = _mapper.Map<RequestDTO>(requestInDb);
+            return requestDTO;
         }
 
         public async Task deleteRequest(int requestId, string userId)

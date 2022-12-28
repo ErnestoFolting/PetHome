@@ -9,6 +9,7 @@ import Footer from './Footer/Footer';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AdvertNotification } from './Components/AdvertNotification/AdvertNotification';
+import { UserNotification } from './Components/UserNotification/UserNotification';
 
 function App() {
 
@@ -33,12 +34,22 @@ function App() {
 
   useEffect(() => {
     if (store?.myHubConnection) {
-      store?.myHubConnection?.on("Send", (postedAdvert) => {
+      store?.myHubConnection?.on("Apply", (request) => {
+        console.log(request)
+        toast(
+          <UserNotification
+            request={request}
+          />
+          ,
+          { id: request.id }
+        )
+      })
+      store?.myHubConnection?.on("Send", (advert) => {
         toast(
           <AdvertNotification
-            advert={postedAdvert}
+            advert={advert}
           />,
-          { id: postedAdvert.id }
+          { id: advert.id }
         )
       })
     }
@@ -50,7 +61,7 @@ function App() {
       <AppRouter />
       <ToastContainer
         position="bottom-right"
-        autoClose={1000000}
+        autoClose={3000}
         hideProgressBar={false}
         newestOnTop={true}
         closeOnClick={false}

@@ -7,7 +7,6 @@ using backendPetHome.DAL.Enums;
 using backendPetHome.DAL.Interfaces;
 using backendPetHome.DAL.Specifications.AdvertSpecifications;
 using backendPetHome.DAL.Specifications.QueryParameters;
-using backendPetHome.DAL.Specifications.RequestSpecifications;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
