@@ -9,6 +9,7 @@ import { AdvertsFilter } from '../../Components/Filters/AdvertsFilter/AdvertsFil
 import { usePagination } from '../../Hooks/usePagination';
 import { getPagesCount } from '../../Common/pagesCount'
 import { Context } from '../../index.js'
+import { observer } from 'mobx-react-lite'
 
 export const MyAdverts = () => {
 
@@ -41,10 +42,14 @@ export const MyAdverts = () => {
 
     const { store } = useContext(Context);
 
+    const hubMethodsToUpdate = ["Apply", "Delete"]
+
     useEffect(() => {
         if (store?.myHubConnection) {
-            store?.myHubConnection?.on("Apply", (postedAdvert) => {
-                setUpdate(postedAdvert.id)
+            hubMethodsToUpdate.forEach((method) => {
+                store?.myHubConnection?.on(method, (postedAdvert) => {
+                    setUpdate(postedAdvert.id)
+                })
             })
         }
     }, [store?.myHubConnection]);
@@ -78,3 +83,4 @@ export const MyAdverts = () => {
     )
 }
 
+export default observer(MyAdverts)

@@ -1,26 +1,22 @@
 ﻿using AutoMapper;
 using backendPetHome.BLL.DTOs.AdvertDTOs;
 using backendPetHome.BLL.Services.Abstract;
-using backendPetHome.DAL.Data;
 using backendPetHome.DAL.Entities;
 using backendPetHome.DAL.Enums;
 using backendPetHome.DAL.Interfaces;
 using backendPetHome.DAL.Specifications.AdvertSpecifications;
 using backendPetHome.DAL.Specifications.QueryParameters;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 
 namespace backendPetHome.BLL.Services
 {
     public class AdvertService : BaseService
     {
-        private readonly DataContext _context;
         private readonly RequestService _requestService;
 
-        public AdvertService(DataContext context, IUnitOfWork unitOfWork, RequestService requestService, IMapper mapper)
+        public AdvertService(IUnitOfWork unitOfWork, RequestService requestService, IMapper mapper)
             :base(unitOfWork,mapper)
         {
-            _context = context;
             _requestService = requestService;
         }
         public async Task<(List<AdvertDTO> fitAdvertsDTO, int totalCount)> getAdverts(QueryStringParameters parameters)
@@ -47,7 +43,7 @@ namespace backendPetHome.BLL.Services
             await _unitOfWork.FileRepository.Add(advertFile);
             await _unitOfWork.SaveChangesAsync();
 
-            IEnumerable<string> possiblePerformers = await choosePossiblePerformers(newAdvert, userId);
+            IEnumerable<string> possiblePerformers = await _unitOfWork.UserRepository.SelectPossiblePerformers(newAdvert, userId);
             foreach(string possiblePerformerId in possiblePerformers)
             {
                 await _requestService.addRequest(possiblePerformerId, newAdvert.Id, RequestStatusEnum.generated);
@@ -56,14 +52,6 @@ namespace backendPetHome.BLL.Services
 
             AdvertDTO advertDTO = _mapper.Map<AdvertDTO>(newAdvert);
             return Tuple.Create(possiblePerformers, advertDTO);
-        }
-        public async Task<IEnumerable<string>> choosePossiblePerformers(Advert advert, string ownerId)
-        {
-            IEnumerable<string> possiblePerformers = await 
-                _context.selectPossiblePerformers(advert.startTime, advert.endTime, advert.locationLng, advert.locationLat, ownerId)
-                .Select(el=>el.Id)
-                .ToListAsync();
-            return possiblePerformers;
         }
         public async Task MarkAsFinished(int advertId, string userId) {
             var advertInDb = await _unitOfWork.AdvertRepository.GetByIdSpecification(new AdvertByIdSpecification(advertId));

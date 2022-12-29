@@ -89,11 +89,12 @@ export const MyAdvert = ({ advert, update, setAdvertRedoVisible, ...props }) => 
           setAdvertRedoVisible={setAdvertRedoVisible}
         />
       </div>
-      <div className='advertInfoBlock'>
+      <div className='myAdvertInfoBlock'>
         <h3>Опис</h3>
         <p>{advert.description}</p>
       </div>
       <div className='myAdvertRequests'>
+        <h3>Заявки</h3>
         {renderSwitch(status)}
       </div>
     </div>

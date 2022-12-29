@@ -30,12 +30,14 @@ const MyRequests = () => {
         fetchData();
     }, [update]);
 
+    const hubMethodsToUpdate = ["Send", "Confirm", "Reject"]
+
     useEffect(() => {
-        console.log('heeeere')
         if (store?.myHubConnection) {
-            store?.myHubConnection?.on("Send", (postedAdvert) => {
-                console.log(postedAdvert.id)
-                setUpdate(postedAdvert.id)
+            hubMethodsToUpdate.forEach((method) => {
+                store?.myHubConnection?.on(method, (postedAdvert) => {
+                    setUpdate(postedAdvert.id+1)
+                })
             })
         }
     }, [store?.myHubConnection]);

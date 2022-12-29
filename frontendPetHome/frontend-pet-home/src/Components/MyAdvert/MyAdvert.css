@@ -1,17 +1,18 @@
 .myAdvert {
     display: flex;
     flex-direction: column;
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
 }
 
 .myAdvertHeader {
-    flex: 1
+    flex: 1;
 }
 
 .myAdvertRequests {
     flex: 1;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     min-height: 350px;
     margin-bottom: 50px;
+    font-size: 20px;
 }
 
 .myAdvertRequests h3 {
@@ -63,10 +64,23 @@
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 2px 5px 0 rgba(0, 0, 0, 0.19);
     margin-top: 50px;
 }
-.finishedStatus button{
+
+.finishedStatus button {
     background-color: rgb(228, 74, 74);
     height: 100%;
     margin-top: 10px;
     padding: 15px;
     margin-bottom: 10px;
+}
+
+.myAdvertInfoBlock {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    flex: 1;
+    min-height: 200px;
+    width: 100%;
+    align-items: center;
+    font-size: 20px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
 }

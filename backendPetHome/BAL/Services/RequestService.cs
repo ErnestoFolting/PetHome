@@ -15,7 +15,7 @@ namespace backendPetHome.BLL.Services
         {
             _timeExceptionService = timeExceptionService;
         }
-        public async Task addRequest(string userId, int advertId, DAL.Enums.RequestStatusEnum status)
+        public async Task<RequestDTO> addRequest(string userId, int advertId, DAL.Enums.RequestStatusEnum status)
         {
             Advert? advertInDb = await _unitOfWork.AdvertRepository.GetByIdSpecification(new AdvertByIdSpecification(advertId));
             if (advertInDb == null) throw new KeyNotFoundException("Advert not found");
@@ -31,10 +31,13 @@ namespace backendPetHome.BLL.Services
 
             await _unitOfWork.RequestRepository.Add(newRequest);
             await _unitOfWork.SaveChangesAsync();
+            var requestInDb = await _unitOfWork.RequestRepository.GetByIdSpecification(new RequestByIdWithAdvertAndUserSpecification(newRequest.id));
+            RequestDTO requestDTO = _mapper.Map<RequestDTO>(requestInDb);
+            return requestDTO;
         }
-        public async Task confirmRequest(int requestId, string userId)
+        public async Task<(List<RequestDTO> requestsToRejectDTO, RequestDTO requestDTO)> confirmRequest(int requestId, string userId)
         {
-            var requestInDb = await _unitOfWork.RequestRepository.GetByIdSpecification(new RequestByIdWithAdvertSpecification(requestId));
+            var requestInDb = await _unitOfWork.RequestRepository.GetByIdSpecification(new RequestByIdWithAdvertAndUserSpecification(requestId));
             if (requestInDb == null) throw new KeyNotFoundException("Request not found.");
             if (requestInDb.advert.ownerId!= userId)throw new ArgumentException("You do not have the access.");
             if (!await _timeExceptionService.checkPerformerDates(requestInDb.userId, requestInDb.advert.startTime, requestInDb.advert.endTime)) throw new ArgumentException("This user can not perform at that dates.");
@@ -51,6 +54,10 @@ namespace backendPetHome.BLL.Services
                 _unitOfWork.RequestRepository.Update(r);
             });
             await _unitOfWork.SaveChangesAsync();
+
+            RequestDTO requestDTO = _mapper.Map<RequestDTO>(requestInDb);
+            List<RequestDTO> requestsToRejectDTO = _mapper.Map<List<RequestDTO>>(requestsToReject);
+            return (requestsToRejectDTO,requestDTO);
         }
 
         public async Task<RequestDTO> applyGeneratedRequest(int requestId, string userId)
@@ -65,25 +72,29 @@ namespace backendPetHome.BLL.Services
             return requestDTO;
         }
 
-        public async Task deleteRequest(int requestId, string userId)
+        public async Task<RequestDTO> deleteRequest(int requestId, string userId)
         {
-            var requestInDb = await _unitOfWork.RequestRepository.GetByIdSpecification(new RequestByIdWithAdvertSpecification(requestId));
+            var requestInDb = await _unitOfWork.RequestRepository.GetByIdSpecification(new RequestByIdWithAdvertAndUserSpecification(requestId));
             if (requestInDb == null) throw new KeyNotFoundException("Request not found");
             if (requestInDb.userId != userId) throw new ArgumentException("You do not have the access.");
             await _unitOfWork.RequestRepository.Delete(requestInDb);
             await _unitOfWork.SaveChangesAsync();
+            RequestDTO requestDTO = _mapper.Map<RequestDTO>(requestInDb);
+            return requestDTO;
         }
 
-        public async Task rejectRequest(int requestId, string userId)
+        public async Task<RequestDTO> rejectRequest(int requestId, string userId)
         {
-            var requestInDb = await _unitOfWork.RequestRepository.GetByIdSpecification(new RequestByIdWithAdvertSpecification(requestId));
+            var requestInDb = await _unitOfWork.RequestRepository.GetByIdSpecification(new RequestByIdWithAdvertAndUserSpecification(requestId));
             if (requestInDb == null) throw new KeyNotFoundException("Request not found");
             if (requestInDb.advert.ownerId != userId) throw new ArgumentException("You do not have the access.");
             requestInDb.status = DAL.Enums.RequestStatusEnum.rejected;
             await _unitOfWork.RequestRepository.Update(requestInDb);
-            await _unitOfWork.SaveChangesAsync(); ;
+            await _unitOfWork.SaveChangesAsync();
+            RequestDTO requestDTO = _mapper.Map<RequestDTO>(requestInDb);
+            return requestDTO;
         }
-        public List<DateTime> getListOfDates(DateTime date1, DateTime date2)
+        private List<DateTime> getListOfDates(DateTime date1, DateTime date2)
         {
             List<DateTime> allDates = new();
             for (DateTime date = date1; date <= date2; date = date.AddDays(1))

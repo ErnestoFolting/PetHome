@@ -35,10 +35,10 @@ function App() {
   useEffect(() => {
     if (store?.myHubConnection) {
       store?.myHubConnection?.on("Apply", (request) => {
-        console.log(request)
         toast(
           <UserNotification
             request={request}
+            status="apply"
           />
           ,
           { id: request.id }
@@ -48,8 +48,37 @@ function App() {
         toast(
           <AdvertNotification
             advert={advert}
+            status="generated"
           />,
           { id: advert.id }
+        )
+      })
+      store?.myHubConnection?.on("Confirm", (confirmedRequest) => {
+        toast(
+          <AdvertNotification
+            advert={confirmedRequest?.advert}
+            status="confirm"
+          />,
+          { id: confirmedRequest.id }
+        )
+      })
+      store?.myHubConnection?.on("Reject", (rejectedRequest) => {
+        toast(
+          <AdvertNotification
+            advert={rejectedRequest?.advert}
+            status="reject"
+          />,
+          { id: rejectedRequest.id }
+        )
+      })
+      store?.myHubConnection?.on("Delete", (deletedRequest) => {
+        toast(
+          <UserNotification
+            request={deletedRequest}
+            status="delete"
+          />
+          ,
+          { id: deletedRequest.id }
         )
       })
     }
@@ -61,7 +90,7 @@ function App() {
       <AppRouter />
       <ToastContainer
         position="bottom-right"
-        autoClose={3000}
+        autoClose={100000}
         hideProgressBar={false}
         newestOnTop={true}
         closeOnClick={false}

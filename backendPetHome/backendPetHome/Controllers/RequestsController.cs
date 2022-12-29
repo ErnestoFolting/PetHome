@@ -21,21 +21,24 @@ namespace backendPetHome.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] int advertId)
         {
-            await _requestService.addRequest(UserId, advertId, DAL.Enums.RequestStatusEnum.applied);
+            RequestDTO requestDTO = await _requestService.addRequest(UserId, advertId, DAL.Enums.RequestStatusEnum.applied);
+            await _hub.ApplyRequest(requestDTO);
             return Ok();
         }
 
         [HttpPut("confirm/{id}")]
         public async Task<IActionResult> ConfirmRequest(int id)
         {
-            await _requestService.confirmRequest(id, UserId);
+            var requestsToRejectAndConfirmedRequest = await _requestService.confirmRequest(id, UserId);
+            await _hub.ConfirmRequest(requestsToRejectAndConfirmedRequest.requestsToRejectDTO, requestsToRejectAndConfirmedRequest.requestDTO);
             return Ok();
         }
 
         [HttpPut("reject/{id}")]
         public async Task<IActionResult> Reject(int id)
         {
-            await _requestService.rejectRequest(id, UserId);
+            RequestDTO requestDTO = await _requestService.rejectRequest(id, UserId);
+            await _hub.RejectRequest(requestDTO);
             return Ok();
         }
 
@@ -50,7 +53,8 @@ namespace backendPetHome.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> deleteRequest(int id)
         {
-            await _requestService.deleteRequest(id, UserId);
+            RequestDTO requestDTO = await _requestService.deleteRequest(id, UserId);
+            await _hub.DeleteRequest(requestDTO);
             return Ok();
         }
     }

@@ -10,9 +10,10 @@ export const UserAdvertItem = ({ advert, ...props }) => {
     id: advert?.id
   });
   function renderSwitch(status) {
+    const requestCount = advert?.requests?.filter((el) => el.status === 'applied')?.length
     switch (status) {
       case 'search':
-        return <div className='requestsCount'>Відгукнулось: {advert?.requests?.filter((el) => el.status === 'applied')?.length}</div>
+        return <div className={requestCount ? 'requestsCount' : 'requestCountEmpty'}>Відгукнулось: {requestCount}</div>
       case 'process':
         return <div className='confirmedStatus'>Виконавця знайдено</div>
       case 'finished':

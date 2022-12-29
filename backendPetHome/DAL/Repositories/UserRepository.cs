@@ -22,6 +22,13 @@ namespace backendPetHome.DAL.Repositories
             return ApplySpecification(spec).SingleOrDefaultAsync();
         }
 
+        public async Task<IEnumerable<string>> SelectPossiblePerformers(Advert advert, string ownerId)
+        {
+            IEnumerable<string> possiblePerformersIds = await
+                _context.selectPossiblePerformers(advert.startTime, advert.endTime, advert.locationLng, advert.locationLat, ownerId).Select(el=>el.Id).ToListAsync();
+            return possiblePerformersIds;
+        }
+
         public async Task Update(User userToUpdate)
         {
             _context.Set<User>().Attach(userToUpdate);

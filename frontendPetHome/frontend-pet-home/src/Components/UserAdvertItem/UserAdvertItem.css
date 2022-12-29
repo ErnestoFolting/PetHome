@@ -34,12 +34,17 @@
 }
 
 .requestsCount {
+    background-color: rgb(223, 250, 223);
+}
+
+.requestCountEmpty {
     background-color: rgb(228, 227, 226);
 }
 
 .confirmedStatus,
 .finishedStatusItem,
-.requestsCount {
+.requestsCount,
+.requestCountEmpty {
     text-align: center;
     padding: 5px;
     margin-top: 10px;
