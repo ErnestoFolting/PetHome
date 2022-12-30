@@ -1,25 +1,25 @@
 import { React, useContext } from 'react'
-import './MyNavBar.css'
 import { Link } from 'react-router-dom'
 import { MyButton } from '../UI/buttons/MyButton'
 import { Context } from '../index'
 import { observer } from 'mobx-react-lite'
+import s from './MyNavBar.module.css'
 
 const MyNavBar = () => {
   const { store } = useContext(Context);
   if (!store.isAuth) {
     return (
-      <div className='navBar'>
-        <h2 style={{color:'rgb(109, 106, 105)'}}>Будь ласка, для початку авторизуйтесь.</h2>
+      <div className={s.navBar}>
+        <h2 style={{ color: 'rgb(109, 106, 105)' }}>Будь ласка, для початку авторизуйтесь.</h2>
       </div>
     )
   }
   return (
-    <div className='navBar'>
-      <div className='exitButton'>
-        {store.isAuth && <MyButton onClick={store.logout} style={{boxShadow:'none'}}>Вийти</MyButton>}
+    <div className={s.navBar}>
+      <div>
+        {store.isAuth && <MyButton onClick={store.logout} style={{ boxShadow: 'none' }}>Вийти</MyButton>}
       </div>
-      <div className='navBar__links'>
+      <div className={s.navBar__links}>
         <Link to="/adverts">Оголошення</Link>
         <Link to="/create">Створити оголошення</Link>
         <Link to="/myadverts">Мої оголошення</Link>

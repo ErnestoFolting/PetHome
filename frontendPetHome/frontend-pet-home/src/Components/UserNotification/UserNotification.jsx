@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { url } from '../../HTTP/index'
 
 export const UserNotification = ({ request, status, ...props }) => {
+    console.log(request?.status)
     const advertPhotoPath = url + request?.user?.photoFilePath
     const navigate = useNavigate()
     function toRequests() {
@@ -16,7 +17,7 @@ export const UserNotification = ({ request, status, ...props }) => {
     function renderSwitch(status) {
         switch (status) {
             case 'delete':
-                return <p>відмінив заявку</p>
+                return request?.status === 'generated' ? <p>відмовився від згенерованої заявки</p> : <p>відмінив заявку</p>
             case 'apply':
                 return <p>подав заявку</p>
             default:

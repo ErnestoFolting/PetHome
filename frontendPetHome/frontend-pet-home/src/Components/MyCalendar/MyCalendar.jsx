@@ -2,11 +2,11 @@ import React from "react";
 import { Calendar } from "react-multi-date-picker";
 import "react-multi-date-picker/styles/colors/red.css"
 import "react-multi-date-picker/styles/backgrounds/bg-dark.css"
-import './MyCalendar.css'
+import s from './MyCalendar.module.css'
 
 export function MyCalendar({ dates, isMultiple, monthsShown, props }) {
     return (
-        <div className="myCalendar">
+        <div className={s.myCalendar}>
             <Calendar
                 {...props}
                 disableMonthPicker

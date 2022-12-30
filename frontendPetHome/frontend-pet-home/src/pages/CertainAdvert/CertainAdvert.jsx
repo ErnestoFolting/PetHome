@@ -3,12 +3,12 @@ import { useParams } from 'react-router-dom'
 import AdvertService from '../../API/AdvertService'
 import { useFetching } from '../../Hooks/useFetching'
 import { MyLoader } from '../../UI/Loader/MyLoader'
-import './CertainAdvert.css'
 import { useNavigate, generatePath } from 'react-router-dom'
 import { MyModal } from '../../UI/MyModal/MyModal'
 import Advert from '../../Components/Advert/Advert'
 import { observer } from 'mobx-react-lite'
 import { Context } from '../../index.js'
+import s from './CertainAdvert.module.css'
 
 
 const CertainAdvert = () => {
@@ -39,7 +39,7 @@ const CertainAdvert = () => {
     }, []);
 
     return (
-        <div className='Advert'>
+        <div className={s.Advert}>
             <MyModal title='error' visible={modalVisible} setVisible={setModalVisible} style={{ backgroundColor: 'black', color: 'lightsalmon' }}>{error}</MyModal>
             {loading
                 ? <MyLoader/>

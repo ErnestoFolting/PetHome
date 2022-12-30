@@ -8,6 +8,7 @@ import { UserProfileRedoForm } from '../UserProfileRedoForm/UserProfileRedoForm'
 import { MyModalConfirmation } from '../../UI/MyModal/MyModalConfirmation'
 
 export const User = ({ profile, calendarVisible, selfProfile, deleteSelfProfile, profileRedoVisible }) => {
+    const [width, setWidth] = useState(window?.innerWidth);
     const [acceptModalVisible, setAcceptModalVisible] = useState(false);
     const [errorModalVisible, setErrorModalVisible] = useState(false);
     const [redoModalVisible, setRedoModalVisible] = useState(false);
@@ -18,6 +19,13 @@ export const User = ({ profile, calendarVisible, selfProfile, deleteSelfProfile,
         if (sex === 'male') return 'чоловіча'
         else return 'жіноча'
     }
+
+    useEffect(() => {
+        function handleResize() {
+            setWidth(window.innerWidth)
+        }
+        window.addEventListener('resize', handleResize)
+    });
 
     function deleteProfile(e) {
         e.preventDefault()
@@ -84,7 +92,7 @@ export const User = ({ profile, calendarVisible, selfProfile, deleteSelfProfile,
             {calendarVisible
                 ? <div className='calendarBlock'>
                     <MyCalendar
-                        monthsShown={3}
+                        monthsShown={width < 1500 ? 1 : 3}
                         dates={timeExceptions}
                     />
                 </div>
