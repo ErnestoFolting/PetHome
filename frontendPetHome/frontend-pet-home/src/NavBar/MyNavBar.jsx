@@ -21,7 +21,7 @@ const MyNavBar = () => {
     <div className={s.navBar}>
 
 
-      <Link to="/adverts" onClick={() => setNav(!nav)}><img src={Logo} alt='logo' href='/adverts' /></Link>
+      <Link to="/adverts"><img src={Logo} alt='logo' href='/adverts' /></Link>
       <div className={nav ? [s.menu, s.active].join(' ') : [s.menu]}>
         <Link to="/adverts" onClick={() => setNav(!nav)}>Оголошення</Link>
         <Link to="/create" onClick={() => setNav(!nav)}>Створити оголошення</Link>
