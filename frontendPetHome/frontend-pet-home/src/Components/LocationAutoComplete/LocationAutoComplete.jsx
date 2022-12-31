@@ -19,8 +19,8 @@ export const LocationAutoComplete = ({ isLoaded, locationSet, previousValue, isN
         initOnMount: false,
         debounce: 300,
         requestOptions: {
-            country: "us"
-        }
+            componentRestrictions: { country: "ua" }
+        },
     });
     const ref = useOnclickOutside(() => {
         clearSuggestions();
