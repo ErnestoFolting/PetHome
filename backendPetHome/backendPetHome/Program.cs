@@ -17,6 +17,7 @@ using backendPetHome.Validators.AdvertValidators;
 using backendPetHome.DAL.Interfaces;
 using backendPetHome.DAL;
 using backendPetHome.DAL.Entities;
+using backendPetHome.API.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,8 +45,7 @@ builder.Services.AddScoped<TimeExceptionService>();
 builder.Services.AddScoped<UserDataService>();
 builder.Services.AddScoped<RequestService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddSingleton<PerformerSelectionHub>();
-builder.Services.AddScoped<PerformerSelectionService>();
+builder.Services.AddSingleton<IPerformerSelectionHub,PerformerSelectionHub>();
 builder.Services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AdvertCreateRedoDTOValidator>());
 
 builder.Services.AddDbContext<DataContext>(options =>

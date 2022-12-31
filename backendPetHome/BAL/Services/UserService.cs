@@ -16,6 +16,7 @@ namespace backendPetHome.BLL.Services
         {
             User? user = await _unitOfWork.UserRepository.GetByIdSpecification(new UserByIdWithTimeExceptionSpecification(id));
             if (user == null) throw new KeyNotFoundException("User not found.");
+
             UserDTO userDTO = _mapper.Map<UserDTO>(user);
             return userDTO;
         }

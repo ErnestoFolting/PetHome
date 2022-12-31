@@ -1,11 +1,6 @@
 use testdb;
 
 go
-CREATE TYPE IdListType AS TABLE (
-    Id nvarchar(450)
-);
-
-go
 CREATE FUNCTION selectPossiblePerformers (
     @advertStartTime dateTime,
     @advertEndTime dateTime,

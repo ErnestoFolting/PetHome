@@ -18,6 +18,7 @@ namespace backendPetHome.Controllers
         {
             _userDataService = userDataService;
         }
+
         [HttpGet("myadverts")]
         public async Task<ActionResult<IEnumerable<AdvertUserDTO>>> GetUserAdverts([FromQuery] QueryStringParameters parameters)
         {

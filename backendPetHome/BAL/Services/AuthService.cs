@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using backendPetHome.BLL.DTOs.RefreshTokenDTOs;
 using backendPetHome.BLL.DTOs.UserDTOs;
 using backendPetHome.BLL.Services.Abstract;
 using backendPetHome.DAL.Entities;
@@ -45,7 +46,7 @@ namespace backendPetHome.BLL.Services
             }
         }
 
-        public async Task<Tuple<SecurityToken, RefreshToken>> Login(UserLoginDTO creds)
+        public async Task<(SecurityToken Security, RefreshTokenDTO Refresh)> Login(UserLoginDTO creds)
         {
             var user = await _userManager.FindByNameAsync(creds.username);
             if (user != null && await _userManager.CheckPasswordAsync(user, creds.password))
@@ -56,7 +57,7 @@ namespace backendPetHome.BLL.Services
             throw new ArgumentException("Invalid credentials.");
         }
 
-        public async Task<Tuple<SecurityToken, RefreshToken>> Refresh(string refreshToken)
+        public async Task<(SecurityToken Security, RefreshTokenDTO Refresh)> Refresh(string refreshToken)
         {
             RefreshToken? refreshTokenInDb = await _unitOfWork.RefreshTokenRepository.GetBySpecification(new RefreshTokenGetByTokenSpecification(refreshToken));
             if (refreshTokenInDb == null)
@@ -104,14 +105,14 @@ namespace backendPetHome.BLL.Services
             }
         }
 
-        private async Task<Tuple<SecurityToken, RefreshToken>> getTokens(User user)
+        private async Task<(SecurityToken Security, RefreshTokenDTO Refresh)> getTokens(User user)
         {
             var securityToken = GetSecurityToken(user, DateTime.Now.AddMinutes(15));
             var newRefreshToken = GetRefreshToken(user);
             await _unitOfWork.RefreshTokenRepository.Add(newRefreshToken);
             await _unitOfWork.SaveChangesAsync();
-            Tuple<SecurityToken, RefreshToken> tokens = new(securityToken, newRefreshToken);
-            return tokens;
+            RefreshTokenDTO refreshDTO = _mapper.Map<RefreshTokenDTO>(newRefreshToken);
+            return (securityToken,refreshDTO);
         }
         private RefreshToken GetRefreshToken(User user)
         {

@@ -19,10 +19,10 @@ namespace backendPetHome.Controllers
             return Ok();
         }
         [HttpDelete]
-        public async Task<ActionResult<IEnumerable<DateTime>>> Delete([FromBody] IEnumerable<DateTime> dates)
+        public async Task<ActionResult> Delete([FromBody] IEnumerable<DateTime> dates)
         {
             await _timeExceptionServise.deleteTimeExceptions(UserId, dates);
-            return Ok(dates);
+            return Ok();
         }
     }
 }

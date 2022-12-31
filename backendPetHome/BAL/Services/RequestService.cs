@@ -40,7 +40,8 @@ namespace backendPetHome.BLL.Services
             var requestInDb = await _unitOfWork.RequestRepository.GetByIdSpecification(new RequestByIdWithAdvertAndUserSpecification(requestId));
             if (requestInDb == null) throw new KeyNotFoundException("Request not found.");
             if (requestInDb.advert.ownerId!= userId)throw new ArgumentException("You do not have the access.");
-            if (!await _timeExceptionService.checkPerformerDates(requestInDb.userId, requestInDb.advert.startTime, requestInDb.advert.endTime)) throw new ArgumentException("This user can not perform at that dates.");
+            if (!await _timeExceptionService.checkPerformerDates(requestInDb.userId, requestInDb.advert.startTime, requestInDb.advert.endTime)) 
+                throw new ArgumentException("This user can not perform at that dates.");
             
             requestInDb.advert.performerId = requestInDb.userId;
             requestInDb.advert.status = DAL.Enums.AdvertStatusEnum.process;
@@ -65,9 +66,11 @@ namespace backendPetHome.BLL.Services
             var requestInDb = await _unitOfWork.RequestRepository.GetByIdSpecification(new RequestByIdWithAdvertAndUserSpecification(requestId));
             if (requestInDb == null) throw new KeyNotFoundException("Request not found");
             if (requestInDb.userId != userId) throw new ArgumentException("You do not have the access.");
+
             requestInDb.status = DAL.Enums.RequestStatusEnum.applied;
             await _unitOfWork.RequestRepository.Update(requestInDb);
             await _unitOfWork.SaveChangesAsync();
+
             RequestDTO requestDTO = _mapper.Map<RequestDTO>(requestInDb);
             return requestDTO;
         }
@@ -77,8 +80,10 @@ namespace backendPetHome.BLL.Services
             var requestInDb = await _unitOfWork.RequestRepository.GetByIdSpecification(new RequestByIdWithAdvertAndUserSpecification(requestId));
             if (requestInDb == null) throw new KeyNotFoundException("Request not found");
             if (requestInDb.userId != userId) throw new ArgumentException("You do not have the access.");
+
             await _unitOfWork.RequestRepository.Delete(requestInDb);
             await _unitOfWork.SaveChangesAsync();
+
             RequestDTO requestDTO = _mapper.Map<RequestDTO>(requestInDb);
             return requestDTO;
         }
@@ -88,9 +93,11 @@ namespace backendPetHome.BLL.Services
             var requestInDb = await _unitOfWork.RequestRepository.GetByIdSpecification(new RequestByIdWithAdvertAndUserSpecification(requestId));
             if (requestInDb == null) throw new KeyNotFoundException("Request not found");
             if (requestInDb.advert.ownerId != userId) throw new ArgumentException("You do not have the access.");
+
             requestInDb.status = DAL.Enums.RequestStatusEnum.rejected;
             await _unitOfWork.RequestRepository.Update(requestInDb);
             await _unitOfWork.SaveChangesAsync();
+
             RequestDTO requestDTO = _mapper.Map<RequestDTO>(requestInDb);
             return requestDTO;
         }

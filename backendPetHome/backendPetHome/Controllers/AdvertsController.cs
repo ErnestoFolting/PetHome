@@ -1,9 +1,9 @@
-﻿using backendPetHome.Attributes;
+﻿using backendPetHome.API.Hubs;
+using backendPetHome.Attributes;
 using backendPetHome.BLL.DTOs.AdvertDTOs;
 using backendPetHome.BLL.Services;
 using backendPetHome.Controllers.Abstract;
 using backendPetHome.DAL.Specifications.QueryParameters;
-using backendPetHome.Hubs;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -13,8 +13,8 @@ namespace backendPetHome.Controllers
     public class AdvertsController : BaseController
     {
         private readonly AdvertService _advertService;
-        private readonly PerformerSelectionHub _hub;
-        public AdvertsController(AdvertService advertService, PerformerSelectionHub hub)
+        private readonly IPerformerSelectionHub _hub;
+        public AdvertsController(AdvertService advertService, IPerformerSelectionHub hub)
         {
             _advertService = advertService;
             _hub = hub;
@@ -40,7 +40,7 @@ namespace backendPetHome.Controllers
         {
             Tuple<IEnumerable<string>, AdvertDTO> possiblePerformers = await _advertService.addAdvert(advertToAdd,UserId,petPhoto);
             if (possiblePerformers.Item1 != null) await _hub.Send(possiblePerformers.Item1, possiblePerformers.Item2);
-            return Ok(new {ids = possiblePerformers.Item1,dto =  possiblePerformers.Item2});
+            return Ok();
         }
 
         [UserId]

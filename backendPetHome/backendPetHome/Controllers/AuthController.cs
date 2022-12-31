@@ -1,7 +1,6 @@
-﻿using backendPetHome.BLL.DTOs.UserDTOs;
+﻿using backendPetHome.BLL.DTOs.RefreshTokenDTOs;
+using backendPetHome.BLL.DTOs.UserDTOs;
 using backendPetHome.BLL.Services;
-using backendPetHome.DAL.Entities;
-using backendPetHome.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -24,16 +23,16 @@ namespace backendPetHome.Controllers
         public async Task<IActionResult> Register([FromForm]UserRegisterDTO data, IFormFile userPhoto)
         {
             await _authService.Register(data, userPhoto);
-            return Ok(new Response { Status = "Success", Message = "User created!" });
+            return Ok();
         }
 
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody]UserLoginDTO creds)
         {
-            Tuple<SecurityToken, RefreshToken> tokens = await _authService.Login(creds);
-            SetTokens(tokens);
-            string? userId = tokens.Item2.ownerId;
+            var tokens = await _authService.Login(creds);
+            SetTokens(tokens.Security,tokens.Refresh);
+            string? userId = tokens.Refresh.ownerId;
             return Ok(new { userId = userId });
         }
 
@@ -42,9 +41,9 @@ namespace backendPetHome.Controllers
         {
             var refreshToken = Request.Cookies["refreshToken"];
             if (refreshToken == null) return Forbid();
-            Tuple<SecurityToken, RefreshToken> tokens = await _authService.Refresh(refreshToken);
-            SetTokens(tokens);
-            string? userId = tokens.Item2.ownerId;
+            var tokens = await _authService.Refresh(refreshToken);
+            SetTokens(tokens.Security,tokens.Refresh);
+            string? userId = tokens.Refresh.ownerId;
             return Ok(new { userId = userId });
         }
 
@@ -60,29 +59,29 @@ namespace backendPetHome.Controllers
             };
             Response.Cookies.Append("accessToken", "", cookieOption);
             Response.Cookies.Append("refreshToken", "", cookieOption);
-            return Ok(new Response{Status = "200", Message = "Logged out"});
+            return Ok();
         }
 
-        private void SetTokens(Tuple<SecurityToken, RefreshToken> tokens)
+        private void SetTokens(SecurityToken security, RefreshTokenDTO refresh)
         {
             var accessOption = new CookieOptions
             {
                 HttpOnly = true,
-                Expires = tokens.Item1.ValidTo,
+                Expires = security.ValidTo,
                 SameSite = SameSiteMode.None,
                 Secure = true
             };
             var refreshOption = new CookieOptions
             {
                 HttpOnly = true,
-                Expires = tokens.Item2.expires,
+                Expires = refresh.expires,
                 SameSite = SameSiteMode.None,
                 Secure = true
             };
             var tokenHandler = new JwtSecurityTokenHandler();
-            var encrypterAccessToken = tokenHandler.WriteToken(tokens.Item1);
+            var encrypterAccessToken = tokenHandler.WriteToken(security);
             Response.Cookies.Append("accessToken", encrypterAccessToken, accessOption);
-            Response.Cookies.Append("refreshToken", tokens.Item2.token , refreshOption);
+            Response.Cookies.Append("refreshToken", refresh.token , refreshOption);
         }
     }
 }

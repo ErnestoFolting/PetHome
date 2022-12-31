@@ -1,4 +1,5 @@
-﻿using backendPetHome.BLL.DTOs.AdvertDTOs;
+﻿using backendPetHome.API.Hubs;
+using backendPetHome.BLL.DTOs.AdvertDTOs;
 using backendPetHome.BLL.DTOs.RequestDTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
@@ -6,7 +7,7 @@ using Microsoft.AspNetCore.SignalR;
 namespace backendPetHome.Hubs
 {
     [Authorize]
-    public class PerformerSelectionHub : Hub
+    public class PerformerSelectionHub : Hub, IPerformerSelectionHub
     {
         public async Task Send(IEnumerable<string> possiblePerformerIds, AdvertDTO advertToSend)
         {

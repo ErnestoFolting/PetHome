@@ -1,7 +1,7 @@
-﻿using backendPetHome.BLL.DTOs.RequestDTOs;
+﻿using backendPetHome.API.Hubs;
+using backendPetHome.BLL.DTOs.RequestDTOs;
 using backendPetHome.BLL.Services;
 using backendPetHome.Controllers.Abstract;
-using backendPetHome.Hubs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backendPetHome.Controllers
@@ -10,13 +10,13 @@ namespace backendPetHome.Controllers
     public class RequestsController : BaseController
     {
         private readonly RequestService _requestService;
-        private readonly PerformerSelectionHub _hub;
+        private readonly IPerformerSelectionHub _hub;
 
-        public RequestsController(RequestService requestService, PerformerSelectionHub hub)
+        public RequestsController(RequestService requestService, IPerformerSelectionHub hub)
         {
             _requestService = requestService;
             _hub = hub;
-    }
+        }
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] int advertId)

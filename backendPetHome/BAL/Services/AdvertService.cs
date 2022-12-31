@@ -30,6 +30,7 @@ namespace backendPetHome.BLL.Services
         { 
             Advert? advert = await _unitOfWork.AdvertRepository.GetByIdSpecification(new AdvertByIdWithOwnerSpecification(advertId));
             if (advert == null) throw new KeyNotFoundException("Advert not found");
+
             AdvertDTO advertDTO = _mapper.Map<AdvertDTO>(advert);
             return advertDTO;
         }
@@ -43,20 +44,21 @@ namespace backendPetHome.BLL.Services
             await _unitOfWork.FileRepository.Add(advertFile);
             await _unitOfWork.SaveChangesAsync();
 
-            IEnumerable<string> possiblePerformers = await _unitOfWork.UserRepository.SelectPossiblePerformers(newAdvert, userId);
-            foreach(string possiblePerformerId in possiblePerformers)
+            IEnumerable<string> possiblePerformersIds = await _unitOfWork.UserRepository.SelectPossiblePerformers(newAdvert, userId);
+            foreach(string possiblePerformerId in possiblePerformersIds)
             {
                 await _requestService.addRequest(possiblePerformerId, newAdvert.Id, RequestStatusEnum.generated);
             }
             await _unitOfWork.SaveChangesAsync();
 
             AdvertDTO advertDTO = _mapper.Map<AdvertDTO>(newAdvert);
-            return Tuple.Create(possiblePerformers, advertDTO);
+            return Tuple.Create(possiblePerformersIds, advertDTO);
         }
         public async Task MarkAsFinished(int advertId, string userId) {
             var advertInDb = await _unitOfWork.AdvertRepository.GetByIdSpecification(new AdvertByIdSpecification(advertId));
             if (advertInDb == null) throw new KeyNotFoundException("Advert not found.");
             if (advertInDb.ownerId!= userId) throw new ArgumentException("You do not have the access.");
+
             advertInDb.status = AdvertStatusEnum.finished;
             await _unitOfWork.AdvertRepository.Update(advertInDb);
             await _unitOfWork.SaveChangesAsync();
@@ -66,6 +68,7 @@ namespace backendPetHome.BLL.Services
             var advertInDb = await _unitOfWork.AdvertRepository.GetByIdSpecification(new AdvertByIdSpecification(advertId));
             if (advertInDb == null) throw new KeyNotFoundException("Advert not found.");
             if (advertInDb.ownerId != userId) throw new ArgumentException("You do not have the access.");
+
             await _unitOfWork.AdvertRepository.Delete(advertInDb);
             await _unitOfWork.SaveChangesAsync();
         }

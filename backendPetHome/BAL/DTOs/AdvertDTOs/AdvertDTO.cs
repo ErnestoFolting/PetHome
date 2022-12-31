@@ -11,7 +11,7 @@ namespace backendPetHome.BLL.DTOs.AdvertDTOs
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public AdvertStatusEnum status { get; set; }
         public string? photoFilePath { get; set; } = string.Empty;
-        public UserDTO? owner { get; set; } //make some DTOs
+        public UserDTO? owner { get; set; }
         public string?  ownerId { get; set; }
     }
 }
