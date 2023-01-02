@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using backendPetHome.BLL.DTOs.RequestDTOs;
 using backendPetHome.BLL.Services.Abstract;
+using backendPetHome.BLL.Services.Interfaces;
 using backendPetHome.DAL.Entities;
 using backendPetHome.DAL.Interfaces;
 using backendPetHome.DAL.Specifications.AdvertSpecifications;
@@ -8,7 +9,7 @@ using backendPetHome.DAL.Specifications.RequestSpecifications;
 
 namespace backendPetHome.BLL.Services
 {
-    public class RequestService: BaseService
+    public class RequestService: BaseService, IRequestService
     {
         private readonly TimeExceptionService _timeExceptionService;
         public RequestService(IUnitOfWork unitOfWork, IMapper mapper, TimeExceptionService timeExceptionService) : base(unitOfWork, mapper)

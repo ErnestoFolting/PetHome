@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using backendPetHome.BLL.DTOs.AdvertDTOs;
 using backendPetHome.BLL.Services.Abstract;
+using backendPetHome.BLL.Services.Interfaces;
 using backendPetHome.DAL.Entities;
 using backendPetHome.DAL.Enums;
 using backendPetHome.DAL.Interfaces;
@@ -10,11 +11,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace backendPetHome.BLL.Services
 {
-    public class AdvertService : BaseService
+    public class AdvertService : BaseService, IAdvertService
     {
-        private readonly RequestService _requestService;
+        private readonly IRequestService _requestService;
 
-        public AdvertService(IUnitOfWork unitOfWork, RequestService requestService, IMapper mapper)
+        public AdvertService(IUnitOfWork unitOfWork, IRequestService requestService, IMapper mapper)
             :base(unitOfWork,mapper)
         {
             _requestService = requestService;
@@ -35,7 +36,7 @@ namespace backendPetHome.BLL.Services
             return advertDTO;
         }
 
-        public async Task<Tuple<IEnumerable<string>,AdvertDTO>> addAdvert(AdvertCreateRedoDTO advertToAdd, string userId, IFormFile advertFile)
+        public async Task<(IEnumerable<string> possiblePerformersIds,AdvertDTO advertDTO)> addAdvert(AdvertCreateRedoDTO advertToAdd, string userId, IFormFile advertFile)
         {
             Advert newAdvert = _mapper.Map<Advert>(advertToAdd);
             newAdvert.photoFilePath = "/images/" + advertFile.FileName;
@@ -52,7 +53,7 @@ namespace backendPetHome.BLL.Services
             await _unitOfWork.SaveChangesAsync();
 
             AdvertDTO advertDTO = _mapper.Map<AdvertDTO>(newAdvert);
-            return Tuple.Create(possiblePerformersIds, advertDTO);
+            return (possiblePerformersIds, advertDTO);
         }
         public async Task MarkAsFinished(int advertId, string userId) {
             var advertInDb = await _unitOfWork.AdvertRepository.GetByIdSpecification(new AdvertByIdSpecification(advertId));

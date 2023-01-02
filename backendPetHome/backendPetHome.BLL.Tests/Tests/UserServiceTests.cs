@@ -42,12 +42,12 @@ namespace backendPetHome.BLL.Tests.Tests
                  .ReturnsAsync(user);
 
             //act
-            UserDTO userInDb = await _sut.getCertainUser(userId);
+            UserDTO userFromService = await _sut.getCertainUser(userId);
 
             UserDTO userMapped = _mapper.Map<UserDTO>(user);
 
             //assert
-            userInDb.Should().BeEquivalentTo(userMapped);
+            userFromService.Should().BeEquivalentTo(userMapped);
         }
         [Fact]
         public async Task getCertainUser_UserNotExists_KeyNotFound()

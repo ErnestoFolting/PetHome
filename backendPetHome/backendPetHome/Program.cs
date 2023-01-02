@@ -18,6 +18,7 @@ using backendPetHome.DAL.Interfaces;
 using backendPetHome.DAL;
 using backendPetHome.DAL.Entities;
 using backendPetHome.API.Hubs;
+using backendPetHome.BLL.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,11 +40,11 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
 builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<AdvertService>();
+builder.Services.AddScoped<IAdvertService,AdvertService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<TimeExceptionService>();
 builder.Services.AddScoped<UserDataService>();
-builder.Services.AddScoped<RequestService>();
+builder.Services.AddScoped<IRequestService,RequestService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddSingleton<IPerformerSelectionHub,PerformerSelectionHub>();
 builder.Services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AdvertCreateRedoDTOValidator>());

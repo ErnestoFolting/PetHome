@@ -38,8 +38,8 @@ namespace backendPetHome.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromForm] AdvertCreateRedoDTO advertToAdd, IFormFile petPhoto)
         {
-            Tuple<IEnumerable<string>, AdvertDTO> possiblePerformers = await _advertService.addAdvert(advertToAdd,UserId,petPhoto);
-            if (possiblePerformers.Item1 != null) await _hub.Send(possiblePerformers.Item1, possiblePerformers.Item2);
+            var possiblePerformers = await _advertService.addAdvert(advertToAdd,UserId,petPhoto);
+            if (possiblePerformers.possiblePerformersIds != null) await _hub.Send(possiblePerformers.possiblePerformersIds, possiblePerformers.advertDTO);
             return Ok();
         }
 
