@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using backendPetHome.BLL.Services;
 using backendPetHome.API.Controllers.Abstract;
+using backendPetHome.BLL.Services.Interfaces;
 
 namespace backendPetHome.API.Controllers
 {
     [Route("api/[controller]")]
     public class TimeExceptionsController : BaseController
     {
-        private readonly TimeExceptionService _timeExceptionServise;
-        public TimeExceptionsController(TimeExceptionService timeExceptionService)
+        private readonly ITimeExceptionService _timeExceptionServise;
+        public TimeExceptionsController(ITimeExceptionService timeExceptionService)
         {
             _timeExceptionServise = timeExceptionService;
         }

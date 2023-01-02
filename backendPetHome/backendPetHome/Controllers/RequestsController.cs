@@ -10,9 +10,9 @@ namespace backendPetHome.API.Controllers
     public class RequestsController : BaseController
     {
         private readonly IRequestService _requestService;
-        private readonly IPerformerSelectionHub _hub;
+        private readonly PerformerSelectionHub _hub;
 
-        public RequestsController(IRequestService requestService, IPerformerSelectionHub hub)
+        public RequestsController(IRequestService requestService, PerformerSelectionHub hub)
         {
             _requestService = requestService;
             _hub = hub;

@@ -13,8 +13,8 @@ namespace backendPetHome.API.Controllers
     public class AdvertsController : BaseController
     {
         private readonly IAdvertService _advertService;
-        private readonly IPerformerSelectionHub _hub;
-        public AdvertsController(IAdvertService advertService, IPerformerSelectionHub hub)
+        private readonly PerformerSelectionHub _hub;
+        public AdvertsController(IAdvertService advertService, PerformerSelectionHub hub)
         {
             _advertService = advertService;
             _hub = hub;
