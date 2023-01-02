@@ -1,20 +1,20 @@
-﻿using backendPetHome.API.Hubs;
-using backendPetHome.Attributes;
+﻿using backendPetHome.API.Attributes;
+using backendPetHome.API.Controllers.Abstract;
+using backendPetHome.API.Hubs;
 using backendPetHome.BLL.DTOs.AdvertDTOs;
-using backendPetHome.BLL.Services;
-using backendPetHome.Controllers.Abstract;
+using backendPetHome.BLL.Services.Interfaces;
 using backendPetHome.DAL.Specifications.QueryParameters;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace backendPetHome.Controllers
+namespace backendPetHome.API.Controllers
 {
     [Route("api/[controller]")]
     public class AdvertsController : BaseController
     {
-        private readonly AdvertService _advertService;
+        private readonly IAdvertService _advertService;
         private readonly IPerformerSelectionHub _hub;
-        public AdvertsController(AdvertService advertService, IPerformerSelectionHub hub)
+        public AdvertsController(IAdvertService advertService, IPerformerSelectionHub hub)
         {
             _advertService = advertService;
             _hub = hub;
@@ -38,7 +38,7 @@ namespace backendPetHome.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromForm] AdvertCreateRedoDTO advertToAdd, IFormFile petPhoto)
         {
-            var possiblePerformers = await _advertService.addAdvert(advertToAdd,UserId,petPhoto);
+            var possiblePerformers = await _advertService.addAdvert(advertToAdd, UserId, petPhoto);
             if (possiblePerformers.possiblePerformersIds != null) await _hub.Send(possiblePerformers.possiblePerformersIds, possiblePerformers.advertDTO);
             return Ok();
         }

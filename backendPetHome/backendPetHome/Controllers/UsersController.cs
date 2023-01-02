@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using backendPetHome.BLL.Services;
 using backendPetHome.BLL.DTOs.UserDTOs;
-using backendPetHome.Controllers.Abstract;
+using backendPetHome.API.Controllers.Abstract;
 
-namespace backendPetHome.Controllers
+namespace backendPetHome.API.Controllers
 {
     [Route("api/[controller]")]
     public class UsersController : BaseController

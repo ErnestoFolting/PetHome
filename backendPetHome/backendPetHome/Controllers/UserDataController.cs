@@ -1,13 +1,13 @@
-﻿using backendPetHome.BLL.DTOs.AdvertDTOs;
+﻿using backendPetHome.API.Controllers.Abstract;
+using backendPetHome.BLL.DTOs.AdvertDTOs;
 using backendPetHome.BLL.DTOs.RequestDTOs;
 using backendPetHome.BLL.DTOs.UserDTOs;
 using backendPetHome.BLL.Services;
-using backendPetHome.Controllers.Abstract;
 using backendPetHome.DAL.Specifications.QueryParameters;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace backendPetHome.Controllers
+namespace backendPetHome.API.Controllers
 {
     [Route("api/[controller]")]
     public class UserDataController : BaseController
@@ -58,7 +58,7 @@ namespace backendPetHome.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateProfile([FromForm] UserRedoDTO data, IFormFile? userPhoto)
         {
-            await _userDataService.updateUserProfile(UserId, data,userPhoto);
+            await _userDataService.updateUserProfile(UserId, data, userPhoto);
             return Ok();
         }
 

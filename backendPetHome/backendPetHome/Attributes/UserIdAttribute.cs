@@ -1,8 +1,8 @@
-using backendPetHome.Controllers.Abstract;
+using backendPetHome.API.Controllers.Abstract;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Security.Claims;
 
-namespace backendPetHome.Attributes
+namespace backendPetHome.API.Attributes
 {
     public class UserIdAttribute : Attribute, IActionFilter
     {
@@ -14,4 +14,4 @@ namespace backendPetHome.Attributes
             c.UserId = c.User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
     }
-}                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+}

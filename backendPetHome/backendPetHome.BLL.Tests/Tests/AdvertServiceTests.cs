@@ -5,7 +5,6 @@ using backendPetHome.BLL.Services;
 using backendPetHome.BLL.Services.Interfaces;
 using backendPetHome.DAL.Entities;
 using backendPetHome.DAL.Interfaces;
-using backendPetHome.DAL.Interfaces.RepositoryInterfaces;
 using backendPetHome.DAL.Specifications.AdvertSpecifications;
 using backendPetHome.DAL.Specifications.QueryParameters;
 using FluentAssertions;
@@ -94,35 +93,115 @@ namespace backendPetHome.BLL.Tests.Tests
             await act.Should().ThrowAsync<KeyNotFoundException>();
         }
         [Fact]
-        public async Task addAdvert_AdvertNotExists_ArgumentNullExceptionThrown()
+        public async Task addAdvert_CorrectData_AdvertAdded()
         {
             //arrange
-            string ownerId = "6a00001b-0265-4a16-8cf2-d05b11b4f239";
             Advert advert = _advertToTest;
-            advert.ownerId = ownerId;
-            
-
             var bytes = Encoding.UTF8.GetBytes("This is a dummy file");
             IFormFile file = new FormFile(new MemoryStream(bytes), 0, bytes.Length, "Data", "hairy.jpeg");
             IEnumerable<string> possiblePerformersIds = new List<string>() { "userId1", "userId2"};
             int countPossiblePeformers = 2;
+
             _unitOfWorkMock.Setup(x =>x.AdvertRepository.Add(advert));
             _unitOfWorkMock.Setup(x =>x.FileRepository.Add(file));
-            _unitOfWorkMock.Setup(x =>x.UserRepository.SelectPossiblePerformers(It.IsAny<Advert>(), It.IsAny<string>())).ReturnsAsync(possiblePerformersIds);
-            _requestServiceMock.Setup(x => x.addRequest(It.IsAny<string>(), 0, DAL.Enums.RequestStatusEnum.generated));
+            _unitOfWorkMock.Setup(x =>x.UserRepository.SelectPossiblePerformers(It.IsAny<Advert>(), advert.ownerId)).ReturnsAsync(possiblePerformersIds);
+            _requestServiceMock.Setup(x => x.addRequest(It.IsAny<string>(), advert.Id, DAL.Enums.RequestStatusEnum.generated));
 
             //act
             AdvertCreateRedoDTO advertCreateDTO = _mapper.Map<AdvertCreateRedoDTO>(advert);
-            var possiblePerformersIdsAndAdvert  = await _sut.addAdvert(advertCreateDTO, ownerId, file);
+            var possiblePerformersIdsAndAdvert  = await _sut.addAdvert(advertCreateDTO, advert.ownerId, file);
             AdvertDTO advertDTO = _mapper.Map<AdvertDTO>(advert);
 
             //assert
             _unitOfWorkMock.Verify(x => x.AdvertRepository.Add(It.IsAny<Advert>()), Times.Exactly(1));
             _unitOfWorkMock.Verify(x => x.FileRepository.Add(file), Times.Exactly(1));
-            _requestServiceMock.Verify(x => x.addRequest(It.IsAny<string>(), It.IsAny<int>(), DAL.Enums.RequestStatusEnum.generated), Times.Exactly(countPossiblePeformers));
+            _requestServiceMock.Verify(x => x.addRequest(It.IsAny<string>(), advert.Id, DAL.Enums.RequestStatusEnum.generated), Times.Exactly(countPossiblePeformers));
             possiblePerformersIdsAndAdvert.possiblePerformersIds.Should().BeEquivalentTo(possiblePerformersIds);
             possiblePerformersIdsAndAdvert.advertDTO.Should().BeEquivalentTo(advertDTO);
         }
+        [Fact]
+        public async Task markAsFinished_AdvertExists_AdvertFinished()
+        {
+            //arrange
+            Advert advertToFinish = _advertToTest;
+            _unitOfWorkMock.Setup(x => x.AdvertRepository.GetByIdSpecification(It.IsAny<AdvertByIdSpecification>())).ReturnsAsync(advertToFinish);
+            _unitOfWorkMock.Setup(x => x.AdvertRepository.Update(advertToFinish));
+            //act
+            await _sut.MarkAsFinished(advertToFinish.Id, advertToFinish.ownerId);
+
+            //assert
+            _unitOfWorkMock.Verify(x => x.AdvertRepository.Update(advertToFinish), Times.Exactly(1));
+
+        }
+        [Fact]
+        public async Task markAsFinished_AdvertNotExists_ArgumentNullExceptionThrown()
+        {
+            //arrange
+            _unitOfWorkMock.Setup(x => x.AdvertRepository.GetByIdSpecification(It.IsAny<AdvertByIdSpecification>())).ReturnsAsync(()=>null);
+
+            //act
+            Func<Task> act = () => _sut.MarkAsFinished(1,"check");
+
+            //assert
+            await act.Should().ThrowAsync<KeyNotFoundException>();
+
+        }
+        [Fact]
+        public async Task markAsFinished_UserIsNotOwner_ArgumentExceptionTrown()
+        {
+            //arrange
+            Advert advertToFinish = _advertToTest;
+            _unitOfWorkMock.Setup(x => x.AdvertRepository.GetByIdSpecification(It.IsAny<AdvertByIdSpecification>())).ReturnsAsync(advertToFinish);
+
+            //act
+            Func<Task> act = () => _sut.MarkAsFinished(advertToFinish.Id, "check");
+
+            //assert
+            await act.Should().ThrowAsync<ArgumentException>();
+
+        }
+        [Fact]
+        public async Task delete_AdvertExists_AdvertDeleted()
+        {
+            //arrange
+            Advert advertToDelete = _advertToTest;
+            _unitOfWorkMock.Setup(x => x.AdvertRepository.GetByIdSpecification(It.IsAny<AdvertByIdSpecification>())).ReturnsAsync(advertToDelete);
+            _unitOfWorkMock.Setup(x => x.AdvertRepository.Delete(advertToDelete));
+            //act
+            await _sut.deleteAdvert(advertToDelete.Id, advertToDelete.ownerId);
+
+            //assert
+            _unitOfWorkMock.Verify(x => x.AdvertRepository.Delete(advertToDelete), Times.Exactly(1));
+
+        }
+        [Fact]
+        public async Task delete_AdvertNotExists_ArgumentNullExceptionThrown()
+        {
+            //arrange
+            _unitOfWorkMock.Setup(x => x.AdvertRepository.GetByIdSpecification(It.IsAny<AdvertByIdSpecification>())).ReturnsAsync(() => null);
+
+            //act
+            Func<Task> act = () => _sut.deleteAdvert(1, "check");
+
+            //assert
+            await act.Should().ThrowAsync<KeyNotFoundException>();
+
+        }
+        [Fact]
+        public async Task delete_UserIsNotOwner_ArgumentExceptionTrown()
+        {
+            //arrange
+            Advert advertToDelete = _advertToTest;
+            _unitOfWorkMock.Setup(x => x.AdvertRepository.GetByIdSpecification(It.IsAny<AdvertByIdSpecification>())).ReturnsAsync(advertToDelete);
+
+            //act
+            Func<Task> act = () => _sut.deleteAdvert(advertToDelete.Id, "check");
+
+            //assert
+            await act.Should().ThrowAsync<ArgumentException>();
+
+        }
+
         private void initialSeed()
         {
             _advertToTest = new Advert()

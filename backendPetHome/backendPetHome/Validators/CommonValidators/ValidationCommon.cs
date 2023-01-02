@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace backendPetHome.Validators.CommonValidators
+namespace backendPetHome.API.Validators.CommonValidators
 {
     public static class ValidationCommon
     {

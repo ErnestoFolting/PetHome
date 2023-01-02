@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using backendPetHome.BLL.DTOs.UserDTOs;
-using backendPetHome.Validators.CommonValidators;
+using backendPetHome.API.Validators.CommonValidators;
 
-namespace backendPetHome.Validators.UserValidators
+namespace backendPetHome.API.Validators.UserValidators
 {
     public class UserRedoDTOValidator : AbstractValidator<UserRedoDTO>
     {

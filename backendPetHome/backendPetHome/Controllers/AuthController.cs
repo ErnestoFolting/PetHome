@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace backendPetHome.Controllers
+namespace backendPetHome.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -15,12 +15,12 @@ namespace backendPetHome.Controllers
 
         public AuthController(AuthService authService)
         {
-             _authService = authService;
+            _authService = authService;
         }
 
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> Register([FromForm]UserRegisterDTO data, IFormFile userPhoto)
+        public async Task<IActionResult> Register([FromForm] UserRegisterDTO data, IFormFile userPhoto)
         {
             await _authService.Register(data, userPhoto);
             return Ok();
@@ -28,12 +28,12 @@ namespace backendPetHome.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login([FromBody]UserLoginDTO creds)
+        public async Task<IActionResult> Login([FromBody] UserLoginDTO creds)
         {
             var tokens = await _authService.Login(creds);
-            SetTokens(tokens.Security,tokens.Refresh);
+            SetTokens(tokens.Security, tokens.Refresh);
             string? userId = tokens.Refresh.ownerId;
-            return Ok(new { userId = userId });
+            return Ok(new { userId });
         }
 
         [HttpPost("refresh-token")]
@@ -42,9 +42,9 @@ namespace backendPetHome.Controllers
             var refreshToken = Request.Cookies["refreshToken"];
             if (refreshToken == null) return Forbid();
             var tokens = await _authService.Refresh(refreshToken);
-            SetTokens(tokens.Security,tokens.Refresh);
+            SetTokens(tokens.Security, tokens.Refresh);
             string? userId = tokens.Refresh.ownerId;
-            return Ok(new { userId = userId });
+            return Ok(new { userId });
         }
 
         [HttpPost("logout")]
@@ -81,7 +81,7 @@ namespace backendPetHome.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
             var encrypterAccessToken = tokenHandler.WriteToken(security);
             Response.Cookies.Append("accessToken", encrypterAccessToken, accessOption);
-            Response.Cookies.Append("refreshToken", refresh.token , refreshOption);
+            Response.Cookies.Append("refreshToken", refresh.token, refreshOption);
         }
     }
 }

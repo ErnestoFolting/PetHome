@@ -1,7 +1,7 @@
 ﻿using backendPetHome.BLL.DTOs.AdvertDTOs;
 using FluentValidation;
 
-namespace backendPetHome.Validators.AdvertValidators
+namespace backendPetHome.API.Validators.AdvertValidators
 {
     public class AdvertCreateRedoDTOValidator : AbstractValidator<AdvertCreateRedoDTO>
     {

@@ -9,10 +9,10 @@ using backendPetHome.DAL.Specifications.RequestSpecifications;
 
 namespace backendPetHome.BLL.Services
 {
-    public class RequestService: BaseService, IRequestService
+    public class RequestService : BaseService, IRequestService
     {
-        private readonly TimeExceptionService _timeExceptionService;
-        public RequestService(IUnitOfWork unitOfWork, IMapper mapper, TimeExceptionService timeExceptionService) : base(unitOfWork, mapper)
+        private readonly ITimeExceptionService _timeExceptionService;
+        public RequestService(IUnitOfWork unitOfWork, IMapper mapper, ITimeExceptionService timeExceptionService) : base(unitOfWork, mapper)
         {
             _timeExceptionService = timeExceptionService;
         }
@@ -22,9 +22,9 @@ namespace backendPetHome.BLL.Services
             if (advertInDb == null) throw new KeyNotFoundException("Advert not found");
             if (advertInDb.ownerId == userId) throw new ArgumentException("You can not send a request on your own advert.");
             if (!await _timeExceptionService
-                .checkPerformerDates(userId, advertInDb.startTime, advertInDb.endTime)) 
-                    throw new ArgumentException("You can not perform at that dates. Remove the time exceptions and try again.");
-            
+                .checkPerformerDates(userId, advertInDb.startTime, advertInDb.endTime))
+                throw new ArgumentException("You can not perform at that dates. Remove the time exceptions and try again.");
+
             Request newRequest = new();
             newRequest.userId = userId;
             newRequest.advertId = advertId;
@@ -40,10 +40,10 @@ namespace backendPetHome.BLL.Services
         {
             var requestInDb = await _unitOfWork.RequestRepository.GetByIdSpecification(new RequestByIdWithAdvertAndUserSpecification(requestId));
             if (requestInDb == null) throw new KeyNotFoundException("Request not found.");
-            if (requestInDb.advert.ownerId!= userId)throw new ArgumentException("You do not have the access.");
-            if (!await _timeExceptionService.checkPerformerDates(requestInDb.userId, requestInDb.advert.startTime, requestInDb.advert.endTime)) 
+            if (requestInDb.advert.ownerId != userId) throw new ArgumentException("You do not have the access.");
+            if (!await _timeExceptionService.checkPerformerDates(requestInDb.userId, requestInDb.advert.startTime, requestInDb.advert.endTime))
                 throw new ArgumentException("This user can not perform at that dates.");
-            
+
             requestInDb.advert.performerId = requestInDb.userId;
             requestInDb.advert.status = DAL.Enums.AdvertStatusEnum.process;
             requestInDb.status = DAL.Enums.RequestStatusEnum.confirmed;
@@ -51,7 +51,8 @@ namespace backendPetHome.BLL.Services
             List<DateTime> datesToExceptAtPerformer = getListOfDates(requestInDb.advert.startTime, requestInDb.advert.endTime);
             await _timeExceptionService.addTimeExceptions(requestInDb.userId, datesToExceptAtPerformer);
             var requestsToReject = await _unitOfWork.RequestRepository.GetBySpecification(new RequestCurrentAdvertNotCurrentSpecification(requestInDb));
-            requestsToReject.ForEach(r => {
+            requestsToReject.ForEach(r =>
+            {
                 r.status = DAL.Enums.RequestStatusEnum.rejected;
                 _unitOfWork.RequestRepository.Update(r);
             });
@@ -59,7 +60,7 @@ namespace backendPetHome.BLL.Services
 
             RequestDTO requestDTO = _mapper.Map<RequestDTO>(requestInDb);
             List<RequestDTO> requestsToRejectDTO = _mapper.Map<List<RequestDTO>>(requestsToReject);
-            return (requestsToRejectDTO,requestDTO);
+            return (requestsToRejectDTO, requestDTO);
         }
 
         public async Task<RequestDTO> applyGeneratedRequest(int requestId, string userId)

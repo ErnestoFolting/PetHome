@@ -1,8 +1,6 @@
 global using Microsoft.EntityFrameworkCore;
 using backendPetHome.BLL.Services;
 using backendPetHome.DAL.Data;
-using backendPetHome.Middlewares;
-using backendPetHome.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -13,12 +11,13 @@ using System.Reflection;
 using FluentValidation.AspNetCore;
 using backendPetHome.BLL.MappingProfiles.UserProfiles;
 using backendPetHome.BLL.MappingProfiles.AdvertProfiles;
-using backendPetHome.Validators.AdvertValidators;
 using backendPetHome.DAL.Interfaces;
 using backendPetHome.DAL;
 using backendPetHome.DAL.Entities;
 using backendPetHome.API.Hubs;
 using backendPetHome.BLL.Services.Interfaces;
+using backendPetHome.API.Validators.AdvertValidators;
+using backendPetHome.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,7 +41,7 @@ builder.Services.AddSignalR();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<IAdvertService,AdvertService>();
 builder.Services.AddScoped<AuthService>();
-builder.Services.AddScoped<TimeExceptionService>();
+builder.Services.AddScoped<ITimeExceptionService,TimeExceptionService>();
 builder.Services.AddScoped<UserDataService>();
 builder.Services.AddScoped<IRequestService,RequestService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

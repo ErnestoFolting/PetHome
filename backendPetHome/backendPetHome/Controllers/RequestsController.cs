@@ -1,18 +1,18 @@
-﻿using backendPetHome.API.Hubs;
+﻿using backendPetHome.API.Controllers.Abstract;
+using backendPetHome.API.Hubs;
 using backendPetHome.BLL.DTOs.RequestDTOs;
-using backendPetHome.BLL.Services;
-using backendPetHome.Controllers.Abstract;
+using backendPetHome.BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace backendPetHome.Controllers
+namespace backendPetHome.API.Controllers
 {
     [Route("api/[controller]")]
     public class RequestsController : BaseController
     {
-        private readonly RequestService _requestService;
+        private readonly IRequestService _requestService;
         private readonly IPerformerSelectionHub _hub;
 
-        public RequestsController(RequestService requestService, IPerformerSelectionHub hub)
+        public RequestsController(IRequestService requestService, IPerformerSelectionHub hub)
         {
             _requestService = requestService;
             _hub = hub;

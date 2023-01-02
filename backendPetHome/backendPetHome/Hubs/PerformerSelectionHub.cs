@@ -1,10 +1,9 @@
-﻿using backendPetHome.API.Hubs;
-using backendPetHome.BLL.DTOs.AdvertDTOs;
+﻿using backendPetHome.BLL.DTOs.AdvertDTOs;
 using backendPetHome.BLL.DTOs.RequestDTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
-namespace backendPetHome.Hubs
+namespace backendPetHome.API.Hubs
 {
     [Authorize]
     public class PerformerSelectionHub : Hub, IPerformerSelectionHub
@@ -17,7 +16,7 @@ namespace backendPetHome.Hubs
         public async Task ApplyRequest(RequestDTO requestDTO)
         {
             string? ownerId = requestDTO.advert.ownerId;
-            if(ownerId != null)
+            if (ownerId != null)
             {
                 await Clients.User(ownerId).SendAsync("Apply", requestDTO);
             }
@@ -26,8 +25,8 @@ namespace backendPetHome.Hubs
         public async Task DeleteRequest(RequestDTO requestDTO)
         {
             string? ownerId = requestDTO.advert.ownerId;
-            if (ownerId != null && 
-                requestDTO.advert.status != DAL.Enums.AdvertStatusEnum.finished && 
+            if (ownerId != null &&
+                requestDTO.advert.status != DAL.Enums.AdvertStatusEnum.finished &&
                 requestDTO.status != DAL.Enums.RequestStatusEnum.rejected
                 )
             {

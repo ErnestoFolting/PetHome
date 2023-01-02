@@ -1,12 +1,12 @@
-﻿using backendPetHome.Attributes;
+﻿using backendPetHome.API.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace backendPetHome.Controllers.Abstract
+namespace backendPetHome.API.Controllers.Abstract
 {
     [ApiController]
     [Authorize]
-    [UserId] 
+    [UserId]
     public abstract class BaseController : ControllerBase
     {
         public string UserId { get; set; }

@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using backendPetHome.BLL.Services.Abstract;
+using backendPetHome.BLL.Services.Interfaces;
 using backendPetHome.DAL.Entities;
 using backendPetHome.DAL.Interfaces;
 using backendPetHome.DAL.Specifications.TimeExceptionSpecifications;
 
 namespace backendPetHome.BLL.Services
 {
-    public class TimeExceptionService : BaseService
+    public class TimeExceptionService : BaseService, ITimeExceptionService
     {
         public TimeExceptionService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {

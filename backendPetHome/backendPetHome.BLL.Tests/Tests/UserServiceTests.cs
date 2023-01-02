@@ -58,7 +58,6 @@ namespace backendPetHome.BLL.Tests.Tests
                  .ReturnsAsync(() => null);
 
             //act
-
             Func<Task> act = () =>  _sut.getCertainUser("check");
 
             //assert
