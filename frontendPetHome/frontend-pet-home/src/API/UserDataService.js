@@ -14,13 +14,13 @@ export default class UserDataService {
         return response.data
     }
     static async redoUserProfile(redoData) {
-        const response = await $api.put('api/userdata', redoData, {
+        const response = await $api.put('/api/userdata', redoData, {
             headers: { "Content-Type": "multipart/form-data" }
         })
         return response.data
     }
     static async redoUserAdvert(redoData, id) {
-        const response = await $api.put('api/userdata/myadverts/' + id, redoData, {
+        const response = await $api.put('/api/userdata/myadverts/' + id, redoData, {
             headers: { "Content-Type": "multipart/form-data" }
         })
         return response.data

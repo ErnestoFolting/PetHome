@@ -2,6 +2,7 @@ import { makeAutoObservable } from "mobx";
 import AuthService from "../API/AuthService";
 import axios from 'axios';
 import { HubConnectionBuilder } from "@microsoft/signalr"
+import { url } from "../HTTP";
 
 export default class Store {
     isAuth = false;
@@ -57,7 +58,7 @@ export default class Store {
     }
     async checkAuth() {
         try {
-            const response = await axios("https://localhost:7124/api/auth/refresh-token", {
+            const response = await axios(url + "/api/auth/refresh-token", {
                 method: "post",
                 withCredentials: true
             })
@@ -69,7 +70,7 @@ export default class Store {
     }
     async createHubConnection() {
         if (!this.myHubConnection) {
-            const hubConnection = new HubConnectionBuilder().withUrl("https://localhost:7124/performerSelectionHub").withAutomaticReconnect().build()
+            const hubConnection = new HubConnectionBuilder().withUrl(url + "/performerSelectionHub").withAutomaticReconnect().build()
             try {
                 await hubConnection?.start()
                 console.log('HUB START')

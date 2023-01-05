@@ -5,7 +5,7 @@ export default class AdvertService {
         return response
     }
     static async registration(registrationData) {
-        const response = await $api.post('api/auth/register', registrationData, {
+        const response = await $api.post('/api/auth/register', registrationData, {
             headers: { "Content-Type": "multipart/form-data" }
         })
         return response.data

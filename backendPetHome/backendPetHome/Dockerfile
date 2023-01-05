@@ -7,16 +7,18 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["backendPetHome/backendPetHome.csproj", "backendPetHome/"]
-RUN dotnet restore "backendPetHome/backendPetHome.csproj"
+COPY ["backendPetHome/backendPetHome.API.csproj", "backendPetHome/"]
+COPY ["BAL/backendPetHome.BLL.csproj", "BAL/"]
+COPY ["DAL/backendPetHome.DAL.csproj", "DAL/"]
+RUN dotnet restore "backendPetHome/backendPetHome.API.csproj"
 COPY . .
 WORKDIR "/src/backendPetHome"
-RUN dotnet build "backendPetHome.csproj" -c Release -o /app/build
+RUN dotnet build "backendPetHome.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "backendPetHome.csproj" -c Release -o /app/publish
+RUN dotnet publish "backendPetHome.API.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "backendPetHome.dll"]
+ENTRYPOINT ["dotnet", "backendPetHome.API.dll"]

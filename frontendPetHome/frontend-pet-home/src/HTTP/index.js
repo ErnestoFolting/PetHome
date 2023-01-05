@@ -1,5 +1,5 @@
 import axios from 'axios';
-export const url = 'https://localhost:7124'
+export const url = 'https://localhost:7124' //https://localhost:7124, empty if docker
 
 const $api = axios.create({
     withCredentials: true,
