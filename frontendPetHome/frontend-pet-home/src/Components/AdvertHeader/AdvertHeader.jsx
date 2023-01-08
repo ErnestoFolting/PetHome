@@ -15,7 +15,6 @@ import { UserAdvertRedoForm } from '../UserAdvertRedoForm/UserAdvertRedoForm'
 
 
 export const AdvertHeader = ({ advert, isCreatedByUser, setAdvertRedoVisible, ...props }) => {
-    console.log(advert)
     const imgPath = url + advert?.photoFilePath
     const [confirmationModalVisible, setConfirmationModalVisible] = useState(false);
     const [errorModalVisible, setErrorModalVisible] = useState(false);

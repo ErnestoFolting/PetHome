@@ -3,6 +3,7 @@ version: '3.4'
 services:
   backendpethomeapi:
     image: backendpethomeapi
+    restart: on-failure
     build:
       context: .
       dockerfile: backendPetHome/Dockerfile
@@ -12,7 +13,12 @@ services:
     - "8080:80"
     depends_on:
     - petHomeDB
-
+    environment:
+        ConnectionStrings__DefaultConnection: "server=petHomeDB;database=testdb;User=sa;password=Qwerty123!"
+        LANG: uk_UA.UTF-8  
+        LANGUAGE: uk_UA  
+        LC_ALL: uk_UA.UTF-8 
+        
   petHomeDB:
     image: "mcr.microsoft.com/mssql/server:2022-latest"
     ports:

@@ -9,11 +9,16 @@ export const useFetching = (callback) => {
             setIsLoading(true)
             await callback()
         } catch (e) {
-            setError(e?.response?.data)
+            const errData = e?.response?.data
+            if (errData?.title) {
+                setError(errData?.title)
+            } else {
+                setError(errData)
+            }
             throw e
         } finally {
             setIsLoading(false)
         }
     }
-    return [fetching,isLoading,error]
+    return [fetching, isLoading, error]
 }

@@ -20,5 +20,10 @@ RUN dotnet publish "backendPetHome.API.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
+COPY ["DAL/Data/FunctionsUp/", "Data/FunctionsUp/"]
+COPY ["DAL/Data/FunctionsDown/", "Data/FunctionsDown/"]
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "backendPetHome.API.dll"]
+
+RUN apt-get clean && apt-get update && apt-get install -y locales
+RUN locale-gen pt_BR.UTF-8

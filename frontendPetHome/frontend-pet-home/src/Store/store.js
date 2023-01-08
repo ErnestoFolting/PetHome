@@ -42,6 +42,7 @@ export default class Store {
         try {
             await AuthService.registration(registrationData)
         } catch (e) {
+            console.log(e)
             throw e
         }
     }
