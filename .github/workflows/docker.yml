@@ -19,7 +19,7 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v2
-        
+
       - name: Build and push frontend docker image
         uses: docker/build-push-action@v3
         with:
@@ -31,8 +31,8 @@ jobs:
       - name: Build and push backend docker image
         uses: docker/build-push-action@v3
         with:
-          context: ./backendPetHome
-          file: ./backendPetHome/Dockerfile
+          context: ./backendPetHome/backendPetHome
+          file: ./backendPetHome/backendPetHome/Dockerfile
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/backend-pet-home:latest
           push: true
           build-args: |
