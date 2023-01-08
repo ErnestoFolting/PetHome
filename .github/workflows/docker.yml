@@ -21,7 +21,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ./frontendPetHome/frontend-pet-home
-          file: /frontendPetHome/frontend-pet-home/Dockerfile
+          file: ./frontendPetHome/frontend-pet-home/Dockerfile
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/frontend-pet-home:latest
           push: true
 
