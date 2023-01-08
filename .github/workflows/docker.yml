@@ -22,7 +22,7 @@ jobs:
         with:
           context: ./frontendPetHome/frontend-pet-home
           file: /frontendPetHome/frontend-pet-home/Dockerfile
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/frontendPetHome:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/frontend-pet-home:latest
           push: true
 
       - name: Build and push backend docker image
@@ -30,7 +30,7 @@ jobs:
         with:
           context: ./backendPetHome
           file: ./backendPetHome/Dockerfile
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/backendPetHome:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/backend-pet-home:latest
           push: true
           build-args: |
             PROJECT_PORT=80
