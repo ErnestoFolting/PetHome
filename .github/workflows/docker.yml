@@ -31,7 +31,7 @@ jobs:
       - name: Build and push backend docker image
         uses: docker/build-push-action@v3
         with:
-          context: ./backendPetHome/backendPetHome
+          context: ./backendPetHome
           file: ./backendPetHome/backendPetHome/Dockerfile
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/backend-pet-home:latest
           push: true
