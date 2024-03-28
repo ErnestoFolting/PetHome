@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace DAL.Migrations
+namespace backendPetHome.DAL.Migrations
 {
-    public partial class addIdentity : Migration
+    public partial class initialMigrations : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -31,6 +31,10 @@ namespace DAL.Migrations
                     surname = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     sex = table.Column<int>(type: "int", nullable: false),
+                    photoFilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    location = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    locationLat = table.Column<double>(type: "float", nullable: false),
+                    locationLng = table.Column<double>(type: "float", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -76,12 +80,15 @@ namespace DAL.Migrations
                 name: "adverts",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     cost = table.Column<int>(type: "int", nullable: false),
                     location = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    locationLat = table.Column<double>(type: "float", nullable: false),
+                    locationLng = table.Column<double>(type: "float", nullable: false),
                     description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    photoFilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     status = table.Column<int>(type: "int", nullable: false),
                     startTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     endTime = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -90,7 +97,7 @@ namespace DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_adverts", x => x.id);
+                    table.PrimaryKey("PK_adverts", x => x.Id);
                     table.ForeignKey(
                         name: "FK_adverts_AspNetUsers_ownerId",
                         column: x => x.ownerId,
@@ -190,20 +197,42 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Interval",
+                name: "refreshTokens",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    token = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    expires = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ownerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    isNotActual = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_refreshTokens", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_refreshTokens_AspNetUsers_ownerId",
+                        column: x => x.ownerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "timeExceptions",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     userId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    startTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    endTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    date = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Interval", x => x.id);
+                    table.PrimaryKey("PK_timeExceptions", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Interval_AspNetUsers_userId",
+                        name: "FK_timeExceptions_AspNetUsers_userId",
                         column: x => x.userId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -211,7 +240,7 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Request",
+                name: "requests",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
@@ -222,15 +251,15 @@ namespace DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Request", x => x.id);
+                    table.PrimaryKey("PK_requests", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Request_adverts_advertId",
+                        name: "FK_requests_adverts_advertId",
                         column: x => x.advertId,
                         principalTable: "adverts",
-                        principalColumn: "id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Request_AspNetUsers_userId",
+                        name: "FK_requests_AspNetUsers_userId",
                         column: x => x.userId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
@@ -286,18 +315,23 @@ namespace DAL.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Interval_userId",
-                table: "Interval",
-                column: "userId");
+                name: "IX_refreshTokens_ownerId",
+                table: "refreshTokens",
+                column: "ownerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Request_advertId",
-                table: "Request",
+                name: "IX_requests_advertId",
+                table: "requests",
                 column: "advertId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Request_userId",
-                table: "Request",
+                name: "IX_requests_userId",
+                table: "requests",
+                column: "userId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_timeExceptions_userId",
+                table: "timeExceptions",
                 column: "userId");
         }
 
@@ -319,10 +353,13 @@ namespace DAL.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Interval");
+                name: "refreshTokens");
 
             migrationBuilder.DropTable(
-                name: "Request");
+                name: "requests");
+
+            migrationBuilder.DropTable(
+                name: "timeExceptions");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

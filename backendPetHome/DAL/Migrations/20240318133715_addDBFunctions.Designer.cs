@@ -9,11 +9,11 @@ using backendPetHome.DAL.Data;
 
 #nullable disable
 
-namespace DAL.Migrations
+namespace backendPetHome.DAL.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221119181311_addTimeExceptions")]
-    partial class addTimeExceptions
+    [Migration("20240318133715_addDBFunctions")]
+    partial class addDBFunctions
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,7 +24,7 @@ namespace DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("backendPetHome.DAL.Models.Advert", b =>
+            modelBuilder.Entity("backendPetHome.DAL.Entities.Advert", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -46,6 +46,12 @@ namespace DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double>("locationLat")
+                        .HasColumnType("float");
+
+                    b.Property<double>("locationLng")
+                        .HasColumnType("float");
+
                     b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -56,6 +62,10 @@ namespace DAL.Migrations
 
                     b.Property<string>("performerId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("photoFilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("startTime")
                         .HasColumnType("datetime2");
@@ -72,7 +82,7 @@ namespace DAL.Migrations
                     b.ToTable("adverts");
                 });
 
-            modelBuilder.Entity("backendPetHome.DAL.Models.RefreshToken", b =>
+            modelBuilder.Entity("backendPetHome.DAL.Entities.RefreshToken", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -104,7 +114,7 @@ namespace DAL.Migrations
                     b.ToTable("refreshTokens");
                 });
 
-            modelBuilder.Entity("backendPetHome.DAL.Models.Request", b =>
+            modelBuilder.Entity("backendPetHome.DAL.Entities.Request", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -131,7 +141,7 @@ namespace DAL.Migrations
                     b.ToTable("requests");
                 });
 
-            modelBuilder.Entity("backendPetHome.DAL.Models.TimeException", b =>
+            modelBuilder.Entity("backendPetHome.DAL.Entities.TimeException", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -153,7 +163,7 @@ namespace DAL.Migrations
                     b.ToTable("timeExceptions");
                 });
 
-            modelBuilder.Entity("backendPetHome.DAL.Models.User", b =>
+            modelBuilder.Entity("backendPetHome.DAL.Entities.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -205,7 +215,21 @@ namespace DAL.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<string>("location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("locationLat")
+                        .HasColumnType("float");
+
+                    b.Property<double>("locationLng")
+                        .HasColumnType("float");
+
                     b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("photoFilePath")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -362,15 +386,15 @@ namespace DAL.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("backendPetHome.DAL.Models.Advert", b =>
+            modelBuilder.Entity("backendPetHome.DAL.Entities.Advert", b =>
                 {
-                    b.HasOne("backendPetHome.DAL.Models.User", "owner")
+                    b.HasOne("backendPetHome.DAL.Entities.User", "owner")
                         .WithMany("postedAdverts")
                         .HasForeignKey("ownerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("backendPetHome.DAL.Models.User", "performer")
+                    b.HasOne("backendPetHome.DAL.Entities.User", "performer")
                         .WithMany("performAtAdverts")
                         .HasForeignKey("performerId");
 
@@ -379,9 +403,9 @@ namespace DAL.Migrations
                     b.Navigation("performer");
                 });
 
-            modelBuilder.Entity("backendPetHome.DAL.Models.RefreshToken", b =>
+            modelBuilder.Entity("backendPetHome.DAL.Entities.RefreshToken", b =>
                 {
-                    b.HasOne("backendPetHome.DAL.Models.User", "owner")
+                    b.HasOne("backendPetHome.DAL.Entities.User", "owner")
                         .WithMany("refreshTokens")
                         .HasForeignKey("ownerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -390,15 +414,15 @@ namespace DAL.Migrations
                     b.Navigation("owner");
                 });
 
-            modelBuilder.Entity("backendPetHome.DAL.Models.Request", b =>
+            modelBuilder.Entity("backendPetHome.DAL.Entities.Request", b =>
                 {
-                    b.HasOne("backendPetHome.DAL.Models.Advert", "advert")
+                    b.HasOne("backendPetHome.DAL.Entities.Advert", "advert")
                         .WithMany("requests")
                         .HasForeignKey("advertId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("backendPetHome.DAL.Models.User", "user")
+                    b.HasOne("backendPetHome.DAL.Entities.User", "user")
                         .WithMany("requests")
                         .HasForeignKey("userId")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -409,10 +433,10 @@ namespace DAL.Migrations
                     b.Navigation("user");
                 });
 
-            modelBuilder.Entity("backendPetHome.DAL.Models.TimeException", b =>
+            modelBuilder.Entity("backendPetHome.DAL.Entities.TimeException", b =>
                 {
-                    b.HasOne("backendPetHome.DAL.Models.User", "user")
-                        .WithMany("timeIntervals")
+                    b.HasOne("backendPetHome.DAL.Entities.User", "user")
+                        .WithMany("timeExceptions")
                         .HasForeignKey("userId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -431,7 +455,7 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("backendPetHome.DAL.Models.User", null)
+                    b.HasOne("backendPetHome.DAL.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -440,7 +464,7 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("backendPetHome.DAL.Models.User", null)
+                    b.HasOne("backendPetHome.DAL.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -455,7 +479,7 @@ namespace DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("backendPetHome.DAL.Models.User", null)
+                    b.HasOne("backendPetHome.DAL.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -464,19 +488,19 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("backendPetHome.DAL.Models.User", null)
+                    b.HasOne("backendPetHome.DAL.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("backendPetHome.DAL.Models.Advert", b =>
+            modelBuilder.Entity("backendPetHome.DAL.Entities.Advert", b =>
                 {
                     b.Navigation("requests");
                 });
 
-            modelBuilder.Entity("backendPetHome.DAL.Models.User", b =>
+            modelBuilder.Entity("backendPetHome.DAL.Entities.User", b =>
                 {
                     b.Navigation("performAtAdverts");
 
@@ -486,7 +510,7 @@ namespace DAL.Migrations
 
                     b.Navigation("requests");
 
-                    b.Navigation("timeIntervals");
+                    b.Navigation("timeExceptions");
                 });
 #pragma warning restore 612, 618
         }

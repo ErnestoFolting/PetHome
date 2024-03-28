@@ -8,7 +8,7 @@ using backendPetHome.DAL.Data;
 
 #nullable disable
 
-namespace DAL.Migrations
+namespace backendPetHome.DAL.Migrations
 {
     [DbContext(typeof(DataContext))]
     partial class DataContextModelSnapshot : ModelSnapshot

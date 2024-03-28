@@ -22,7 +22,7 @@ namespace backendPetHome.API.Controllers
         [Route("register")]
         public async Task<IActionResult> Register([FromForm] UserRegisterDTO data, IFormFile userPhoto)
         {
-            await _authService.Register(data, userPhoto);
+            //await _authService.Register(data, userPhoto);
             return Ok();
         }
 
@@ -33,7 +33,7 @@ namespace backendPetHome.API.Controllers
             var tokens = await _authService.Login(creds);
             SetTokens(tokens.Security, tokens.Refresh);
             string? userId = tokens.Refresh.ownerId;
-            return Ok(new { userId });
+            return Ok(new { userId, tokens.Security });
         }
 
         [HttpPost("refresh-token")]
