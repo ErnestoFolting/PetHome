@@ -19,6 +19,5 @@ namespace backendPetHome.BLL.DTOs.UserDTOs
         public double locationLat { get; set; } = 0;
         public double locationLng { get; set; } = 0;
         public bool ifHaveRequests { get; set; } = true;
-        public IEnumerable<TimeExceptionDTO> timeExceptions { get; set; }
     }
 }

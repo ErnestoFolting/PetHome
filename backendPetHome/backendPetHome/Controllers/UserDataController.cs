@@ -1,6 +1,7 @@
 ﻿using backendPetHome.API.Controllers.Abstract;
 using backendPetHome.BLL.DTOs.AdvertDTOs;
 using backendPetHome.BLL.DTOs.RequestDTOs;
+using backendPetHome.BLL.DTOs.TimeExceptionDTOs;
 using backendPetHome.BLL.DTOs.UserDTOs;
 using backendPetHome.BLL.Services;
 using backendPetHome.DAL.Specifications.QueryParameters;
@@ -45,6 +46,13 @@ namespace backendPetHome.API.Controllers
         public async Task<ActionResult<IEnumerable<RequestDTO>>> GetUserRequests()
         {
             IEnumerable<RequestDTO> requests = await _userDataService.getCurrentUserRequests(UserId);
+            return Ok(requests);
+        }
+
+        [HttpGet("mytimeexceptions")]
+        public async Task<ActionResult<IEnumerable<RequestDTO>>> GetUserTimeExceptions()
+        {
+            IEnumerable<TimeExceptionDTO> requests = await _userDataService.getCurrentUserTimeExceptions(UserId);
             return Ok(requests);
         }
 

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using backendPetHome.BLL.DTOs.AdvertDTOs;
 using backendPetHome.BLL.DTOs.RequestDTOs;
+using backendPetHome.BLL.DTOs.TimeExceptionDTOs;
 using backendPetHome.BLL.DTOs.UserDTOs;
 using backendPetHome.BLL.Services.Abstract;
 using backendPetHome.DAL.Entities;
@@ -8,6 +9,7 @@ using backendPetHome.DAL.Interfaces;
 using backendPetHome.DAL.Specifications.AdvertSpecifications;
 using backendPetHome.DAL.Specifications.QueryParameters;
 using backendPetHome.DAL.Specifications.RequestSpecifications;
+using backendPetHome.DAL.Specifications.TimeExceptionSpecifications;
 using backendPetHome.DAL.Specifications.UserSpecifications;
 using Microsoft.AspNetCore.Http;
 
@@ -50,6 +52,13 @@ namespace backendPetHome.BLL.Services
             List<Request> requests = await _unitOfWork.RequestRepository.GetBySpecification(new RequestCurrentUserSpecification(id));
             List<RequestDTO> requestDTOs = _mapper.Map<List<RequestDTO>>(requests);
             return requestDTOs;
+        }
+
+        public async Task<List<TimeExceptionDTO>> getCurrentUserTimeExceptions(string id)
+        {
+            List<TimeException> timeExceptions = await _unitOfWork.TimeExceptionRepository.GetBySpecification(new TimeExceptionCurrentUserSpecification(id));
+            List<TimeExceptionDTO> timeExceptionsDTOs = _mapper.Map<List<TimeExceptionDTO>>(timeExceptions);
+            return timeExceptionsDTOs;
         }
 
         public async Task<int> deleteUserProfile(string userId)
