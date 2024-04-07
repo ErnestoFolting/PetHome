@@ -22,7 +22,7 @@ namespace backendPetHome.API.Controllers
         [Route("register")]
         public async Task<IActionResult> Register([FromForm] UserRegisterDTO data, IFormFile userPhoto)
         {
-            //await _authService.Register(data, userPhoto);
+            await _authService.Register(data, userPhoto);
             return Ok();
         }
 

@@ -40,7 +40,10 @@ namespace backendPetHome.BLL.Services
 
             foreach (var userException in userExceptions)
             {
-                if (datesToRemove.Contains(userException.date))
+                if (datesToRemove.Any(dateToRemove =>
+                dateToRemove.Year == userException.date.Year &&
+                dateToRemove.Month == userException.date.Month &&
+                dateToRemove.Day == userException.date.Day))
                 {
                     await _unitOfWork.TimeExceptionRepository.Delete(userException);
                 }
