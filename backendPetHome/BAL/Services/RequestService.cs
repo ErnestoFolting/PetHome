@@ -18,9 +18,10 @@ namespace backendPetHome.BLL.Services
         }
         public async Task<RequestDTO> addRequest(string userId, int advertId, DAL.Enums.RequestStatusEnum status)
         {
-            Advert? advertInDb = await _unitOfWork.AdvertRepository.GetByIdSpecification(new AdvertByIdSpecification(advertId));
+            Advert? advertInDb = await _unitOfWork.AdvertRepository.GetByIdSpecification(new AdvertByIdIncludesRequestAndUserSpecification(advertId));
             if (advertInDb == null) throw new KeyNotFoundException("Advert not found");
             if (advertInDb.ownerId == userId) throw new ArgumentException("You can not send a request on your own advert.");
+            if (advertInDb.requests.Any(request => request.userId == userId)) throw new ArgumentException("You can not send request multiple times");
             if (!await _timeExceptionService
                 .checkPerformerDates(userId, advertInDb.startTime, advertInDb.endTime))
                 throw new ArgumentException("You can not perform at that dates. Remove the time exceptions and try again.");
