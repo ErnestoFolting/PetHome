@@ -77,7 +77,7 @@ namespace backendPetHome.DAL.Migrations
 
                     b.HasIndex("performerId");
 
-                    b.ToTable("adverts");
+                    b.ToTable("adverts", (string)null);
                 });
 
             modelBuilder.Entity("backendPetHome.DAL.Entities.RefreshToken", b =>
@@ -109,7 +109,7 @@ namespace backendPetHome.DAL.Migrations
 
                     b.HasIndex("ownerId");
 
-                    b.ToTable("refreshTokens");
+                    b.ToTable("refreshTokens", (string)null);
                 });
 
             modelBuilder.Entity("backendPetHome.DAL.Entities.Request", b =>
@@ -136,7 +136,7 @@ namespace backendPetHome.DAL.Migrations
 
                     b.HasIndex("userId");
 
-                    b.ToTable("requests");
+                    b.ToTable("requests", (string)null);
                 });
 
             modelBuilder.Entity("backendPetHome.DAL.Entities.TimeException", b =>
@@ -158,7 +158,7 @@ namespace backendPetHome.DAL.Migrations
 
                     b.HasIndex("userId");
 
-                    b.ToTable("timeExceptions");
+                    b.ToTable("timeExceptions", (string)null);
                 });
 
             modelBuilder.Entity("backendPetHome.DAL.Entities.User", b =>

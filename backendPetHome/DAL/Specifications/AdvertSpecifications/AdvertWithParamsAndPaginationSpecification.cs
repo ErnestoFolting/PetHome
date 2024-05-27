@@ -5,11 +5,16 @@ namespace backendPetHome.DAL.Specifications.AdvertSpecifications
 {
     public class AdvertWithParamsAndPaginationSpecification : Specification<Advert>
     {
-        public AdvertWithParamsAndPaginationSpecification(QueryStringParameters parameters)
+        public AdvertWithParamsAndPaginationSpecification(string userId, QueryStringParameters parameters)
             : base(el => el.cost >= parameters.priceFrom && el.cost <= parameters.priceTo
-            && el.status == parameters.advertsStatus)
+            && el.status == parameters.advertsStatus )
         {
             AddPagination(parameters);
+            if (parameters.isDatesFit)
+            {
+                AddFitDatesCriteria(userId);
+
+            }
         }
     }
 }

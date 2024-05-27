@@ -23,5 +23,6 @@ namespace backendPetHome.DAL.Entities
         public string? performerId { get; set; }
         public User? performer { get; set; }
         public List<Request>? requests { get; set; }
+
     }
 }

@@ -142,6 +142,7 @@ using (var scope = app.Services.CreateScope())
     {
         context.Database.Migrate();
     }
+    await RoleInitializer.InitializeAsync(services);
 }
 
 

@@ -23,7 +23,7 @@ namespace backendPetHome.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AdvertDTO>>> GetAdverts([FromQuery] QueryStringParameters parameters)
         {
-            var advertsAndCount = await _advertService.getAdverts(parameters);
+            var advertsAndCount = await _advertService.getAdverts(parameters, UserId);
             Response.Headers.Add("X-Pagination-Total-Count", JsonConvert.SerializeObject(advertsAndCount.totalCount));
             return Ok(advertsAndCount.fitAdvertsDTO);
         }
@@ -34,7 +34,6 @@ namespace backendPetHome.API.Controllers
             return Ok(await _advertService.getAdvertById(id));
         }
 
-        [UserId]
         [HttpPost]
         public async Task<ActionResult> Post([FromForm] AdvertCreateRedoDTO advertToAdd, IFormFile petPhoto)
         {
@@ -43,7 +42,6 @@ namespace backendPetHome.API.Controllers
             return Ok();
         }
 
-        [UserId]
         [HttpPut("finish/{advertId}")]
         public async Task<ActionResult> MarkAsFinished(int advertId)
         {
@@ -51,7 +49,6 @@ namespace backendPetHome.API.Controllers
             return Ok();
         }
 
-        [UserId]
         [HttpDelete("{advertId}")]
         public async Task<ActionResult> deleteAdvert(int advertId)
         {

@@ -7,6 +7,7 @@ using backendPetHome.DAL.Enums;
 using backendPetHome.DAL.Interfaces;
 using backendPetHome.DAL.Specifications.AdvertSpecifications;
 using backendPetHome.DAL.Specifications.QueryParameters;
+using backendPetHome.DAL.Specifications.TimeExceptionSpecifications;
 using Microsoft.AspNetCore.Http;
 
 namespace backendPetHome.BLL.Services
@@ -20,9 +21,9 @@ namespace backendPetHome.BLL.Services
         {
             _requestService = requestService;
         }
-        public async Task<(List<AdvertDTO> fitAdvertsDTO, int totalCount)> getAdverts(QueryStringParameters parameters)
+        public async Task<(List<AdvertDTO> fitAdvertsDTO, int totalCount)> getAdverts(QueryStringParameters parameters,string userId)
         {
-            var fitAdverts = await _unitOfWork.AdvertRepository.GetBySpecificationAndPaging(new AdvertWithParamsAndPaginationSpecification(parameters));
+            var fitAdverts = await _unitOfWork.AdvertRepository.GetBySpecificationAndPaging(new AdvertWithParamsAndPaginationSpecification(userId, parameters));
             List<AdvertDTO> advertsDTO = _mapper.Map<List<AdvertDTO>>(fitAdverts.fitAdverts);
             return (advertsDTO, fitAdverts.totalCount);
         }

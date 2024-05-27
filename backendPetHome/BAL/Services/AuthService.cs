@@ -40,7 +40,11 @@ namespace backendPetHome.BLL.Services
             var result = await _userManager.CreateAsync(newUser, data.password);
             await _unitOfWork.FileRepository.Add(userFile);
 
-            if (!result.Succeeded)
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(newUser, "User");
+            }
+            else
             {
                 throw new InvalidOperationException("Can not add a new user.");
             }
@@ -51,7 +55,8 @@ namespace backendPetHome.BLL.Services
             var user = await _userManager.FindByNameAsync(creds.username);
             if (user != null && await _userManager.CheckPasswordAsync(user, creds.password))
             {
-                var newTokens = await getTokens(user);
+                IList<string> roles = await _userManager.GetRolesAsync(user);
+                var newTokens = await getTokens(user, roles);
                 return newTokens;
             }
             throw new ArgumentException("Invalid credentials.");
@@ -73,7 +78,8 @@ namespace backendPetHome.BLL.Services
                 refreshTokenInDb.isNotActual = true;
                 await _unitOfWork.RefreshTokenRepository.Update(refreshTokenInDb);
                 var user = await _userManager.FindByIdAsync(refreshTokenInDb.ownerId);
-                var newTokens = await getTokens(user);
+                IList<string> roles = await _userManager.GetRolesAsync(user);
+                var newTokens = await getTokens(user,  roles);
                 return newTokens;
             }
             else
@@ -105,19 +111,19 @@ namespace backendPetHome.BLL.Services
             }
         }
 
-        private async Task<(SecurityToken Security, RefreshTokenDTO Refresh)> getTokens(User user)
+        private async Task<(SecurityToken Security, RefreshTokenDTO Refresh)> getTokens(User user, IList<string> userRoles)
         {
-            var securityToken = GetSecurityToken(user, DateTime.Now.AddMinutes(15));
-            var newRefreshToken = GetRefreshToken(user);
+            var securityToken = GetSecurityToken(user, DateTime.Now.AddMinutes(15), userRoles);
+            var newRefreshToken = GetRefreshToken(user, userRoles);
             await _unitOfWork.RefreshTokenRepository.Add(newRefreshToken);
             await _unitOfWork.SaveChangesAsync();
             RefreshTokenDTO refreshDTO = _mapper.Map<RefreshTokenDTO>(newRefreshToken);
             return (securityToken,refreshDTO);
         }
-        private RefreshToken GetRefreshToken(User user)
+        private RefreshToken GetRefreshToken(User user, IList<string> userRoles)
         {
             var expireTime = DateTime.Now.AddDays(7);
-            var refreshJWT = GetSecurityToken(user, expireTime);
+            var refreshJWT = GetSecurityToken(user, expireTime, userRoles);
             var tokenHandler = new JwtSecurityTokenHandler();
             var encryptedRefreshToken = tokenHandler.WriteToken(refreshJWT);
             RefreshToken refreshToken = new()
@@ -129,13 +135,14 @@ namespace backendPetHome.BLL.Services
             };
             return refreshToken;
         }
-        private SecurityToken GetSecurityToken(User user, DateTime expireTime)
+        private SecurityToken GetSecurityToken(User user, DateTime expireTime, IList<string> userRoles)
         {
             var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier,user.Id),
                     new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
                 };
+            authClaims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"]));
             var token = new JwtSecurityToken(
                 issuer: _configuration["JWT:ValidIssuer"],

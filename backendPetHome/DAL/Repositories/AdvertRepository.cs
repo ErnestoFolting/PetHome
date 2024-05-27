@@ -34,7 +34,7 @@ namespace backendPetHome.DAL.Repositories
             var fitAdvertsWithPaging = await ApplySpecification(spec).ToListAsync();
             spec.RemovePagination();
             var totalCount = await ApplySpecification(spec).CountAsync();
-            return(fitAdvertsWithPaging,totalCount);
+            return (fitAdvertsWithPaging,totalCount);
         }
         public async Task Update(Advert advertToUpdate)
         { 
@@ -48,7 +48,18 @@ namespace backendPetHome.DAL.Repositories
 
         private IQueryable<Advert> ApplySpecification(Specification<Advert> specification)
         {
-            return SpecificationEvaluator.getQuery(_context.Set<Advert>(), specification);
+            IQueryable<Advert> set;
+
+            if (specification?.userId !=null)
+            {
+                 set = _context.getTimeExceptionFitAdverts(specification.userId);
+            }
+            else
+            {
+                set = _context.Set<Advert>();
+            }
+            
+            return SpecificationEvaluator.getQuery(set, specification);
         }
     }
 }

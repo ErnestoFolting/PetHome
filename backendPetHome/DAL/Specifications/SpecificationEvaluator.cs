@@ -22,12 +22,8 @@ namespace backendPetHome.DAL.Specifications
             if (specification.QueryParameters != null)
             {
                 quaryable = quaryable.Skip((specification.QueryParameters.PageNumber - 1) * specification.QueryParameters.PageSize)
-                    .Take(specification.QueryParameters.PageSize);
-                if (specification.QueryParameters.isDatesFit)
-                {
-
-                }
-            }
+                   .Take(specification.QueryParameters.PageSize);
+            }   
             return quaryable;
         }
     }

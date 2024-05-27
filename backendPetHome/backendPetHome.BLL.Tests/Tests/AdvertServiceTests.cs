@@ -53,7 +53,7 @@ namespace backendPetHome.BLL.Tests.Tests
                 .ReturnsAsync((adverts, adverts.Count));
 
             //act
-            var advertsAndCount = await _sut.getAdverts(new QueryStringParameters());
+            var advertsAndCount = await _sut.getAdverts(new QueryStringParameters(), default);
             List<AdvertDTO> advertsDTOs = _mapper.Map<List<AdvertDTO>>(advertsAndCount.fitAdvertsDTO);
 
             //assert

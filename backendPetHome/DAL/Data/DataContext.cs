@@ -18,6 +18,9 @@ namespace backendPetHome.DAL.Data
         public IQueryable<User> selectPossiblePerformers(DateTime advertStartTime, DateTime advertEndTime, double advertLng, double advertLat, string? ownerId) 
             => FromExpression(() => selectPossiblePerformers(advertStartTime, advertEndTime, advertLng, advertLat, ownerId));
 
+        public IQueryable<Advert> getTimeExceptionFitAdverts(string? userId)
+            => FromExpression(() => getTimeExceptionFitAdverts(userId));
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder
@@ -54,6 +57,7 @@ namespace backendPetHome.DAL.Data
                 .HasForeignKey(r => r.ownerId);
 
             builder.HasDbFunction(() => selectPossiblePerformers(default, default, default, default, default));
+            builder.HasDbFunction(() => getTimeExceptionFitAdverts(default));
 
             base.OnModelCreating(builder);
         }

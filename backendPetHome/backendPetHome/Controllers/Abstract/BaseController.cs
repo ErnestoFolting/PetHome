@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace backendPetHome.API.Controllers.Abstract
 {
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "User")]
     [UserId]
     public abstract class BaseController : ControllerBase
     {

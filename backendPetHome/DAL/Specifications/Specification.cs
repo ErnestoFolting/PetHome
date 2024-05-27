@@ -1,4 +1,5 @@
-﻿using backendPetHome.DAL.Specifications.QueryParameters;
+﻿using backendPetHome.DAL.Entities;
+using backendPetHome.DAL.Specifications.QueryParameters;
 using System.Linq.Expressions;
 
 namespace backendPetHome.DAL.Specifications
@@ -10,7 +11,7 @@ namespace backendPetHome.DAL.Specifications
             Criteria = criteria;
         }
         public QueryStringParameters? QueryParameters;
-        public string userWhoRequestsId = string.Empty;
+        public string userId{ get; private set; }
         public Expression<Func<TEntity, bool>>? Criteria { get; }
         public List<Expression<Func<TEntity, object>>> IncludeExpressions { get; } = new();
         protected void AddInclude(Expression<Func<TEntity, object>> includeExpression)
@@ -30,9 +31,9 @@ namespace backendPetHome.DAL.Specifications
         {
             QueryParameters = null;
         }
-        protected virtual void AddFitDates(string userWhoRequestsId)
+        protected virtual void AddFitDatesCriteria(string userId)
         {
-            this.userWhoRequestsId = userWhoRequestsId;
+            this.userId = userId;
         }
     }
 }
