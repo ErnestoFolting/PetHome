@@ -20,5 +20,13 @@ namespace backendPetHome.BLL.Services
             UserDTO userDTO = _mapper.Map<UserDTO>(user);
             return userDTO;
         }
+        public async Task<List<UserDTO>> getUsers(string adminId)
+        {
+            List<User>? users = await _unitOfWork.UserRepository.GetUsersSpecification(new AllUsersSpecification(adminId));
+            if (users == null) throw new KeyNotFoundException("Users not found.");
+
+            List<UserDTO> userDTOs = _mapper.Map<List<UserDTO>>(users);
+            return userDTOs;
+        }
     }
 }

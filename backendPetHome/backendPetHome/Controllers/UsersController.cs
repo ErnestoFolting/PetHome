@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using backendPetHome.BLL.Services;
 using backendPetHome.BLL.DTOs.UserDTOs;
+using Microsoft.AspNetCore.Authorization;
 using backendPetHome.API.Controllers.Abstract;
 
 namespace backendPetHome.API.Controllers
@@ -20,6 +21,17 @@ namespace backendPetHome.API.Controllers
         {
             var user = await _userService.getCertainUser(id);
             return Ok(user);
+        }
+
+        [Authorize(Roles = "Administrator")]
+        [HttpGet]
+        public async Task<ActionResult<List<UserDTO>>> GetUsers()
+        {
+            Console.WriteLine("check");
+
+            var users = await _userService.getUsers(UserId);
+            return Ok(users);
+
         }
     }
 }

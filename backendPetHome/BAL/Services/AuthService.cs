@@ -50,14 +50,14 @@ namespace backendPetHome.BLL.Services
             }
         }
 
-        public async Task<(SecurityToken Security, RefreshTokenDTO Refresh)> Login(UserLoginDTO creds)
+        public async Task<(SecurityToken Security, RefreshTokenDTO Refresh, IList<string> Roles)> Login(UserLoginDTO creds)
         {
             var user = await _userManager.FindByNameAsync(creds.username);
             if (user != null && await _userManager.CheckPasswordAsync(user, creds.password))
             {
                 IList<string> roles = await _userManager.GetRolesAsync(user);
                 var newTokens = await getTokens(user, roles);
-                return newTokens;
+                return (newTokens.Security,newTokens.Refresh, roles);
             }
             throw new ArgumentException("Invalid credentials.");
         }

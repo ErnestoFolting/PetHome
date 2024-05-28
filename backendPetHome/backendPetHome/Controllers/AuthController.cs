@@ -30,10 +30,10 @@ namespace backendPetHome.API.Controllers
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginDTO creds)
         {
-            var tokens = await _authService.Login(creds);
-            SetTokens(tokens.Security, tokens.Refresh);
-            string? userId = tokens.Refresh.ownerId;
-            return Ok(new { userId, tokens.Security });
+            var tokensAndRoles = await _authService.Login(creds);
+            SetTokens(tokensAndRoles.Security, tokensAndRoles.Refresh);
+            string? userId = tokensAndRoles.Refresh.ownerId;
+            return Ok(new { userId, tokensAndRoles.Security, tokensAndRoles.Roles });
         }
 
         [HttpPost("refresh-token")]

@@ -22,6 +22,11 @@ namespace backendPetHome.DAL.Repositories
             return ApplySpecification(spec).SingleOrDefaultAsync();
         }
 
+        public Task<List<User>>? GetUsersSpecification(Specification<User> spec)
+        {
+            return ApplySpecification(spec).ToListAsync();
+        }
+
         public async Task<IEnumerable<string>> SelectPossiblePerformers(Advert advert, string ownerId)
         {
             IEnumerable<string> possiblePerformersIds = await
