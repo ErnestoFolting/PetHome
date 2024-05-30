@@ -41,10 +41,10 @@ namespace backendPetHome.API.Controllers
         {
             var refreshToken = Request.Cookies["refreshToken"];
             if (refreshToken == null) return Forbid();
-            var tokens = await _authService.Refresh(refreshToken);
-            SetTokens(tokens.Security, tokens.Refresh);
-            string? userId = tokens.Refresh.ownerId;
-            return Ok(new { userId });
+            var tokensAndRoles = await _authService.Refresh(refreshToken);
+            SetTokens(tokensAndRoles.Security, tokensAndRoles.Refresh);
+            string? userId = tokensAndRoles.Refresh.ownerId;
+            return Ok(new { userId, tokensAndRoles.Roles });
         }
 
         [HttpPost("logout")]

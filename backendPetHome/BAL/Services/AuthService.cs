@@ -62,7 +62,7 @@ namespace backendPetHome.BLL.Services
             throw new ArgumentException("Invalid credentials.");
         }
 
-        public async Task<(SecurityToken Security, RefreshTokenDTO Refresh)> Refresh(string refreshToken)
+        public async Task<(SecurityToken Security, RefreshTokenDTO Refresh, IList<string> Roles)> Refresh(string refreshToken)
         {
             RefreshToken? refreshTokenInDb = await _unitOfWork.RefreshTokenRepository.GetBySpecification(new RefreshTokenGetByTokenSpecification(refreshToken));
             if (refreshTokenInDb == null)
@@ -80,7 +80,7 @@ namespace backendPetHome.BLL.Services
                 var user = await _userManager.FindByIdAsync(refreshTokenInDb.ownerId);
                 IList<string> roles = await _userManager.GetRolesAsync(user);
                 var newTokens = await getTokens(user,  roles);
-                return newTokens;
+                return (newTokens.Security,newTokens.Refresh, roles);
             }
             else
             {
@@ -113,7 +113,7 @@ namespace backendPetHome.BLL.Services
 
         private async Task<(SecurityToken Security, RefreshTokenDTO Refresh)> getTokens(User user, IList<string> userRoles)
         {
-            var securityToken = GetSecurityToken(user, DateTime.Now.AddMinutes(15), userRoles);
+            var securityToken = GetSecurityToken(user, DateTime.Now.AddDays(1), userRoles); //change
             var newRefreshToken = GetRefreshToken(user, userRoles);
             await _unitOfWork.RefreshTokenRepository.Add(newRefreshToken);
             await _unitOfWork.SaveChangesAsync();

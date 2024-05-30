@@ -7,7 +7,6 @@ using backendPetHome.DAL.Enums;
 using backendPetHome.DAL.Interfaces;
 using backendPetHome.DAL.Specifications.AdvertSpecifications;
 using backendPetHome.DAL.Specifications.QueryParameters;
-using backendPetHome.DAL.Specifications.TimeExceptionSpecifications;
 using Microsoft.AspNetCore.Http;
 
 namespace backendPetHome.BLL.Services
@@ -28,10 +27,17 @@ namespace backendPetHome.BLL.Services
             return (advertsDTO, fitAdverts.totalCount);
         }
 
+        public async Task<(List<AdvertDTO> fitAdvertsDTO, int totalCount)> getAdverts(QueryStringParameters parameters)
+        {
+            var fitAdverts = await _unitOfWork.AdvertRepository.GetBySpecificationAndPaging(new AllAdvertsWithPaginationSpecification(parameters));
+            List<AdvertDTO> advertsDTO = _mapper.Map<List<AdvertDTO>>(fitAdverts.fitAdverts);
+            return (advertsDTO, fitAdverts.totalCount);
+        }
+
         public async Task<AdvertDTO> getAdvertById(int advertId)
         { 
             Advert? advert = await _unitOfWork.AdvertRepository.GetByIdSpecification(new AdvertByIdWithOwnerSpecification(advertId));
-            if (advert == null) throw new KeyNotFoundException("Advert not found");
+            if (advert == null) throw new KeyNotFoundException("Advert not found.");
 
             AdvertDTO advertDTO = _mapper.Map<AdvertDTO>(advert);
             return advertDTO;
@@ -70,6 +76,14 @@ namespace backendPetHome.BLL.Services
             var advertInDb = await _unitOfWork.AdvertRepository.GetByIdSpecification(new AdvertByIdSpecification(advertId));
             if (advertInDb == null) throw new KeyNotFoundException("Advert not found.");
             if (advertInDb.ownerId != userId) throw new ArgumentException("You do not have the access.");
+
+            await _unitOfWork.AdvertRepository.Delete(advertInDb);
+            await _unitOfWork.SaveChangesAsync();
+        }
+        public async Task deleteAdvert(int advertId)
+        {
+            var advertInDb = await _unitOfWork.AdvertRepository.GetByIdSpecification(new AdvertByIdSpecification(advertId));
+            if (advertInDb == null) throw new KeyNotFoundException("Advert not found.");
 
             await _unitOfWork.AdvertRepository.Delete(advertInDb);
             await _unitOfWork.SaveChangesAsync();

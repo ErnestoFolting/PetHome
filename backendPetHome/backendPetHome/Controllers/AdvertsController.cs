@@ -4,6 +4,7 @@ using backendPetHome.API.Hubs;
 using backendPetHome.BLL.DTOs.AdvertDTOs;
 using backendPetHome.BLL.Services.Interfaces;
 using backendPetHome.DAL.Specifications.QueryParameters;
+using Microsoft.AspNet.SignalR;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -24,6 +25,14 @@ namespace backendPetHome.API.Controllers
         public async Task<ActionResult<IEnumerable<AdvertDTO>>> GetAdverts([FromQuery] QueryStringParameters parameters)
         {
             var advertsAndCount = await _advertService.getAdverts(parameters, UserId);
+            Response.Headers.Add("X-Pagination-Total-Count", JsonConvert.SerializeObject(advertsAndCount.totalCount));
+            return Ok(advertsAndCount.fitAdvertsDTO);
+        }
+        [Authorize(Roles = "Administrator")]
+        [HttpGet("byadmin")]
+        public async Task<ActionResult<IEnumerable<AdvertDTO>>> GetAdvertsByAdmin([FromQuery] QueryStringParameters parameters)
+        {
+            var advertsAndCount = await _advertService.getAdverts(parameters);
             Response.Headers.Add("X-Pagination-Total-Count", JsonConvert.SerializeObject(advertsAndCount.totalCount));
             return Ok(advertsAndCount.fitAdvertsDTO);
         }
@@ -53,6 +62,14 @@ namespace backendPetHome.API.Controllers
         public async Task<ActionResult> deleteAdvert(int advertId)
         {
             await _advertService.deleteAdvert(advertId, UserId);
+            return Ok();
+        }
+
+        [Authorize(Roles ="Administrator")] //can be more complex moderating logic
+        [HttpDelete("adminDelete/{advertId}")]
+        public async Task<ActionResult> deleteAdvertByAdmin(int advertId)
+        {
+            await _advertService.deleteAdvert(advertId);
             return Ok();
         }
     }

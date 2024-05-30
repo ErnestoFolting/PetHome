@@ -33,7 +33,7 @@ namespace backendPetHome.BLL.Services
             Advert? advertInDb = await 
                 _unitOfWork.AdvertRepository
                 .GetByIdSpecification(new AdvertByIdIncludesRequestAndUserSpecification(advertId));
-            if (advertInDb == null) throw new KeyNotFoundException("Advert not found.");
+            if (advertInDb == null) throw new KeyNotFoundException("Your advert not found.");
             if (advertInDb.ownerId != userId) throw new ArgumentException("This is not your advert.");
 
             AdvertUserDTO advertUserDTO = _mapper.Map<AdvertUserDTO>(advertInDb);
